@@ -1,0 +1,65 @@
+
+/* Estilo aplicado a todo la pantalla */
+* {
+  text-align: center;
+  align-items: center;
+  background: #12A1DD; 
+  justify-content: center;
+  color: #ffffff;
+}
+
+.titulo-login{
+  position: absolute;
+  top: 5rem;
+  left: 45rem;
+}
+
+/* primer bloque CORREO*/
+
+.introducir-datos{
+  color: #000000;
+  border-radius: 5rem;
+  font-size: 2rem;
+  background-color: #ffffff;
+}
+
+.bloque-con-margenes-Correo{
+
+  position: absolute;
+  justify-content: center;
+  margin-left: 45rem;
+  margin-top: 15rem;
+  margin-bottom: 10rem;
+  display: block;
+
+}
+
+
+/* primer bloque CONTRASEÑA*/
+
+.bloque-con-margenes-Password{
+
+  position: absolute;
+  justify-content: center;
+  margin-left: 45rem;
+  margin-top: 23rem;
+  margin-bottom: 10rem;
+  display: block;
+
+}
+
+.tipado-login{
+  position: relative;
+  background-color: #ffffff00;
+  left: -31rem;
+  top: -40px;
+  color: #363333;
+  font-size: 3rem;
+}
+
+.botones-login{
+  position: absolute;
+  top: 35rem;
+  left: 45rem;
+  margin: 2rem;
+}
