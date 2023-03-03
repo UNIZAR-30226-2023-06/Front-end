@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
-import "./styles.css";
+import "./inicio_sesion.css";
 
 function Inicio_sesion() {
-  // React States
+  // Estados de error del mensaje de loggin
   const [errorMessages, setErrorMessages] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // User Login info
+  // BD iniciales
   const database = [
     {
       correo: "user1",
@@ -20,6 +20,7 @@ function Inicio_sesion() {
     }
   ];
 
+  // Mensajes de errores
   const errors = {
     uname: "Nombre de usuario inválido",
     pass: "Contraseña incorrecta"
@@ -34,7 +35,7 @@ function Inicio_sesion() {
     // Find user login info
     const userData = database.find((user) => user.correo === uname.value);
 
-    // Compare user info
+    // Comprobamos si la contraseña es válida con los datos que tenemos
     if (userData) {
       if (userData.password !== pass.value) {
         // Invalid password
@@ -43,12 +44,12 @@ function Inicio_sesion() {
         setIsSubmitted(true);
       }
     } else {
-      // correo not found
+      // No se ha encontrado el usuario 
       setErrorMessages({ name: "uname", message: errors.uname });
     }
   };
 
-  // Generate JSX code for error message
+  // Mostrar los mensajes de error
   const renderErrorMessage = (name) =>
     name === errorMessages.name && (
       <div className="error">{errorMessages.message}</div>
@@ -64,24 +65,28 @@ function Inicio_sesion() {
           {renderErrorMessage("uname")}
         </div>
         <div className="input-container">
-        <div className="Titulos">Password </div>
+        <div className="Titulos">Contraseña </div>
           <input type="password" name="pass" required />
           {renderErrorMessage("pass")}
         </div>
         <div className="button-container">
-          <input type="submit" />
+          <input type="submit"/>
         </div>
+        <div ClassName="Recuperar_password"> <a href="/"> ¿Has olvidado tu contraseña? </a></div>
       </form>
     </div>
   );
 
+
   return (
     <div className="Inicio_sesion">
+      
       <div className="login-form">
-        <div className="title">Inicio de sesión</div>
-        {isSubmitted ? <div>User is successfully logged in</div> : renderForm}
-      </div>
-    </div>
+        <div className="title">Bienvenido a CATANIC</div>
+        {isSubmitted ?  <div>User is successfully logged in</div> : renderForm}
+      </div> 
+      <div ClassName="Recuperar_password"> <a href="/"> ¿Eres nuevo? Registrate </a></div>
+    </div>   
   );
 }
 
