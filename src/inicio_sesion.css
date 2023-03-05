@@ -1,12 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Philosopher&display=swap');
 .Inicio_sesion {
-  font-family: sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   gap: 20px;
   min-height: 100vh;
-  font-family: Cambria, Cochin, Georgia,"Helvetica", Times, serif;
+  font-family: 'Philosopher', sans-serif;
+  /* font-family: Nexa; */
   font-weight: 600;
   background-image: url(imagenes/art-3525337.svg);
   background-size: cover;
@@ -52,7 +53,7 @@ input[type="submit"]:hover {
 
 /*Cuadrado*/
 .login-form {
-  background-color: #ffffff65;
+  background-color: #ffffffc7;
   border: 1px solid #2D4052; 
   border-radius: 1rem;
   padding: 20px;
@@ -69,7 +70,7 @@ input[type="submit"]:hover {
 
 .error {
   color: red;
-  font-size: 12px;
+  font-size: 20px;
 }
 
 .title {

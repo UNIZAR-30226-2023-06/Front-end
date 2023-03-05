@@ -88,10 +88,11 @@ function Inicio_sesion() {
           <input type="password" name="pass" required />
           {renderErrorMessage("pass")}
         </div>
+        <div className="Recuperar_password"> <a href="/"> ¿Has olvidado tu contraseña? </a></div>
         <div className="button-container">
           <input type="submit"/>
         </div>
-        <div className="Recuperar_password"> <a href="/"> ¿Has olvidado tu contraseña? </a></div>
+        <div className="Recuperar_password"> <a href="/"> ¿Eres nuevo? Registrate </a></div>
       </form>
     </div>
   );
@@ -104,7 +105,6 @@ function Inicio_sesion() {
         <div className="title">Bienvenido a CATANIC</div>
         {isSubmitted ?  <div>User is successfully logged in</div> : renderForm}
       </div> 
-      <div className="Recuperar_password"> <a href="/"> ¿Eres nuevo? Registrate </a></div>
     </div>   
   );
 }
