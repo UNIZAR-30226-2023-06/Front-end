@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import Inicio_sesion from './Inicio_sesion';
+import Registro from './Registro';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -10,7 +11,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 // cargamos la página de App los nombres deben de coincidir 
 root.render(
   <React.StrictMode>
-    <Inicio_sesion />
+    <Registro/>
   </React.StrictMode>
 );
 

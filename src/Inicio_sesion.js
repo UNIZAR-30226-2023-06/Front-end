@@ -6,6 +6,7 @@ import jwt_decode from 'jwt-decode';
 import "./inicio_sesion.css";
 
 const URL_BACKEND = "http://localhost:8000";
+const URL_FRONTEND = "http://localhost:3000";
 
 function Inicio_sesion() {
   // Estados de error del mensaje de loggin
@@ -92,7 +93,8 @@ function Inicio_sesion() {
         <div className="button-container">
           <input type="submit"/>
         </div>
-        <div className="Recuperar_password"> <a href="/"> ¿Eres nuevo? Registrate </a></div>
+        <div className="Recuperar_password"> <a href='localhost:3000/Registro' rel="noopener noreferrer"> ¿Eres nuevo? Registrate </a>
+        </div>
       </form>
     </div>
   );
@@ -100,7 +102,6 @@ function Inicio_sesion() {
 
   return (
     <div className="Inicio_sesion">
-      
       <div className="login-form">
         <div className="title">Bienvenido a CATANIC</div>
         {isSubmitted ?  <div>User is successfully logged in</div> : renderForm}

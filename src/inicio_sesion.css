@@ -9,7 +9,7 @@
   font-family: 'Philosopher', sans-serif;
   /* font-family: Nexa; */
   font-weight: 600;
-  background-image: url(imagenes/art-3525337.svg);
+  background-image: url(imagenes/fondo1.svg);
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;   
@@ -24,6 +24,7 @@ input[type="password"] {
   font-size: 20px;
   border-radius: 20px;
   padding-left: 10px;
+  font-family: 'Philosopher', sans-serif;
 }
 
 /* etiquetas con input tipo sibmit */
@@ -54,7 +55,7 @@ input[type="submit"]:hover {
 /*Cuadrado*/
 .login-form {
   background-color: #ffffffc7;
-  border: 1px solid #2D4052; 
+  border: 1px solid #ffffffc7; 
   border-radius: 1rem;
   padding: 20px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); 
