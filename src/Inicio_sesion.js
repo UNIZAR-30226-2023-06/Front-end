@@ -12,17 +12,6 @@ function Inicio_sesion() {
   const [errorMessages, setErrorMessages] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // BD iniciales
-  const database = [
-    {
-      correo: "user1",
-      password: "pass1"
-    },
-    {
-      correo: "user2",
-      password: "pass2"
-    }
-  ];
 
   // Mensajes de errores
   const errors = {
@@ -36,7 +25,7 @@ function Inicio_sesion() {
 
     var { uname, pass } = document.forms[0];
 
-    fetch('http://127.0.0.1:8000/login', {
+    fetch(URL_BACKEND + "/login", {
         method: 'POST',
         headers: {
             'accept': 'application/json'
