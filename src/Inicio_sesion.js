@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
+import * as jose from 'jose'
 
 import "./inicio_sesion.css";
+
+const URL_BACKEND = "http://localhost:8000";
 
 function Inicio_sesion() {
   // Estados de error del mensaje de loggin
@@ -32,21 +35,55 @@ function Inicio_sesion() {
 
     var { uname, pass } = document.forms[0];
 
-    // Find user login info
-    const userData = database.find((user) => user.correo === uname.value);
+    fetch('http://127.0.0.1:8000/login', {
+        method: 'POST',
+        headers: {
+            'accept': 'application/json'
+        },
+        body: new URLSearchParams({
+            'grant_type': '',
+            'username': uname.value,
+            'password': pass.value,
+            'scope': '',
+            'client_id': '',
+            'client_secret': ''
+        })
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        if (data.detail === "Incorrect password") {
+          // login failed
+          console.log("Incorrect password");
+          setErrorMessages({ name: "pass", message: errors.pass });
 
-    // Comprobamos si la contraseña es válida con los datos que tenemos
-    if (userData) {
-      if (userData.password !== pass.value) {
-        // Invalid password
-        setErrorMessages({ name: "pass", message: errors.pass });
-      } else {
-        setIsSubmitted(true);
-      }
-    } else {
-      // No se ha encontrado el usuario 
-      setErrorMessages({ name: "uname", message: errors.uname });
-    }
+        } else if (data.detail === "Incorrect email"){
+          console.log("Incorrect email");
+          setErrorMessages({ name: "uname", message: errors.uname });
+        }
+        else{
+          // login success
+          console.log("login success")
+          console.log(data.access_token);
+          setIsSubmitted(true);
+        }
+      });
+
+    // // Find user login info
+    // const userData = database.find((user) => user.correo === uname.value);
+
+    // // Comprobamos si la contraseña es válida con los datos que tenemos
+    // if (userData) {
+    //   if (userData.password !== pass.value) {
+    //     // Invalid password
+    //     setErrorMessages({ name: "pass", message: errors.pass });
+    //   } else {
+    //     setIsSubmitted(true);
+    //   }
+    // } else {
+    //   // No se ha encontrado el usuario 
+    //   setErrorMessages({ name: "uname", message: errors.uname });
+    // }
   };
 
   // Mostrar los mensajes de error
@@ -72,7 +109,7 @@ function Inicio_sesion() {
         <div className="button-container">
           <input type="submit"/>
         </div>
-        <div ClassName="Recuperar_password"> <a href="/"> ¿Has olvidado tu contraseña? </a></div>
+        <div className="Recuperar_password"> <a href="/"> ¿Has olvidado tu contraseña? </a></div>
       </form>
     </div>
   );
@@ -85,7 +122,7 @@ function Inicio_sesion() {
         <div className="title">Bienvenido a CATANIC</div>
         {isSubmitted ?  <div>User is successfully logged in</div> : renderForm}
       </div> 
-      <div ClassName="Recuperar_password"> <a href="/"> ¿Eres nuevo? Registrate </a></div>
+      <div className="Recuperar_password"> <a href="/"> ¿Eres nuevo? Registrate </a></div>
     </div>   
   );
 }
