@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import * as jose from 'jose'
+import jwt_decode from 'jwt-decode';
 
 import "./inicio_sesion.css";
 
@@ -65,25 +66,17 @@ function Inicio_sesion() {
           // login success
           console.log("login success")
           console.log(data.access_token);
+                  
+          //TODO: asegurarse de que el token tiene que venir del backend
+          
+          var decoded = jwt_decode(data.access_token);
+          console.log(decoded);
+          console.groupCollapsed(decoded.id);
+          console.groupCollapsed(decoded.email);
+          console.groupCollapsed(decoded.username);
           setIsSubmitted(true);
         }
       });
-
-    // // Find user login info
-    // const userData = database.find((user) => user.correo === uname.value);
-
-    // // Comprobamos si la contraseña es válida con los datos que tenemos
-    // if (userData) {
-    //   if (userData.password !== pass.value) {
-    //     // Invalid password
-    //     setErrorMessages({ name: "pass", message: errors.pass });
-    //   } else {
-    //     setIsSubmitted(true);
-    //   }
-    // } else {
-    //   // No se ha encontrado el usuario 
-    //   setErrorMessages({ name: "uname", message: errors.uname });
-    // }
   };
 
   // Mostrar los mensajes de error
