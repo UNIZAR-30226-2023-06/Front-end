@@ -80,16 +80,14 @@ function Inicio_sesion() {
     <div className="form">
       <form onSubmit={handleSubmit}>
         <div className="input-container">
-          <div className="Titulos">Correo </div>
-          <input type="text" name="uname" required />
+          <input type="text" name="uname" required placeholder="Correo"/>
           {renderErrorMessage("uname")}
         </div>
         <div className="input-container">
-        <div className="Titulos">Contraseña </div>
-          <input type="password" name="pass" required />
+          <input type="password" name="pass" required placeholder="Contraseña"/>
           {renderErrorMessage("pass")}
         </div>
-        <div className="Recuperar_password"> <a href="/"> ¿Has olvidado tu contraseña? </a></div>
+        <div className="Recuperar_password"> <a href="/" rel="noopener noreferrer"> ¿Has olvidado tu contraseña? </a></div>
         <div className="button-container">
           <input type="submit"/>
         </div>
@@ -102,8 +100,19 @@ function Inicio_sesion() {
 
   return (
     <div className="Inicio_sesion">
+      <section>
+          <h2>
+            <span className="a">C</span>
+            <span className="a">A</span>
+            <span className="a">T</span>
+            <span className="a">A</span>
+            <span className="a">N</span>
+            <span className="a">I</span>
+            <span className="a">C</span>
+          </h2>
+        </section>
       <div className="login-form">
-        <div className="title">Bienvenido a CATANIC</div>
+        <div className="title">Inicio de sesion</div>
         {isSubmitted ?  <div>User is successfully logged in</div> : renderForm}
       </div> 
     </div>   

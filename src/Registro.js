@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
-import "./style_registro.css";
+import "./Registro.css";
 import flecha from './imagenes/flecha.svg';
 
 function Registro() {

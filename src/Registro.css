@@ -9,6 +9,8 @@
     font-family: Cambria, Cochin, Georgia,"Helvetica", Times, serif;
     font-weight: 600;
     background-color: #12A1DD;
+    
+  background-image: url(imagenes/fondo1.svg);
   }
   
   input[type="text"],
