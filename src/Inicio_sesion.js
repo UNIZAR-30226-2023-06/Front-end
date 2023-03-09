@@ -112,7 +112,7 @@ function Inicio_sesion() {
           </h2>
         </section>
       <div className="login-form">
-        <div className="title">Inicio de sesion</div>
+        <div className="title">Inicio de sesión</div>
         {isSubmitted ?  <div>User is successfully logged in</div> : renderForm}
       </div> 
     </div>   
