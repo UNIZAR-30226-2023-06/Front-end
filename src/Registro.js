@@ -62,40 +62,29 @@ function Registro() {
   // JSX code for login form
   const renderForm = (
 
-    // <div className="form">
-
       <form onSubmit={handleSubmit}>
-    <div className="input-container0">        
       <div className="input-container1">
-          <div className="Titulos">Introduce nombre </div>
-          <input type="text" name="uname" required />
-          {renderErrorMessage("uname")}
-        </div>
-
-        <div className="input-container2">
-          <div className="Titulos">Introduce correo </div>
-          <input type="text" name="uname" required />
+          <input type="text" name="uname" required placeholder="Introduce nombre"/>
           {renderErrorMessage("uname")}
         </div>
 
         <div className="input-container1">
-          <div className="Titulos">Introduce contraseña </div>
-          <input type="password" name="pass" required />
+          <input type="text" name="uname" required placeholder="Introduce correo" />
+          {renderErrorMessage("uname")}
+        </div>
+
+        <div className="input-container2">
+          <input type="password" name="pass" required placeholder="Introduce contraseña" />
           {renderErrorMessage("pass")}
         </div>
 
         <div className="input-container2">
-        <div className="Titulos">Repetir contraseña </div>
-          <input type="password" name="pass" required />
+          <input type="password" name="pass" required placeholder="Repetir contraseña" />
           {renderErrorMessage("pass")}
-        </div></div>
+        </div>
 
-        <img 
-        // const[enabled, setEnabled] = useState(true);
-        // onClick = {() => setEnabled(!enabled)}
-        src={flecha} />      
         </form>
-    // </div>
+
   );
 
   const boton = (
@@ -109,13 +98,18 @@ function Registro() {
   return (
     <div className="style_registro">
       <div className="login-form">
+        <div>
+        <img 
+        // const[enabled, setEnabled] = useState(true);
+        // onClick = {() => setEnabled(!enabled)}
+        src={flecha} /> 
         <div className="title">Creacion de cuenta</div>
+        </div>
         {isSubmitted ? <div>User is successfully logged in</div> : renderForm}
         {isSubmitted ? <div>User is successfully logged in</div> : boton}
-
       </div>
     </div>
-  );
+  );  
 }
 
 export default Registro;

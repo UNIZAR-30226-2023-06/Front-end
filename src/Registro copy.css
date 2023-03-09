@@ -1,0 +1,114 @@
+.style_registro {
+    font-family: sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+    height: 100vh;
+    font-family: Cambria, Cochin, Georgia,"Helvetica", Times, serif;
+    font-weight: 600;
+    background-color: #12A1DD;
+    
+  background-image: url(imagenes/fondo1.svg);
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    height: 75px;
+    width: 600px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    font-size: 30px;
+  }
+  
+  input[type="submit"] {
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    background: #01d28e;
+    border: 1px solid #01d28e;
+    color: #fff;
+    padding: 10px 20px;
+    height: 100px;
+    font-size: 40px;
+    aspect-ratio: 3 /1;
+  }
+  
+  input[type="submit"]:hover {
+    background: #6cf0c2;
+  }
+  
+  /* Botones */
+  .button-container {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    bottom: 100px;
+    right:0px;
+    width: 100px;
+  }
+
+  /*Cuadrado*/
+  .login-form {
+    background-color: #ffffffc7;
+    border: 1px solid #ffffffc7; 
+    border-radius: 1rem;
+    padding: 15px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); 
+    width: 90%;
+    max-width: 500px;
+  }
+  
+  .list-container {
+    display: flex;
+  }
+  
+  .error {
+    color: red;
+    font-size: 12px;
+  }
+  
+  .title {
+    font-size: 50px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+
+  .input-container1 {
+    display: flex;
+    position:relative;
+    left:100px;
+    top:44px;
+    flex-direction: column;
+    gap: 8px;
+    margin: 10px;
+  }
+
+  .input-container2 {
+    position:relative;
+    left:800px;
+    bottom:100px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 10px;
+  }
+
+  .form div {
+    float: left;
+    clear: none; 
+    position:relative;
+    left:240px;
+}
+
+  .Titulos {
+    font-size: 40px;
+  }
+
+  img{
+    position: fixed;
+    max-width: 5px;
+  }
+
+  

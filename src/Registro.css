@@ -1,110 +1,135 @@
+/* Importación de fuentes */
+@import url('https://fonts.googleapis.com/css2?family=Philosopher&display=swap');
+
+/* Contenedor principal */
 .style_registro {
-    font-family: sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 20px;
-    height: 100vh;
-    font-family: Cambria, Cochin, Georgia,"Helvetica", Times, serif;
-    font-weight: 600;
-    background-color: #12A1DD;
-    
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+  font-weight: 600;
   background-image: url(imagenes/fondo1.svg);
-  }
-  
-  input[type="text"],
-  input[type="password"] {
-    height: 75px;
-    width: 600px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    font-size: 30px;
-  }
-  
-  input[type="submit"] {
-    margin-top: 10px;
-    cursor: pointer;
-    font-size: 15px;
-    background: #01d28e;
-    border: 1px solid #01d28e;
-    color: #fff;
-    padding: 10px 20px;
-    height: 100px;
-    font-size: 40px;
-    aspect-ratio: 3 /1;
-  }
-  
-  input[type="submit"]:hover {
-    background: #6cf0c2;
-  }
-  
-  /* Botones */
-  .button-container {
-    display: flex;
-    justify-content: center;
-    position: relative;
-    bottom: 100px;
-    right:0px;
-    width: 100;
-  }
-
-  /*Cuadrado*/
-  .login-form {
-    background-color: #ffffff;
-    border: 1px solid #2D4052; 
-    border-radius: 1rem;
-    width: 1400px;
-    height: 700px;
-    padding: 40px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  }
-  
-  .list-container {
-    display: flex;
-  }
-  
-  .error {
-    color: red;
-    font-size: 12px;
-  }
-  
-  .title {
-    font-size: 50px;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
-  .input-container1 {
-    display: flex;
-    position:relative;
-    left:100px;
-    top:44px;
-    flex-direction: column;
-    gap: 8px;
-    margin: 10px;
-  }
-
-  .input-container2 {
-    position:relative;
-    left:800px;
-    bottom:100px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin: 10px;
-  }
-
-  .form div {
-    float: left;
-    clear: none; 
-    position:relative;
-    left:240px;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 
-  .Titulos {
-    font-size: 40px;
-  }
+/* Estilos para los inputs de texto y password */
+input[type="text"],
+input[type="password"] {
+  height: 40px;
+  width: 90%;
+  border: none;
+  border-bottom: 1px solid rgb(0, 0, 0);
+  font-size: 15px;
+  padding-left: 10px;
+  background: #ffffff00;
+}
 
+/* Estilos para el botón de submit */
+input[type="submit"] {
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  background: #2D4052;
+  border: 1px solid #2D4052;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 400px;
+}
 
+input[type="submit"]:hover {
+  background: #2d2e52;
+  border: 1px solid 	#2d2e52;
+}
 
-  
+/* Contenedor de los botones */
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 150px;
+}
+
+/* Estilos cuando los inputs están enfocados */
+input[type="text"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  border: none;
+  border-bottom: 2px solid rgb(0, 0, 0);
+}
+
+/* Cuadrado para el formulario */
+.login-form {
+  margin-top: 20%;
+  background-color: #ffffffc7;
+  border: 1px solid #ffffffc7; 
+  border-radius: 1rem;
+  padding: 15px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); 
+  width: 90%;
+  max-width: 500px;
+  align-items: center;
+}
+
+/* Contenedor de las listas */
+.list-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Estilos para los mensajes de error */
+.error {
+  color: red;
+  font-size: 20px;
+}
+
+/* Estilos para los títulos */
+.title {
+  font-size: 25px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #2d2e52;
+}
+
+.aParent div {
+  justify-content: center;
+  clear: none; 
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Contenedor de los inputs */
+.input-container1 {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 10px;
+  width: 100%;
+  max-width: 600px;
+  float:left;
+  width:45%;
+}
+
+.input-container2 {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 10px;
+  width: 100%;
+  max-width: 600px;
+  float:right;
+  width:45%;
+}
+
+img{
+  object-position: left center;
+  max-width:9%;
+}
+
+.Titulos {
+  font-size: 20px;
+}
+
