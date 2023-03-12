@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import ReactDOM from "react-dom";
-
 import "./Registro.css";
 import flecha from './imagenes/flecha.svg';
 
@@ -8,18 +6,6 @@ function Registro() {
   // React States
   const [errorMessages, setErrorMessages] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
-
-  // User Login info
-  const database = [
-    {
-      correo: "user1",
-      password: "pass1"
-    },
-    {
-      correo: "user2",
-      password: "pass2"
-    }
-  ];
 
   const errors = {
     uname: "Nombre de usuario inválido",
