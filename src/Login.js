@@ -1,126 +1,54 @@
-import React, { useState } from "react";
-import * as jose from "jose";
-import jwt_decode from "jwt-decode";
-import "./inicio_sesion.css";
+import React from "react";
+import {Link} from "react-router-dom";
 
 export default function Login() {
-  // Estados de error del mensaje de loggin
-  const [errorMessages, setErrorMessages] = useState({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Mensajes de errores
-  const errors = {
-    uname: "Nombre de usuario inválido",
-    pass: "Contraseña incorrecta",
-  };
-
-  const handleSubmit = (event) => {
-    //Prevent page reload
-    event.preventDefault();
-
-    const { uname, pass } = document.forms[0];
-
-    fetch(process.env.REACT_APP_URL_BACKEND + "/login", {
-      method: "POST",
-      headers: {
-        accept: "application/json",
-      },
-      body: new URLSearchParams({
-        grant_type: "",
-        username: uname.value,
-        password: pass.value,
-        scope: "",
-        client_id: "",
-        client_secret: "",
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        if (data.detail === "Incorrect password") {
-          // login failed
-          console.log("Incorrect password");
-          setErrorMessages({ name: "pass", message: errors.pass });
-        } else if (data.detail === "Incorrect email") {
-          console.log("Incorrect email");
-          setErrorMessages({ name: "uname", message: errors.uname });
-        } else {
-          // login success
-          console.log("login success");
-          console.log(data.access_token);
-
-          //TODO: asegurarse de que el token tiene que venir del backend
-
-          const decoded = jwt_decode(data.access_token);
-          console.log(decoded);
-          console.groupCollapsed(decoded.id);
-          console.groupCollapsed(decoded.email);
-          console.groupCollapsed(decoded.username);
-          setIsSubmitted(true);
-        }
-      });
-  };
-
-  // Mostrar los mensajes de error
-  const renderErrorMessage = (name) =>
-    name === errorMessages.name && (
-      <div className="error">{errorMessages.message}</div>
-    );
-
-  // JSX code for login form
-  const renderForm = (
-    <>
-      <div className="form">
-        <div className="title">Inicio de sesión</div>
-        <form onSubmit={handleSubmit}>
-          <div className="input-container">
-            <input type="text" name="uname" required placeholder="Correo" />
-            {renderErrorMessage("uname")}
-          </div>
-          <div className="input-container">
-            <input
-              type="password"
-              name="pass"
-              required
-              placeholder="Contraseña"
-            />
-            {renderErrorMessage("pass")}
-          </div>
-          <div className="Recuperar_password">
-            <a href="/" rel="noopener noreferrer">
-              ¿Has olvidado tu contraseña?{" "}
-            </a>
-          </div>
-          <div className="button-container">
-            <input type="submit" />
-          </div>
-          <div className="Recuperar_password">
-            <a href="/Registro" rel="noopener noreferrer">
-              ¿Eres nuevo? Registrate
-            </a>
-          </div>
-        </form>
-      </div>
-    </>
-  );
-
-  // aqui mostramos lo que l apágina va a renderizar
   return (
-    <div className="Inicio_sesion">
-      <section>
-        <h2>
-          <span className="a">C</span>
-          <span className="a">A</span>
-          <span className="a">T</span>
-          <span className="a">A</span>
-          <span className="a">N</span>
-          <span className="a">I</span>
-          <span className="a">C</span>
-        </h2>
-      </section>
-      <div className="login-form">
-        {isSubmitted ? <div>User is successfully logged in</div> : renderForm}
-      </div>
+    <div className="h-screen w-screen flex flex-col items-center py-20 gap-y-8 imagenCustom">
+      <h2 className="text-4xl font-bold tracking-wide mb-4">
+        catanic
+      </h2>
+      <form className="flex flex-col justify-center items-center p-4 bg-white/75 max-w-sm w-full gap-y-2 rounded-xl shadow-xl">
+        <h3 className="text-2xl font-medium py-2">
+          Inicio de sesión
+        </h3>
+        <input 
+          id="email"
+          type="email" 
+          name="email" 
+          placeholder="Correo"
+          className="w-full border-b py-2 px-4 rounded-md" 
+          required
+        />
+        <input
+          id="password"
+          name="password"
+          type="password"
+          placeholder="Contraseña"
+          className="w-full border-b py-2 px-4 rounded-md" 
+          required
+        />
+        <Link 
+          to="/login" 
+          rel="noopener noreferrer"
+          className="w-full text-sm text-right py-2.5"
+        >
+          Recuperar Contraseña 
+        </Link>
+        <button 
+          type="submit"
+          className="w-full py-2 bg-indigo-600 text-white font-bold rounded-md"
+        >
+          Enviar
+        </button>
+      </form>
+      <Link 
+        to="/login" 
+        rel="noopener noreferrer"
+        className="text-sm text-center py-1.5"
+      >
+        ¿Eres nuevo? Registrate
+      </Link>
     </div>
   );
 }
