@@ -1,54 +1,104 @@
 import React from "react";
-import {Link} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function Login() {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      username: e.target.email.value,
+      password: e.target.password.value,
+    };
+
+    return new Promise((resolve, reject) => {
+      fetch(`${process.env.REACT_APP_URL_BACKEND}/login`, {
+        method: "POST", // hacemos una petición post
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams(data),
+      })
+        .then((res) => {
+          console.log(res.json());
+          if (res.ok && res.status === 200) {
+            resolve("Login successfully");
+          }
+          reject("Something happended while logging in");
+        })
+        .catch((err) => {
+          reject("Something happended while logging in");
+        });
+    });
+  };
 
   return (
-    <div className="h-screen w-screen flex flex-col items-center py-20 gap-y-8 imagenCustom">
-      <h2 className="text-4xl font-bold tracking-wide mb-4">
-        catanic
+    <div className="h-screen min-h-screen w-screen flex flex-col items-center py-10 gap-y-8 imagenCustom">
+      <h2 className="text-5xl font-bold mb-4">
+        <span className="a"> C </span>
+        <span className="a"> A </span>
+        <span className="a"> T </span>
+        <span className="a"> A </span>
+        <span className="a"> N </span>
+        <span className="a"> I </span>
+        <span className="a"> C </span>
       </h2>
-      <form className="flex flex-col justify-center items-center p-4 bg-white/75 max-w-sm w-full gap-y-2 rounded-xl shadow-xl">
-        <h3 className="text-2xl font-medium py-2">
+      <form
+        className="flex flex-col justify-center items-center p-4 bg-white/60 max-w-sm w-full gap-y-2 rounded-xl shadow-xl"
+        onSubmit={(e) => {
+          toast
+            .promise(handleSubmit(e), {
+              loading: "Logging in...",
+              success: "Login successfully",
+              error: "Something happended while logging in",
+            })
+            .then(() => navigate("/home"));
+        }}
+      >
+        <h3 className="text-2xl font-medium py-2 text-gray-600">
           Inicio de sesión
         </h3>
-        <input 
-          id="email"
-          type="email" 
-          name="email" 
-          placeholder="Correo"
-          className="w-full border-b py-2 px-4 rounded-md" 
-          required
-        />
-        <input
-          id="password"
-          name="password"
-          type="password"
-          placeholder="Contraseña"
-          className="w-full border-b py-2 px-4 rounded-md" 
-          required
-        />
-        <Link 
-          to="/login" 
+        <div className="flex flex-col gap-y-4 px-2 w-full">
+          <input
+            id="email"
+            type="email"
+            name="email"
+            placeholder="Correo"
+            className="w-full border border-transparent border-b-black/25 bg-transparent focus:outline-none focus:border-b-black"
+            required
+          />
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="Contraseña"
+            className="w-full border border-transparent border-b-black/25 bg-transparent focus:outline-none focus:border-b-black"
+            required
+          />
+        </div>
+        <Link
+          to="/login"
           rel="noopener noreferrer"
-          className="w-full text-sm text-right py-2.5"
+          className="w-full text-sm text-right py-2.5 text-cyan-900 decoration-cyan-900 underline underline-offset-2"
         >
-          Recuperar Contraseña 
+          Recuperar Contraseña
         </Link>
-        <button 
+        <button
           type="submit"
-          className="w-full py-2 bg-indigo-600 text-white font-bold rounded-md"
+          className="w-full py-2 bg-cyan-900 text-white font-bold rounded-full hover:bg-indigo-900 duration-300"
         >
           Enviar
         </button>
-      </form>
-      <Link 
-        to="/login" 
+        <Link
+        to="/registro"
         rel="noopener noreferrer"
-        className="text-sm text-center py-1.5"
+        className="text-sm text-center m-0 text-cyan-900 decoration-cyan-900 underline  underline-offset-2"
       >
         ¿Eres nuevo? Registrate
       </Link>
+      </form>
     </div>
   );
 }

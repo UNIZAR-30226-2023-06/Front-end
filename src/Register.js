@@ -20,22 +20,6 @@ function Registro() {
 
     var { uname, pass, corr, rpass } = document.forms[0];
 
-    // Find user login info
-    const userData = database.find((user) => user.correo === uname.value);
-
-    // Compare user info
-    if (userData) {
-      if (userData.password !== pass.value) {
-        // Invalid password
-        setErrorMessages({ name: "pass", message: errors.pass });
-      } else {
-        setIsSubmitted(true);
-      }
-    } else {
-      // correo not found
-      setErrorMessages({ name: "uname", message: errors.uname });
-    }
-
 
   };
 

@@ -1,12 +1,11 @@
 import React from 'react'
 import {Link} from "react-router-dom";
 
-export default function Home() {
+export default function PrivateHome() {
   return (
     <div className='w-screen h-screen flex flex-col justify-center items-center'>
-      <Link to="/login">Login</Link>
       <h1 className="p-3">
-        Hello world!
+        Hello world! esta es tu pantalla principal 
       </h1>
     </div>
   )
