@@ -1,85 +1,117 @@
-import React, { useState } from "react";
-import "./Registro.css";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import toast from "react-hot-toast";import "./style.css";
 import flecha from './imagenes/flecha.svg';
 
-function Registro() {
-  // React States
-  const [errorMessages, setErrorMessages] = useState({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
+export default function Registro(){
 
-  const errors = {
-    uname: "Nombre de usuario inválido",
-    pass: "Contraseña incorrecta"
-    // corr: "Correo no valido/ya en uso"
-    // rpass: "Contraseñas no son iguales"
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      name: e.target.name.value,
+      email: e.target.email.value,
+      password: e.target.password.value,
+    };
+    console.log(data);
+
+    return new Promise((resolve, reject) => {
+      fetch(`${process.env.REACT_APP_URL_BACKEND}/register`, {
+        method: "POST", // hacemos una petición post
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "accept": "application/json",
+        },
+        body: new URLSearchParams(data),
+      })
+        .then((res) => {
+          console.log(res.json());
+          if (res.ok && res.status === 200) {
+            resolve("Registed successfully");
+          }
+          reject("There was a problem with the registration");
+        })
+        .catch((err) => {
+          reject("There was a problem with the registration");
+        });
+    });
   };
-
-  const handleSubmit = (event) => {
-    //Prevent page reload
-    event.preventDefault();
-
-    var { uname, pass, corr, rpass } = document.forms[0];
-
-
-  };
-
-  // Generate JSX code for error message
-  const renderErrorMessage = (name) =>
-    name === errorMessages.name && (
-      <div className="error">{errorMessages.message}</div>
-    );
-
-  // JSX code for login form
-  const renderForm = (
-
-      <form onSubmit={handleSubmit}>
-      <div className="input-container1">
-          <input type="text" name="uname" required placeholder="Introduce nombre"/>
-          {renderErrorMessage("uname")}
-        </div>
-
-        <div className="input-container1">
-          <input type="text" name="uname" required placeholder="Introduce correo" />
-          {renderErrorMessage("uname")}
-        </div>
-
-        <div className="input-container2">
-          <input type="password" name="pass" required placeholder="Introduce contraseña" />
-          {renderErrorMessage("pass")}
-        </div>
-
-        <div className="input-container2">
-          <input type="password" name="pass" required placeholder="Repetir contraseña" />
-          {renderErrorMessage("pass")}
-        </div>
-
-        </form>
-
-  );
-
-  const boton = (
-    <div className="button-container">
-    <input type="submit" />
-    </div>
   
-  )
-
-
   return (
-    <div className="style_registro">
-      <div className="login-form">
-        <div>
-        <img 
-        // const[enabled, setEnabled] = useState(true);
-        // onClick = {() => setEnabled(!enabled)}
-        src={flecha} /> 
-        <div className="title">Creacion de cuenta</div>
-        </div>
-        {isSubmitted ? <div>User is successfully logged in</div> : renderForm}
-        {isSubmitted ? <div>User is successfully logged in</div> : boton}
+  <div className="h-screen min-h-screen w-screen flex flex-col justify-center items-center py-10 gap-y-8 imagenCustom">
+  <form
+    className="flex flex-col justify-center items-center p-4 bg-white/60 max-w-md w-full gap-y-2 rounded-xl shadow-xl "
+    onSubmit={(e) => {
+      toast
+        .promise(handleSubmit(e), {
+          loading: "Logging in...",
+          success: "Login successfully",
+          error: "There was a problem with the registration",
+        })
+        .then(() => navigate("/login"));
+    }}
+  >
+    <div className="flex justify-between items-center px-2 w-full">
+      <img
+        src="http://localhost:3000/flechaMenu.png"
+        className={`relative cursor-pointer  
+        right-3 top-90 w-7 p-1 border-cyan-900 ${
+          !open
+        }`}
+        onClick={() => setOpen(!open)}
+      />
+      <div className="mx-auto max-w-xs">
+        <h3 className="text-center text-2xl mr-5 font-medium py-2 text-gray-600">
+          Registro
+        </h3>
       </div>
     </div>
-  );  
-}
 
-export default Registro;
+    <div className="flex flex-row gap-x-4 px-2 w-full">
+      <input
+        id="name"
+        type="name"
+        name="name"
+        placeholder="Introduce nombre"
+        className="w-full border border-transparent border-b-black/25 bg-transparent focus:outline-none focus:border-b-black h-12 text-lg"
+      />
+
+      <input
+        id="email"
+        type="email"
+        name="email"
+        placeholder="Introduce correo"
+        className="w-full border border-transparent border-b-black/25 bg-transparent focus:outline-none focus:border-b-black h-12 text-lg"
+      />
+    </div>
+
+    <div className="flex flex-row gap-x-4 px-2 w-full">
+      <input
+        id="password"
+        type="password"
+        name="password"
+        placeholder="Introduce contraseña"
+        className="w-full border border-transparent border-b-black/25 bg-transparent focus:outline-none focus:border-b-black h-12 text-lg"
+      />
+
+      <input
+        id="password2"
+        type="password"
+        name="password2"
+        placeholder="Repite la contraseña"
+        className="w-full border border-transparent border-b-black/25 bg-transparent focus:outline-none focus:border-b-black h-12 text-lg"
+      />
+    </div>
+    <button
+      type="submit"
+      className="w-full py-2 bg-cyan-900 text-white font-bold rounded-full hover:bg-indigo-900 duration-300"
+    >
+      Enviar
+    </button>
+  </form>
+</div>
+  )
+}
