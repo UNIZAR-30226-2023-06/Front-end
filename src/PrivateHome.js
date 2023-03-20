@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 export default function PrivateHome() {
-  
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
@@ -35,11 +34,11 @@ export default function PrivateHome() {
             src="http://localhost:3000/perfil1.avif"
             className={`mx-auto object-cover rounded-full h-28 w-28 mt-9 ${
               !open &&
-              "h-10 w-10 mx-auto object-cover rounded-full  mt-9 duration-300"
+              "h-8 w-8 mx-auto object-cover rounded-full  mt-9 duration-300"
             }`}
           />
           <h1
-            className={`text-white origin-center font-medium text-xl ml-16 duration-300 ${
+            className={`text-white origin-center content-center font-medium text-xl duration-300 ${
               !open && `scale-0`
             }`}
           >
@@ -47,12 +46,28 @@ export default function PrivateHome() {
           </h1>
         </a>
         <ul>
-          <button as={Link} to="/login"
-          variant={Link}
-            className="w-full py-2 mt-8 bg-cyan-900 text-white font-bold rounded-full hover:bg-indigo-900 duration-300"
+          <a href="http://localhost:3000/amigos"
+          className="flex items-center"
           >
-            Editar Perfil
-          </button>
+            {/* imagen editar perfil*/}
+            <img
+              alt="profil"
+              src="http://localhost:3000/editProfile.png"
+              className={`mx-auto object-cover h-8 w-8 mt-9 ${
+                !open &&
+                "h-8 w-8  object-cover mt-9 duration-300"
+              }`}
+            ></img>
+            <h1
+              href="/login"
+              variant={Link}
+              className={`text-white origin-center content-center font-medium text-xl duration-300 ${
+                !open && `scale-0`
+              }`}
+            >
+              Editar Perfil
+            </h1>
+          </a>
           <button
             type="submit"
             className="w-full py-2 mt-2 bg-cyan-900 text-white font-bold rounded-full hover:bg-indigo-900 duration-300"

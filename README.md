@@ -68,3 +68,12 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+### instrucciones para instalar fronted
+### instalar react 18.2.0"
+### node 
+### react-router-dom": 6.8.2
+### "tailwindcss": 3.2.7 
+### npm install -D tailwind
+### npx tailwind init
+### npm install react-hot-toast
