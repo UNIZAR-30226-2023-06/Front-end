@@ -1,0 +1,67 @@
+.estilo {
+  background-color: #5e89df;
+  min-height: 100vh;
+  display: flex;
+}
+
+.icono_retroceso {
+  width: 80px;
+  height: 80px;
+  margin: 50px;
+}
+
+.input_text {
+  width: 50%;
+  height: 60px;
+  margin: 80px;
+  border: 0px;
+  border-radius: 30px;
+  padding: 0px;
+
+  font-size: 20px;
+
+  position: fixed;
+  top: 10%;
+  left: 10%;
+}
+
+.boton {
+  width: 10%;
+  height: 60px;
+  margin: 80px;
+  border: 0px;
+  border-radius: 30px;
+  padding: 10px;
+
+  font-size: 20px;
+
+  position: absolute;
+  top: 10%;
+  left: 65%;
+
+  background-color: #1c2c4d;
+  color: white;
+}
+
+.lista {
+  list-style: none; /* quita los puntos de la lista */
+  padding: 0; /* quita los márgenes de la lista */
+  overflow: hidden;
+  overflow-y: scroll;
+
+  background-color: #1c2c4d;
+
+  width: 65%;
+  height: 55%;
+
+  position: absolute;
+  top: 30%;
+  left: 14.4%;
+}
+
+.rectangulo {
+  width: 200px; /* ancho del rectángulo */
+  height: 100px; /* alto del rectángulo */
+  border: 2px solid black; /* borde del rectángulo */
+  margin: 10px; /* espacio entre rectángulos */
+}
