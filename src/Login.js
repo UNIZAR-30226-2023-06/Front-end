@@ -26,10 +26,10 @@ export default function Login() {
           if (res.ok && res.status === 200) {
             resolve("Login successfully");
           }
-          reject("Something happended while logging in");
+          reject("Fallo en la recuperacion de la contraseña");
         })
         .catch((err) => {
-          reject("Something happended while logging in");
+          reject("Fallo en la recuperacion de la contraseña");
         });
     });
   };
@@ -50,9 +50,9 @@ export default function Login() {
         onSubmit={(e) => {
           toast
             .promise(handleSubmit(e), {
-              loading: "Logging in...",
-              success: "Login successfully",
-              error: "Something happended while logging in",
+              loading: "Enviando correo...",
+              success: "Correo enviado correctamente",
+              error: "Fallo en la recuperacion de la contraseña",
             })
             .then(() => navigate("/home"));
         }}
@@ -79,7 +79,7 @@ export default function Login() {
           />
         </div>
         <Link
-          to="/login"
+          to="/RecPassword"
           rel="noopener noreferrer"
           className="w-full text-sm text-right py-2.5 text-cyan-900 decoration-cyan-900 underline underline-offset-2"
         >

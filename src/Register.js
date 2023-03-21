@@ -43,7 +43,7 @@ export default function Registro(){
   return (
   <div className="h-screen min-h-screen w-screen flex flex-col justify-center items-center py-10 gap-y-8 imagenCustom">
   <form
-    className="flex flex-col justify-center items-center p-4 bg-white/60 max-w-md w-full gap-y-2 rounded-xl shadow-xl "
+    className="flex flex-col justify-center items-center p-4 bg-white/60 max-w-md w-full gap-y-2 rounded-xl shadow-xl mb-20"
     onSubmit={(e) => {
       toast
         .promise(handleSubmit(e), {
@@ -55,6 +55,7 @@ export default function Registro(){
     }}
   >
     <div className="flex justify-between items-center px-2 w-full">
+        <a href="/login">
       <img
         src="http://localhost:3000/flechaMenu.png"
         className={`relative cursor-pointer  
@@ -63,6 +64,8 @@ export default function Registro(){
         }`}
         onClick={() => setOpen(!open)}
       />
+    </a>
+
       <div className="mx-auto max-w-xs">
         <h3 className="text-center text-2xl mr-5 font-medium py-2 text-gray-600">
           Registro
