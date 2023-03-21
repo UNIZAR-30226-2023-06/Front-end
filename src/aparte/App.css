@@ -49,8 +49,6 @@
   overflow: hidden;
   overflow-y: scroll;
 
-  background-color: #1c2c4d;
-
   width: 65%;
   height: 55%;
 
@@ -59,9 +57,86 @@
   left: 14.4%;
 }
 
-.rectangulo {
-  width: 200px; /* ancho del rectángulo */
-  height: 100px; /* alto del rectángulo */
-  border: 2px solid black; /* borde del rectángulo */
-  margin: 10px; /* espacio entre rectángulos */
+.resultado_busqueda {
+  background-color: #263d6b;
+  border-radius: 15px;
+
+  width: 1160px;
+  height: 100px;
+
+  margin: 20px;
+  
+  right: 20px;
+
+  /* Cosas sobre el texto */
+  color: white;
+  font-size: 40px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+
+  position:relative;
+
+  text-decoration: none;
+}
+
+.icono_jugadores {
+  width: 60px;
+  height: 60px;
+  margin: 70px;
+}
+
+.icono_ladron {
+  width: 60px;
+  height: 60px;
+  margin: 70px;
+}
+
+.icono_puntos_victoria {
+  width: 60px;
+  height: 60px;
+  margin: 70px;
+}
+
+.icono_tiempo_turno {
+  width: 60px;
+  height: 60px;
+  margin: 70px;
+}
+
+.num_jugadores {
+  position: absolute;
+  top: -25%;
+  left: 37%;
+
+  color: white;
+  padding: 10px;
+}
+
+.ladron {
+  position: absolute;
+  top: -25%;
+  left: 54%;
+
+  color: white;
+  padding: 10px;
+}
+
+.puntos_victoria {
+  position: absolute;
+  top: -25%;
+  left: 70%;
+
+  color: white;
+  padding: 10px;
+}
+
+.tiempo_turno {
+  position: absolute;
+  top: -25%;
+  left: 88%;
+
+  color: white;
+  padding: 10px;
 }

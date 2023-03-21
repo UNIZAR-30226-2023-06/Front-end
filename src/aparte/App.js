@@ -1,7 +1,13 @@
 import React from 'react';
 
 import flecha_retroceso from './assets/flecha_retroceso.png';
+import ladron from './assets/ladron.png';
+import jugadores from './assets/jugadores.png';
+import puntos_victoria from './assets/puntos_victoria.png';
+import tiempo_turno from './assets/tiempo_turno.png';
+
 import { useNavigate } from 'react-router-dom';
+
 
 import './App.css';
 
@@ -21,6 +27,92 @@ function App() {
     return result.partida.toLowerCase().includes(searchTerm.toLowerCase());
   });*/
 
+  // Aquí los resultados de la búsqueda, estos se sustituirán por los resultados
+  // de la búsqueda cuando se implemente la búsqueda llamando al backend
+  const results = [
+    {
+      nombre: "Nombre_1",
+      id: "0001",
+      ladron: "Sí",
+      num_jugadores: 4,
+      puntos_victoria: 10,
+      tiempo_turno: 60
+    },
+    {
+      nombre: "Nombre_2",
+      id: "0002",
+      ladron: "No",
+      num_jugadores: 5,
+      puntos_victoria: 15,
+      tiempo_turno: 90
+    },
+    {
+      nombre: "Nombre_3",
+      id: "0003",
+      ladron: "Sí",
+      num_jugadores: 6,
+      puntos_victoria: 20,
+      tiempo_turno: 120
+    },
+    {
+      nombre: "Nombre_4",
+      id: "0004",
+      ladron: "No",
+      num_jugadores: 7,
+      puntos_victoria: 25,
+      tiempo_turno: 150
+    },
+    {
+      nombre: "Nombre_5",
+      id: "0005",
+      ladron: "Sí",
+      num_jugadores: 8,
+      puntos_victoria: 30,
+      tiempo_turno: 180
+    },
+    {
+      nombre: "Nombre_6",
+      id: "0006",
+      ladron: "No",
+      num_jugadores: 9,
+      puntos_victoria: 35,
+      tiempo_turno: 210
+    },
+    {
+      nombre: "Nombre_7",
+      id: "0007",
+      ladron: "Sí",
+      num_jugadores: 10,
+      puntos_victoria: 40,
+      tiempo_turno: 240
+    }
+  ];
+
+  // Un lista de resultados
+  const resultados = results.map((index) => (
+    <a className="resultado_busqueda" href={`https://www.ejemplo.com/${index.id}`}>
+      <code>
+        {index.nombre}#{index.id}
+      </code>
+      <img src={jugadores} className="icono_jugadores" alt="icono_jugadores"/>
+      <img src={ladron} className="icono_ladron" alt="icono_ladron"/>
+      <img src={puntos_victoria} className="icono_puntos_victoria" alt="icono_puntos_victoria"/>
+      <img src={tiempo_turno} className="icono_tiempo_turno" alt="icono_tiempo_turno"/>
+      <p className="num_jugadores">
+        {index.num_jugadores}
+      </p>
+      <p className="tiempo_turno">
+        {index.tiempo_turno}
+      </p>
+      <p className="puntos_victoria">
+        {index.puntos_victoria}
+      </p>
+      <p className="ladron">
+        {index.ladron}
+      </p>
+    </a>
+  ));
+
   return (
     <div className="estilo">
       {/* Flecha de retroceso */}
@@ -37,12 +129,7 @@ function App() {
         {/*filteredResults.map((result) => (
           <li key={result.id}>{result.name}</li>
           ))*/}
-        <li className="resultado">
-          <button type="button" id="search-button">Buscar</button>
-        </li>
-        <li class="resultado">Resultado 2</li>
-        <li class="resultado">Resultado 3</li>
-        <li class="resultado">Resultado 4</li>
+        {resultados}
       </ul>
 
     </div>
