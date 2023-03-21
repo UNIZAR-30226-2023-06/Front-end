@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 export default function Login() {
   const navigate = useNavigate();
-  var errMessage;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -21,19 +21,17 @@ export default function Login() {
         },
         body: new URLSearchParams(data),
       })
-        .then((res) => res.json())
-        .then(data =>{
-          if (data.detail === "Incorrect password") {
-            errMessage = "Contraseña incorrecta";
-            reject(errMessage);
-          } else if (data.detail === "Incorrect email") {
-            errMessage = "Correo incorrecto";
-            reject(errMessage);
-          } else if (data.detail === "Logged in successfully") {
-            resolve("Logged in successfully");
+        .then((res) => {
+          console.log(res.json());
+          if (res.ok && res.status === 200) {
+            resolve("Login successfully");
           }
-        }
-    )});
+          reject("Fallo en la recuperacion de la contraseña");
+        })
+        .catch((err) => {
+          reject("Fallo en la recuperacion de la contraseña");
+        });
+    });
   };
 
   return (
@@ -54,7 +52,7 @@ export default function Login() {
             .promise(handleSubmit(e), {
               loading: "Enviando correo...",
               success: "Correo enviado correctamente",
-              error: errMessage,
+              error: "Fallo en la recuperacion de la contraseña",
             })
             .then(() => navigate("/home"));
         }}
