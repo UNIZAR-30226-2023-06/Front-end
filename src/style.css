@@ -85,6 +85,7 @@ h2 span:nth-of-type(7) {
     opacity: 0;
     filter: blur(20px);
   }
+
   to {
     opacity: 1;
     filter: blur(0px);
@@ -138,8 +139,10 @@ h2 span:nth-of-type(7) {
 }
 
 .lista {
-  list-style: none; /* quita los puntos de la lista */
-  padding: 0; /* quita los márgenes de la lista */
+  list-style: none;
+  /* quita los puntos de la lista */
+  padding: 0;
+  /* quita los márgenes de la lista */
   overflow: hidden;
   overflow-y: scroll;
 
@@ -159,7 +162,7 @@ h2 span:nth-of-type(7) {
   height: 100px;
 
   margin: 20px;
-  
+
   right: 20px;
 
   /* Cosas sobre el texto */
@@ -170,7 +173,7 @@ h2 span:nth-of-type(7) {
   align-items: center;
   padding-left: 20px;
 
-  position:relative;
+  position: relative;
 
   text-decoration: none;
 }
@@ -233,4 +236,225 @@ h2 span:nth-of-type(7) {
 
   color: white;
   padding: 10px;
+}
+
+.jugador_1 {
+  background-color: #e9d209;
+  border-radius: 15px;
+
+  width: 20%;
+  height: 100px;
+
+  margin: 20px;
+
+  left: 25%;
+
+  top: 20%;
+
+  /* Cosas sobre el texto */
+  font-size: 40px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+
+  position: absolute;
+
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.jugador_2 {
+  background-color: #3dd456;
+  border-radius: 15px;
+
+  width: 20%;
+  height: 100px;
+
+  margin: 20px;
+
+  left: 55%;
+
+  top: 20%;
+
+  /* Cosas sobre el texto */
+  font-size: 40px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+
+  position: absolute;
+
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.jugador_3 {
+  background-color: #e9091c;
+  border-radius: 15px;
+
+  width: 20%;
+  height: 100px;
+
+  margin: 20px;
+
+  left: 25%;
+
+  top: 40%;
+
+  /* Cosas sobre el texto */
+  font-size: 40px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+
+  position: absolute;
+
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.jugador_4 {
+  background-color: #e4e6e4;
+  border-radius: 15px;
+
+  width: 20%;
+  height: 100px;
+
+  margin: 20px;
+
+  left: 55%;
+
+  top: 40%;
+
+  /* Cosas sobre el texto */
+  font-size: 40px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+
+  position: absolute;
+
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.icono_jugador {
+  width: 40px;
+  height: width;
+
+  margin: 30px;
+}
+
+.menu_superior {
+  background-color: #1c2c4d;
+
+  width: 100%;
+  height: 100px;
+
+  position: fixed;
+}
+
+.contador_tiempo {
+  background-color: #172135;
+
+  top: 100px;
+
+  width: 100%;
+  height: 20px;
+
+  position: fixed;
+}
+
+.tiempo {
+  background-color: #6b0006;
+
+  top: 100px;
+
+  width: 30%;
+  height: 20px;
+
+  position: fixed;
+}
+
+.superior_jugador_1 {
+  background-color: #e9d209;
+  border-radius: 30px;
+
+  width: 20%;
+  height: 60px;
+
+  left: 5%;
+
+  top: 20%;
+
+  /* Cosas sobre el texto */
+  font-size: 40px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+
+  position: absolute;
+
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.superior_jugador_2 {
+  background-color: #29e959;
+  border-radius: 30px;
+
+  width: 20%;
+  height: 60px;
+
+  left: 40%;
+
+  top: 20%;
+
+  /* Cosas sobre el texto */
+  font-size: 40px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+
+  position: absolute;
+
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.superior_jugador_3 {
+  background-color: #e92929;
+  border-radius: 30px;
+
+  width: 20%;
+  height: 60px;
+
+  right: 5%;
+
+  top: 20%;
+
+  /* Cosas sobre el texto */
+  font-size: 40px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+
+  position: absolute;
+
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.icono_jugador_superior {
+  width: 40px;
+  height: width;
+
+  margin: 20px;
 }

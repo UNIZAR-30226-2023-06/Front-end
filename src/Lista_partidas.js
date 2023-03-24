@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-function App() {
+function Sala_partida() {
 
   // Función para acceder a la historia de navegación
   const navigate = useNavigate();
@@ -127,4 +127,4 @@ function App() {
   );
 }
 
-export default App;
+export default Sala_partida;

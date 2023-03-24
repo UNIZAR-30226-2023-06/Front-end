@@ -8,6 +8,8 @@ import Registro from "./Register";
 import Amigos from "./Amigos";
 import RecPassword from "./recPassword";
 import Lista_partidas from "./Lista_partidas";
+import Sala_partida from "./Sala_partida";
+import Partida from "./Partida";
 
 export default function App() {
   return (
@@ -22,6 +24,8 @@ export default function App() {
           <Route exact path="/amigos" element={<Amigos/>} />
           <Route exact path="/RecPassword" element={<RecPassword/>} />
           <Route exact path="/Lista_partidas" element={<Lista_partidas/>} />
+          <Route exact path="/Sala_partida" element={<Sala_partida/>} />
+          <Route exact path="/Partida" element={<Partida/>} />
         </Routes>
       </Router>
     </>
