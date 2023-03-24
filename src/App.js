@@ -7,6 +7,7 @@ import Login from "./Login";
 import Registro from "./Register";
 import Amigos from "./Amigos";
 import RecPassword from "./recPassword";
+import Lista_partidas from "./Lista_partidas";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
           <Route exact path="/home" element={<PrivateHome/>} />
           <Route exact path="/amigos" element={<Amigos/>} />
           <Route exact path="/RecPassword" element={<RecPassword/>} />
+          <Route exact path="/Lista_partidas" element={<Lista_partidas/>} />
         </Routes>
       </Router>
     </>
