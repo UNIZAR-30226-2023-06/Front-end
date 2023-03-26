@@ -22,14 +22,15 @@ export default function Login() {
         body: new URLSearchParams(data),
       })
         .then((res) => {
+          console.log(data);
           console.log(res.json());
           if (res.ok && res.status === 200) {
             resolve("Login successfully");
           }
-          reject("Fallo en la recuperacion de la contraseña");
+          reject("Fallo en el inicio de sesion");
         })
         .catch((err) => {
-          reject("Fallo en la recuperacion de la contraseña");
+          reject("Fallo en el inicio de sesion");
         });
     });
   };
@@ -50,9 +51,9 @@ export default function Login() {
         onSubmit={(e) => {
           toast
             .promise(handleSubmit(e), {
-              loading: "Enviando correo...",
-              success: "Correo enviado correctamente",
-              error: "Fallo en la recuperacion de la contraseña",
+              loading: "Iniciando sesion...",
+              success: "Sesion iniciada correctamente",
+              error: "Fallo en el inicio de sesion",
             })
             .then(() => navigate("/home"));
         }}

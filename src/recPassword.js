@@ -32,7 +32,7 @@ export default function RecPassword(){
           if (res.ok && res.status === 200) {
             resolve("Registed successfully");
           }
-          reject("There was a problem with the registration");
+          reject(res.json());
         })
         .catch((err) => {
           reject("There was a problem with the registration");
@@ -48,8 +48,8 @@ export default function RecPassword(){
       toast
         .promise(handleSubmit(e), {
           loading: "Logging in...",
-          success: "Login successfully",
-          error: "There was a problem with the registration",
+          success: "Correo enviado correctamente",
+          error: "Fallo en la recuperacion de la contraseña",
         })
         .then(() => navigate("/login"));
     }}

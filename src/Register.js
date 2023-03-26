@@ -1,11 +1,15 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import toast from "react-hot-toast";import "./style.css";
-import flecha from './imagenes/flecha.svg';
+import toast from "react-hot-toast";
+import "./style.css";
+
+
+
 
 export default function Registro(){
-
+  const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const handleSubmit = async (e) => {
@@ -16,6 +20,12 @@ export default function Registro(){
       email: e.target.email.value,
       password: e.target.password.value,
     };
+
+    if (password !== password2) {
+      toast.error("Las contraseñas no coinciden");
+    } else {
+
+    }
     console.log(data);
 
     return new Promise((resolve, reject) => {
@@ -84,8 +94,8 @@ export default function Registro(){
 
       <input
         id="email"
-        type="email"
         name="email"
+        type="email"
         placeholder="Introduce correo"
         className="w-full border border-transparent border-b-black/25 bg-transparent focus:outline-none focus:border-b-black h-12 text-lg"
       />
@@ -94,9 +104,11 @@ export default function Registro(){
     <div className="flex flex-row gap-x-4 px-2 w-full">
       <input
         id="password"
-        type="password"
         name="password"
+        type="password"
         placeholder="Introduce contraseña"
+        onChange={(e) => setPassword(e.target.value)}
+        value={password}
         className="w-full border border-transparent border-b-black/25 bg-transparent focus:outline-none focus:border-b-black h-12 text-lg"
       />
 
@@ -105,6 +117,8 @@ export default function Registro(){
         type="password"
         name="password2"
         placeholder="Repite la contraseña"
+        onChange={(e) => setPassword2(e.target.value)}
+        value={password2}
         className="w-full border border-transparent border-b-black/25 bg-transparent focus:outline-none focus:border-b-black h-12 text-lg"
       />
     </div>
@@ -118,3 +132,5 @@ export default function Registro(){
 </div>
   )
 }
+
+
