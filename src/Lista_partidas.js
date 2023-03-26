@@ -1,17 +1,8 @@
 import React from 'react';
 
-import flecha_retroceso from './assets/flecha_retroceso.png';
-import ladron from './assets/ladron.png';
-import jugadores from './assets/jugadores.png';
-import puntos_victoria from './assets/puntos_victoria.png';
-import tiempo_turno from './assets/tiempo_turno.png';
-
 import { useNavigate } from 'react-router-dom';
 
-
-import './App.css';
-
-function App() {
+function Sala_partida() {
 
   // Función para acceder a la historia de navegación
   const navigate = useNavigate();
@@ -94,10 +85,10 @@ function App() {
       <code>
         {index.nombre}#{index.id}
       </code>
-      <img src={jugadores} className="icono_jugadores" alt="icono_jugadores"/>
-      <img src={ladron} className="icono_ladron" alt="icono_ladron"/>
-      <img src={puntos_victoria} className="icono_puntos_victoria" alt="icono_puntos_victoria"/>
-      <img src={tiempo_turno} className="icono_tiempo_turno" alt="icono_tiempo_turno"/>
+      <img src="http://localhost:3000/jugadores.png" className="icono_jugadores" alt="icono_jugadores"/>
+      <img src="http://localhost:3000/ladron.png" className="icono_ladron" alt="icono_ladron"/>
+      <img src="http://localhost:3000/puntos_victoria.png" className="icono_puntos_victoria" alt="icono_puntos_victoria"/>
+      <img src="http://localhost:3000/tiempo_turno.png" className="icono_tiempo_turno" alt="icono_tiempo_turno"/>
       <p className="num_jugadores">
         {index.num_jugadores}
       </p>
@@ -116,7 +107,7 @@ function App() {
   return (
     <div className="estilo">
       {/* Flecha de retroceso */}
-      <img src={flecha_retroceso} className="icono_retroceso" onClick={handleBack} alt="flecha_retroceso"/>
+      <img src="http://localhost:3000/flecha_retroceso.png" className="icono_retroceso" onClick={handleBack} alt="flecha_retroceso"/>
 
       {/* Caja de texto para filtrar los resultados */}
       <input type="text" id="search-box" placeholder="      Codigo partida" onChange={(e) => setSearchTerm(e.target.value)} className="input_text"/>
@@ -136,4 +127,4 @@ function App() {
   );
 }
 
-export default App;
+export default Sala_partida;
