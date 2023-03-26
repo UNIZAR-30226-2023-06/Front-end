@@ -1,18 +1,17 @@
 import React from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 export default function PrivateHome() {
-  const navigate = useNavigate();
   const [open, setOpen] = useState(true);
 
   return (
     // fondo
-    <div className="w-full h-full flex bg-teal-200">
+    <div className="w-full h-full flex imagenCustomPrivateHome">
       {/* sidebar */}
       <div
-        className={`${
+        className={` h-full opacity-95 ${
           open ? "w-72" : "w-20"
-        } duration-300 h-screen p-5 pt-8 bg-cyan-900 relative`}
+        } duration-300 h-screen p-5 pt-8 bg-slate-600 border border-solid border-cyan-900 relative`}
       >
         {/* flecha */}
         <img
@@ -30,7 +29,7 @@ export default function PrivateHome() {
             src="http://localhost:3000/perfil1.avif"
             className={`mx-auto object-cover rounded-full h-28 w-28 mt-9 ${
               !open &&
-              "h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
+              "h-9 w-9 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
             }`}
           />
           {/* nombre del usuario */}
@@ -45,7 +44,7 @@ export default function PrivateHome() {
         </div>
         <ul className="flex flex-col w-full items-center py-6 px-4 gap-2 ">
           <a
-            href="http://localhost:3000/amigos"
+            href="http://localhost:3000/amigosT"
             className="gap-3 mt-2 flex flex-grow"
           >
             {/* imagen amigos*/}
@@ -68,7 +67,7 @@ export default function PrivateHome() {
             </h1>
           </a>
           <a
-            href="http://localhost:3000/amigos"
+            href="http://localhost:3000/amigosT"
             className="gap-3 mt-2 flex flex-grow"
           >
             {/* imagen amigos*/}
@@ -90,6 +89,16 @@ export default function PrivateHome() {
               Amigos
             </h1>
           </a>
+          <div className="fixed bottom-10 rounded-lg flex">
+            <input
+              className="border border-gray-400 p-2 mr-2"
+              type="text"
+              placeholder="Escribe aquí"
+            />
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              Buscar
+            </button>
+          </div>
         </ul>
       </div>
       {/*cuerpo de la página*/}
@@ -101,17 +110,25 @@ export default function PrivateHome() {
         src="http://localhost:3000/carrito.png"
       />
 
-      <div className="felx flex-col gap-8 place-self-auto m-auto h-96 w-60">
+      <div className="felx flex-col gap-8 mx-auto my-auto  w-96">
         <button
-          className="mt-20 w-80 flex h-20 bg-amber-600 hover:bg-amber-800 text-white text-center font-bold px-24 pt-4 border-b-4 border-amber-900 hover:border-black/40 rounded-lg"
+          className="-mt-40 w-80 flex h-20 btn_private_home "
           onClick={() => {
             window.location.href = "http://localhost:3000/login";
           }}
         >
-          BUSCAR PARTIDA
+          CREAR PARTIDA CON AMIGOS
         </button>
         <button
-          className="mt-20 w-80 flex h-20 bg-amber-600 hover:bg-amber-800 text-white text-center font-bold px-24 pt-4 border-b-4 border-amber-900 hover:border-black/40 rounded-lg"
+          className="mt-20 w-80 flex h-20 btn_private_home "
+          onClick={() => {
+            window.location.href = "http://localhost:3000/login";
+          }}
+        >
+          CREAR PARTIDA CON AMIGOS
+        </button>
+        <button
+          className="mt-20 w-80 flex h-20 btn_private_home "
           onClick={() => {
             window.location.href = "http://localhost:3000/login";
           }}

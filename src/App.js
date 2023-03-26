@@ -5,7 +5,8 @@ import Home from "./Home";
 import PrivateHome from "./PrivateHome";
 import Login from "./Login";
 import Registro from "./Register";
-import Amigos from "./Amigos";
+import Amigos_todos from "./Amigos_todos";
+import Amigos_pendiente from "./Amigos_pendiente";
 import RecPassword from "./recPassword";
 import Lista_partidas from "./Lista_partidas";
 import Sala_partida from "./Sala_partida";
@@ -22,7 +23,8 @@ export default function App() {
           <Route exact path="/login" element={<Login />}/>
           <Route exact path="/registro" element={<Registro/>}/>
           <Route exact path="/home" element={<PrivateHome/>} />
-          <Route exact path="/amigos" element={<Amigos/>} />
+          <Route exact path="/amigosT" element={<Amigos_todos/>} />
+          <Route exact path="/amigosP" element={<Amigos_pendiente/>} />
           <Route exact path="/RecPassword" element={<RecPassword/>} />
           <Route exact path="/Lista_partidas" element={<Lista_partidas/>} />
           <Route exact path="/Sala_partida" element={<Sala_partida/>} />

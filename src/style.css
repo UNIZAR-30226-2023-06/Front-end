@@ -13,6 +13,15 @@
   background-repeat: no-repeat;
 }
 
+.imagenCustomPrivateHome{
+  width: 100vw;
+  height: 100vh;
+  background-image: url('imagenes/fondo1.svg');
+  background-size: cover;
+  background-position: absolute;
+  background-repeat: no-repeat;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -94,6 +103,27 @@ h2 span:nth-of-type(7) {
   }
 }
 
+/* botones hexagonales */
+
+.btn_private_home {
+  display:inline-block;
+  position: relative;
+  color: #fff;
+  font-weight: 500;
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 15px 50px;
+  text-align: center;
+  clip-path: polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%);
+  background-color: #161213;
+  background-image: radial-gradient(200% 70% at center 20%, rgba(48,44,45,1) -30%, rgba(50,46,47,1) 49%, rgba(22,18,19,1) 50%, rgba(22,18,19,1) 150%);
+  background-repeat: no-repeat;
+  transition: background-position-y ease-in-out 250ms;
+}
+
+.btn_private_home:hover {
+  background-position-y: -50px;
+}
 /****/
 .estilo {
   background-color: #5e89df;
@@ -140,6 +170,22 @@ h2 span:nth-of-type(7) {
   color: white;
 }
 
+.boton-dejar-de-seguir {
+  width: 13%;
+  margin-left: 10px;
+  margin-top: 1px;
+  border: 0px;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 20px;
+  position: absolute;
+  top: 10%;
+  left: 65%;
+
+  background-color: #1c2c4d;
+  color: white;
+}
+
 .lista {
   list-style: none;
   /* quita los puntos de la lista */
@@ -165,7 +211,7 @@ h2 span:nth-of-type(7) {
 
   margin: 20px;
 
-  right: 20px;
+  right: 10px;
 
   /* Cosas sobre el texto */
   color: white;
@@ -179,6 +225,7 @@ h2 span:nth-of-type(7) {
 
   text-decoration: none;
 }
+
 
 .icono_jugadores {
   width: 60px;
@@ -461,125 +508,3 @@ h2 span:nth-of-type(7) {
   margin: 20px;
 }
 
-/* TIENDA */
-
-.icono_dinero_tienda {
-  width: 80px;
-  height: 80px;
-  margin: 50px;
-
-  /* El icono está arriba a la derecha */
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-
-.dinero_tienda {
-  right: 200px;
-  top: 0;
-  margin: 45px;
-
-  /* Cosas sobre el texto */
-  font-size: 60px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  padding-left: 20px;
-
-  position: absolute;
-
-  text-decoration: none;
-  overflow: hidden;
-}
-
-.titulo_fotos_perfil_tienda {
-  font-size: 30px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  padding-left: 20px;
-
-  position: absolute;
-
-  text-decoration: none;
-  overflow: hidden;
-
-  top: 200px;
-  left: 50px;
-}
-
-.slider_fotos_perfil_tienda {
-  width: 80%;
-  height: 100%;
-  overflow: hidden;
-  position: absolute;
-  top: 270px;
-  left: 10%;
-  margin : 0;
-}
-
-.titulo_fotos_fichas_tienda{
-  font-size: 30px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  padding-left: 20px;
-
-  position: absolute;
-
-  text-decoration: none;
-  overflow: hidden;
-
-  top: 600px;
-  left: 50px;
-}
-
-.slider_fotos_fichas_tienda {
-  width: 80%;
-  height: 100%;
-  overflow: hidden;
-  position: absolute;
-  top: 670px;
-  left: 10%;
-  margin : 0;
-}
-
-.titulo_fotos_tablero_tienda{
-  font-size: 30px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  padding-left: 20px;
-
-  position: absolute;
-
-  text-decoration: none;
-  overflow: hidden;
-
-  top: 1000px;
-  left: 50px;
-}
-
-.slider_fotos_tablero_tienda {
-  width: 80%;
-  height: 100%;
-  overflow: hidden;
-  position: absolute;
-  top: 1070px;
-  left: 10%;
-  margin : 0;
-}
-
-.slide_tienda {
-  width: 150px;
-  height: 200px;
-
-  justify-content: center;
-  align-items: center;
-
-  text-align: center;
-
-  color:white;
-  font-size: 30px;
-  font-weight: bold;
-}
