@@ -44,7 +44,7 @@ export default function PrivateHome() {
         </div>
         <ul className="flex flex-col w-full items-center py-6 px-4 gap-2 ">
           <a
-            href="http://localhost:3000/amigos"
+            href="http://localhost:3000/amigosT"
             className="gap-3 mt-2 flex flex-grow"
           >
             {/* imagen amigos*/}
@@ -67,7 +67,7 @@ export default function PrivateHome() {
             </h1>
           </a>
           <a
-            href="http://localhost:3000/amigos"
+            href="http://localhost:3000/amigosT"
             className="gap-3 mt-2 flex flex-grow"
           >
             {/* imagen amigos*/}

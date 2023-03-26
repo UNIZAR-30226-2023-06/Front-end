@@ -168,6 +168,22 @@ h2 span:nth-of-type(7) {
   color: white;
 }
 
+.boton-dejar-de-seguir {
+  width: 13%;
+  margin-left: 10px;
+  margin-top: 1px;
+  border: 0px;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 20px;
+  position: absolute;
+  top: 10%;
+  left: 65%;
+
+  background-color: #1c2c4d;
+  color: white;
+}
+
 .lista {
   list-style: none;
   /* quita los puntos de la lista */
@@ -193,7 +209,7 @@ h2 span:nth-of-type(7) {
 
   margin: 20px;
 
-  right: 20px;
+  right: 10px;
 
   /* Cosas sobre el texto */
   color: white;
@@ -207,6 +223,7 @@ h2 span:nth-of-type(7) {
 
   text-decoration: none;
 }
+
 
 .icono_jugadores {
   width: 60px;
