@@ -10,6 +10,7 @@ import RecPassword from "./recPassword";
 import Lista_partidas from "./Lista_partidas";
 import Sala_partida from "./Sala_partida";
 import Partida from "./Partida";
+import Tienda from "./Tienda";
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
           <Route exact path="/Lista_partidas" element={<Lista_partidas/>} />
           <Route exact path="/Sala_partida" element={<Sala_partida/>} />
           <Route exact path="/Partida" element={<Partida/>} />
+          <Route exact path="/Tienda" element={<Tienda/>} />
         </Routes>
       </Router>
     </>

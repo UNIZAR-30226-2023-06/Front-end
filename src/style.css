@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "react-alice-carousel/lib/alice-carousel.css";
+
 .imagenCustom {
   width: 100vw;
   height: 100vh;
@@ -457,4 +459,127 @@ h2 span:nth-of-type(7) {
   height: width;
 
   margin: 20px;
+}
+
+/* TIENDA */
+
+.icono_dinero_tienda {
+  width: 80px;
+  height: 80px;
+  margin: 50px;
+
+  /* El icono está arriba a la derecha */
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.dinero_tienda {
+  right: 200px;
+  top: 0;
+  margin: 45px;
+
+  /* Cosas sobre el texto */
+  font-size: 60px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+
+  position: absolute;
+
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.titulo_fotos_perfil_tienda {
+  font-size: 30px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+
+  position: absolute;
+
+  text-decoration: none;
+  overflow: hidden;
+
+  top: 200px;
+  left: 50px;
+}
+
+.slider_fotos_perfil_tienda {
+  width: 80%;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  top: 270px;
+  left: 10%;
+  margin : 0;
+}
+
+.titulo_fotos_fichas_tienda{
+  font-size: 30px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+
+  position: absolute;
+
+  text-decoration: none;
+  overflow: hidden;
+
+  top: 600px;
+  left: 50px;
+}
+
+.slider_fotos_fichas_tienda {
+  width: 80%;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  top: 670px;
+  left: 10%;
+  margin : 0;
+}
+
+.titulo_fotos_tablero_tienda{
+  font-size: 30px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+
+  position: absolute;
+
+  text-decoration: none;
+  overflow: hidden;
+
+  top: 1000px;
+  left: 50px;
+}
+
+.slider_fotos_tablero_tienda {
+  width: 80%;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  top: 1070px;
+  left: 10%;
+  margin : 0;
+}
+
+.slide_tienda {
+  width: 150px;
+  height: 200px;
+
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+
+  color:white;
+  font-size: 30px;
+  font-weight: bold;
 }
