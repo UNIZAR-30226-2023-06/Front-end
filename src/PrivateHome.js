@@ -89,6 +89,16 @@ export default function PrivateHome() {
               Amigos
             </h1>
           </a>
+          <div className="fixed bottom-10 rounded-lg flex">
+            <input
+              className="border border-gray-400 p-2 mr-2"
+              type="text"
+              placeholder="Escribe aquí"
+            />
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              Buscar
+            </button>
+          </div>
         </ul>
       </div>
       {/*cuerpo de la página*/}
