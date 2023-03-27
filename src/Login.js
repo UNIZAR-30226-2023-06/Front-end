@@ -6,7 +6,7 @@ import { useCookies } from "react-cookie";
 export default function Login() {
   const navigate = useNavigate();
 
-  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,23 +25,18 @@ export default function Login() {
         body: new URLSearchParams(data),
       })
         .then((res) => {
-          console.log(data);
-          //console.log(res.json());
-          const probatina = res.json();
-          //const token = data.json();
-          console.log("aaa");
-          console.log(probatina);
-          console.log(probatina.Object);
-          
+          res.json().then((data) => {
+            // console.log(data);
+            // console.log(data.access_token);
+
+            // path: "/" para que la cookie sea visible en todas las páginas
+            // data.access_token lo que añadimos a las cookies
+            // token -> variable de las cookies definidas anteriormente a la que asignamos el valor
+            setCookie("token", data.access_token, { path: "/" });
+          });
+
           if (res.ok && res.status === 200) {
             resolve("Login successfully");
-
-            // Guardamos en las cookies el token de seguridad
-            // Obtengo el token de seguridad
-            // const token = res.headers.get('access_token');
-
-            //console.log(probatina.access_token)
-            // setCookie("user", data, { path: "/" });
           }
           reject("Fallo en el inicio de sesion");
         })

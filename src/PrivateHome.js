@@ -8,10 +8,11 @@ export default function PrivateHome() {
   
   //const token = cookies.get("token");
 
-  console.log("tigre");
-  //console.log(Cookies.get("token"));
-
   const [open, setOpen] = useState(true);
+  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+
+  // 
+  // console.log(cookies.token);
 
   return (
     // fondo
