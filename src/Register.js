@@ -24,35 +24,32 @@ export default function Registro() {
     if (password !== password2) {
       toast.error("Las contraseñas no coinciden");
     } else {
-      return new Promise((resolve, reject) => {
-        fetch(url, {
+      try {
+        const response = await fetch(url, {
           method: "POST",
           headers: {
             accept: "application/json",
             "Content-Type": "application/x-www-form-urlencoded",
           },
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data); // Ver respuesta en la consola
-            if ("detail" in data && data.detail === "User created") {
-              resolve("Registered successfully");
-            } else if (
-              "detail" in data &&
-              data.detail === "Email already exists"
-            ) {
-              reject("Email already exists");
-            } else {
-              reject("There was a problem with the registration");
-            }
-          })
-          .catch((err) => {
-            console.log(err); // Ver error en la consola
-            reject("There was a problem with the registration");
-          });
-      });
+        });
+        const data = await response.json();
+        console.log(data); // Ver respuesta en la consola
+        if ("detail" in data && data.detail === "User created") {
+          toast.success("Registrado con éxito");
+          navigate("/"); // redirigir a la página de inicio
+        } else if ("detail" in data && data.detail === "Email already exists") {
+          toast.error("El correo electrónico ya existe");
+        } else {
+          toast.error("Hubo un problema con el registro");
+        }
+      } catch (error) {
+        console.log(error); // Ver error en la consola
+        toast.error("Hubo un problema con el registro");
+      }
     }
-  };
+  }
+    
+    
   
 
   return (

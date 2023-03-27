@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import { useNavigate } from 'react-router-dom';
 
-function Sala_partida() {
+function Amigos_todos() {
 
   // Función para acceder a la historia de navegación
   const navigate = useNavigate();
@@ -84,10 +84,12 @@ function Sala_partida() {
     </a>
   ));
 
+  
+
   return (
       
 <div className="h-screen min-h-screen w-screen flex flex-col justify-center items-center py-10 gap-y-8 imagenCustom">
-  <div className="bg-blue-500 rounded-lg p-4 inline-flex flex-col items-center h-4/5">
+  <div className="bg-cyan-900/60 rounded-lg p-4 inline-flex flex-col items-center h-4/5">
     <div className="flex items-center my-4">
 
     <a href="/home">
@@ -120,7 +122,7 @@ function Sala_partida() {
 
 
     {/* Lista de resultados */}
-    <ul className="bg-white/60 w-full rounded-xl shadow-xl mb-20 flex-col justify-center items-center p-4 max-h-98 overflow-y-scroll">
+    <ul className="opacity-95 bg-cyan-900 w-full rounded-xl shadow-xl mb-20 flex-col justify-center items-center p-4 max-h-98 overflow-y-scroll">
       {/*filteredResults.map((result) => (
         <li key={result.id}>{result.name}</li>
         ))*/}
@@ -132,4 +134,4 @@ function Sala_partida() {
   );
 }
 
-export default Sala_partida;
+export default Amigos_todos;
