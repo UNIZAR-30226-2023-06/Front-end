@@ -508,7 +508,7 @@ h2 span:nth-of-type(7) {
   margin: 20px;
 }
 
-/* TIENDA */
+/*********************************** TIENDA ***********************************/
 
 .icono_dinero_tienda {
   width: 80px;
@@ -629,4 +629,56 @@ h2 span:nth-of-type(7) {
   color:white;
   font-size: 30px;
   font-weight: bold;
+}
+
+.modal_tienda {
+  font-size: 12px;
+}
+
+.modal_tienda > .header {
+  width: 100%;
+  border-bottom: 1px solid gray;
+  font-size: 18px;
+  text-align: center;
+  padding: 20px;
+}
+
+.modal_tienda > .content {
+  width: 100%;
+  padding: 10px 5px;
+}
+
+.modal_tienda > .close {
+  cursor: pointer;
+  position: absolute;
+  display: block;
+  padding: 2px 5px;
+  line-height: 20px;
+  right: -10px;
+  top: -10px;
+  font-size: 24px;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #cfcece;
+}
+
+.boton_comprar_tienda {
+  width: 40%;
+  height: 60px;
+  background-color: #172135;
+  border-radius: 30px;
+
+  text-align: center;
+
+  /* Cosas sobre el texto */
+  color: white;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  padding: 5%;
+
+  position: absolute;
+
+  text-decoration: none;
+  overflow: hidden;
 }
