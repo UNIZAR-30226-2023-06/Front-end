@@ -8,18 +8,48 @@ import 'reactjs-popup/dist/index.css';
 
 import { useNavigate } from 'react-router-dom';
 
+// 1-- Importamos useCookies y jwt_decode
+import { useCookies } from "react-cookie";
+import jwt_decode from "jwt-decode";
+
 function Tienda() {
+    const [dinero, set_dinero] = React.useState(null);
 
-    // Función para acceder a la historia de navegación
-    const navigate = useNavigate();
+    // 2-- Creamos la estructura de las cookies
+    const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
-    // Función para volver a la página anterior
-    const handleBack = () => {
-        navigate(-1);
-    };
+    // 3-- Obtenemos el token de las cookies
+    const Token = cookies.token;
+
+    // 4-- Obtenemos la información del token
+    const json_token = jwt_decode(Token);
+    console.log(json_token);
+
+    // 5-- Hacemos el fetch para obtener la información del usuario
+    fetch(`${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(json_token.id)}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": `Bearer ${Token}`
+        }
+    })
+        .then((res) => {
+            res.json().then((data) => {
+                
+                console.log(data.coins);
+                console.log(res);
+                console.log(data);
+                info.dinero = data.coins;
+                console.log(info.dinero);
+
+                // 6-- Actualizamos el estado de cosas
+                set_dinero(data.coins)
+              });
+        })
+
 
     // Cantidad del dinero obtenida del backend
-    const info = {
+    var info = {
         dinero: 50,
         iconos_desbloqueados: [
             true,
@@ -33,6 +63,14 @@ function Tienda() {
             false
         ]
     }
+
+    // Función para acceder a la historia de navegación
+    const navigate = useNavigate();
+
+    // Función para volver a la página anterior
+    const handleBack = () => {
+        navigate(-1);
+    };
 
     const handleDragStart = (e) => e.preventDefault();
 
@@ -49,24 +87,12 @@ function Tienda() {
         5: { items: 6 },
     };
 
-    const fotos_perfil = [
-        "http://localhost:3000/perfil1.avif",
-        "http://localhost:3000/perfil1.avif",
-        "http://localhost:3000/perfil1.avif",
-        "http://localhost:3000/perfil1.avif",
-        "http://localhost:3000/perfil1.avif",
-        "http://localhost:3000/perfil1.avif",
-        "http://localhost:3000/perfil1.avif",
-        "http://localhost:3000/perfil1.avif",
-        "http://localhost:3000/perfil1.avif"
-    ]
-
     function comprar_foto_perfil(indice_foto) {
         info.dinero -= 10;
         info.iconos_desbloqueados[indice_foto] = true;
     }
 
-    const items_fotos_perfil = fotos_perfil.map((foto, i) => (
+    const items_fotos_perfil = info.iconos_desbloqueados.map((foto, i) => (
         <div className="slide_tienda">
             {
                 <Popup trigger={
@@ -77,7 +103,7 @@ function Tienda() {
                         )
                         :
                         (
-                            <img src="http://localhost:3000/perfil1.avif" onDragStart={handleDragStart} role="presentation"
+                            <img src={"http://localhost:3000/fotos_perfil/personaje" + i + ".png"} onDragStart={handleDragStart} role="presentation"
                                 className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle" />
                         )
                 } modal nested
@@ -99,7 +125,7 @@ function Tienda() {
                             </button>
 
                             {/* Imagen del objeto */}
-                            <img src="http://localhost:3000/perfil1.avif" onDragStart={handleDragStart} role="presentation"
+                            <img src={"http://localhost:3000/fotos_perfil/personaje" + i + ".png"} onDragStart={handleDragStart} role="presentation"
                                 className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle" />
 
                             {/* Texto de compra en el centro */}
@@ -158,7 +184,7 @@ function Tienda() {
         "http://localhost:3000/perfil1.avif"
     ]
 
-    const items_fotos_fichas = fotos_perfil.map((foto, i) => (
+    const items_fotos_fichas = info.iconos_desbloqueados.map((foto, i) => (
         <div className="slide_tienda">
             {/* Imagen del objeto */}
             <img src="http://localhost:3000/perfil1.avif" onDragStart={handleDragStart} role="presentation"
@@ -178,7 +204,9 @@ function Tienda() {
 
             {/* Icono del dinero con el dinero */}
             <img src="http://localhost:3000/dinero.png" className="icono_dinero_tienda" alt="icono_dinero" />
-            <a className="dinero_tienda">{info.dinero}</a>
+            { console.log("aaa") }
+            { console.log(info.dinero) }
+            <a className="dinero_tienda">{dinero}</a>
 
             {/*************************** Sliders ****************************/}
 

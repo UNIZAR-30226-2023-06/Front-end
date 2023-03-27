@@ -129,6 +129,8 @@ h2 span:nth-of-type(7) {
   background-color: #5e89df;
   min-height: 100vh;
   display: flex;
+
+  height: 100%;
 }
 
 .icono_retroceso {

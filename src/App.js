@@ -26,10 +26,10 @@ export default function App() {
           <Route exact path="/amigosT" element={<Amigos_todos/>} />
           <Route exact path="/amigosP" element={<Amigos_pendiente/>} />
           <Route exact path="/RecPassword" element={<RecPassword/>} />
-          <Route exact path="/Lista_partidas" element={<Lista_partidas/>} />
-          <Route exact path="/Sala_partida" element={<Sala_partida/>} />
-          <Route exact path="/Partida" element={<Partida/>} />
-          <Route exact path="/Tienda" element={<Tienda/>} />
+          <Route exact path="/lista_partidas" element={<Lista_partidas/>} />
+          <Route exact path="/sala_partida" element={<Sala_partida/>} />
+          <Route exact path="/partida" element={<Partida/>} />
+          <Route exact path="/tienda" element={<Tienda/>} />
         </Routes>
       </Router>
     </>

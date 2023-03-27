@@ -11,7 +11,7 @@ export default function PrivateHome() {
   const [open, setOpen] = useState(true);
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
-  // 
+  // leemos el token y lo imprimimos por consola
   // console.log(cookies.token);
 
   return (
@@ -57,7 +57,7 @@ export default function PrivateHome() {
             href="http://localhost:3000/amigosT"
             className="gap-3 mt-2 flex flex-grow"
           >
-            {/* imagen amigos*/}
+            {/* imagen editar perfil*/}
             <img
               alt="profil"
               src="http://localhost:3000/editProfile.png"
@@ -114,7 +114,7 @@ export default function PrivateHome() {
       {/*cuerpo de la página*/}
       <img
         onClick={() => {
-          window.location.href = "http://localhost:3000/login";
+          window.location.href = "http://localhost:3000/tienda";
         }}
         className="absolute top-0 right-0 m-4"
         src="http://localhost:3000/carrito.png"
