@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from "react";
 
 import { useNavigate } from 'react-router-dom';
 
@@ -13,7 +14,7 @@ function Sala_partida() {
   };
 
   const [searchTerm, setSearchTerm] = React.useState("");
-
+  const [open, setOpen] = useState(false);
   /*const filteredResults = results.filter((result) => {
     return result.partida.toLowerCase().includes(searchTerm.toLowerCase());
   });*/
@@ -88,16 +89,34 @@ function Sala_partida() {
 <div className="h-screen min-h-screen w-screen flex flex-col justify-center items-center py-10 gap-y-8 imagenCustom">
   <div className="bg-blue-500 rounded-lg p-4 inline-flex flex-col items-center h-4/5">
     <div className="flex items-center my-4">
+
+    <a href="/home">
+      <img
+        src="http://localhost:3000/flechaMenu.png"
+        className={`relative cursor-pointer left-0 top-90 w-10 p-1 border-cyan-900 flex-grow-0 mr-5 ${!open}`}
+        onClick={() => setOpen(!open)}
+      />
+    </a>
+
     <input 
       type="text"
       id="search-box"
       placeholder="usuario#1234"
-      className="w-96 border border-transparent border-b-black/25 bg-white focus:outline-none focus:border-b-black h-12 text-lg rounded-md mr-10" 
+      className="w-96 border border-transparent border-b-black/25 bg-white focus:outline-none focus:border-b-black h-12 text-lg rounded-md mr-5 " 
       onChange={(e) => setSearchTerm(e.target.value)}  
     />
 
     <button type="button" id="search-button" className="bg-white text-blue-500 font-bold py-2 px-4 rounded ml-auto">Buscar</button>
-  </div>
+    </div>
+
+    <div className="flex justify-center mt-4">
+  <button type="button" id="todos-button" className="text-black-500 font-bold py-2 px-4 mr-20 border-b border-black border-b-4 mb-2">Todos</button>
+  <a href="/AmigosP">
+    <button type="button" id="pendientes-button" className="text-white font-bold py-2 px-4 ml-20 mb-2" onClick={() => setOpen(!open)}>Pendientes</button>
+  </a>
+  
+</div>
+
 
 
     {/* Lista de resultados */}
