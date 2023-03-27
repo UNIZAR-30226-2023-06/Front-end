@@ -4,6 +4,8 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import "./style.css";
 
+import Cookies from 'js-cookie';
+
 export default function Registro() {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");

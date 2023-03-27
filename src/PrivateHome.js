@@ -1,7 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useCookies } from "react-cookie";
+
 export default function PrivateHome() {
+  //const cookies = new Cookies();
+  
+  //const token = cookies.get("token");
+
+  console.log("tigre");
+  //console.log(Cookies.get("token"));
+
   const [open, setOpen] = useState(true);
 
   return (

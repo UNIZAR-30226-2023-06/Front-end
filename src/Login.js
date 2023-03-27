@@ -1,9 +1,12 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useCookies } from "react-cookie";
 
 export default function Login() {
   const navigate = useNavigate();
+
+  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,9 +26,22 @@ export default function Login() {
       })
         .then((res) => {
           console.log(data);
-          console.log(res.json());
+          //console.log(res.json());
+          const probatina = res.json();
+          //const token = data.json();
+          console.log("aaa");
+          console.log(probatina);
+          console.log(probatina.Object);
+          
           if (res.ok && res.status === 200) {
             resolve("Login successfully");
+
+            // Guardamos en las cookies el token de seguridad
+            // Obtengo el token de seguridad
+            // const token = res.headers.get('access_token');
+
+            //console.log(probatina.access_token)
+            // setCookie("user", data, { path: "/" });
           }
           reject("Fallo en el inicio de sesion");
         })
@@ -93,12 +109,12 @@ export default function Login() {
           Enviar
         </button>
         <Link
-        to="/registro"
-        rel="noopener noreferrer"
-        className="text-sm text-center m-0 text-cyan-900 decoration-cyan-900 underline  underline-offset-2"
-      >
-        ¿Eres nuevo? Registrate
-      </Link>
+          to="/registro"
+          rel="noopener noreferrer"
+          className="text-sm text-center m-0 text-cyan-900 decoration-cyan-900 underline  underline-offset-2"
+        >
+          ¿Eres nuevo? Registrate
+        </Link>
       </form>
     </div>
   );
