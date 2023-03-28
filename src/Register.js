@@ -11,6 +11,7 @@ export default function Registro() {
   const [open, setOpen] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const name = e.target.name.value;
     const email = e.target.email.value;
     const password = e.target.password.value;
@@ -21,9 +22,6 @@ export default function Registro() {
     const elo = 500;
     const url = `${process.env.REACT_APP_URL_BACKEND}/register?name=${name}&email=${email}&password=${password}&coins=${coins}&selected_grid_skin=${selected_grid_skin}&selected_piece_skin=${selected_piece_skin}&saved_music=${saved_music}&elo=${elo}`;
     console.log(process.env.REACT_APP_URL_BACKEND)
-    if (password !== password2) {
-      toast.error("Las contraseñas no coinciden");
-    } else {
       try {
         const response = await fetch(url, {
           method: "POST",
@@ -35,7 +33,6 @@ export default function Registro() {
         const data = await response.json();
         console.log(data); // Ver respuesta en la consola
         if ("detail" in data && data.detail === "User created") {
-          toast.success("Registrado con éxito");
           navigate("/"); // redirigir a la página de inicio
         } else if ("detail" in data && data.detail === "Email already exists") {
           toast.error("El correo electrónico ya existe");
@@ -46,7 +43,6 @@ export default function Registro() {
         console.log(error); // Ver error en la consola
         toast.error("Hubo un problema con el registro");
       }
-    }
   }
     
     
@@ -57,11 +53,15 @@ export default function Registro() {
       <form
         className="flex flex-col justify-center items-center p-4 bg-white/60 max-w-md w-full gap-y-2 rounded-xl shadow-xl mb-20"
         onSubmit={(e) => {
-          toast
-            .promise(handleSubmit(e), {
-              loading: "Logging in...",
-              success: "Login successfully",
-              error: "There was a problem with the registration",
+          if (password !== password2) {
+            e.preventDefault();
+            toast.error("Las contraseñas no coinciden");
+            return;
+          }
+          toast.promise(handleSubmit(e), {
+              loading: "Cargando...",
+              success: "Registrado con éxito",
+              error: "ha habido un problema en el registro",
             })
             .then(() => navigate("/login"));
         }}
@@ -122,12 +122,13 @@ export default function Registro() {
             className="w-full border border-transparent border-b-black/25 bg-transparent focus:outline-none focus:border-b-black h-12 text-lg"
           />
         </div>
-        <button
-          type="submit"
-          className="w-full py-2 bg-cyan-900 text-white font-bold rounded-full hover:bg-indigo-900 duration-300"
-        >
-          Enviar
-        </button>
+          <button
+              type="submit"
+                className="w-full py-2 bg-cyan-900 text-white font-bold rounded-full hover:bg-indigo-900 duration-300"
+              >
+                Enviar
+          </button>
+
       </form>
     </div>
   );
