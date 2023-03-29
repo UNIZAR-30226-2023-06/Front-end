@@ -1,23 +1,69 @@
 import React from 'react';
 import { useState } from "react";
-
+import { useCookies } from "react-cookie";
 import { useNavigate } from 'react-router-dom';
+import jwt_decode from "jwt-decode";
+import { useRef } from "react";
 
-function Amigos_todos() {
+export default function Amigos_todos() {
+  {
+    /* --------------------------- "variables" de la página  --------------------------- */
+  }
 
+  const [cookies, setCookie, removeCookie] = useCookies(["token"]); // Agregamos removeCookie
+  const [open, setOpen] = useState(true);
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [nombre, set_nombre] = React.useState(null);
+  const [id, set_id] = React.useState(null);
+  const [foto, set_foto] = React.useState(null);
+  const inputRef = useRef(null);
   // Función para acceder a la historia de navegación
   const navigate = useNavigate();
-
   // Función para volver a la página anterior
   const handleBack = () => {
     navigate(-1);
   };
 
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const [open, setOpen] = useState(false);
-  /*const filteredResults = results.filter((result) => {
-    return result.partida.toLowerCase().includes(searchTerm.toLowerCase());
-  });*/
+  {
+    /* --------------------------- cookies  --------------------------- */
+  }
+
+  // cargamos los datos de los usuarios y hacemos decode del token
+  const Token = cookies.token;
+  const json_token = jwt_decode(Token);
+  console.log(json_token);
+
+  {
+    /* --------------------------- obtener datos usuario  --------------------------- */
+  }
+
+  //En espera hasta que el back-end este arreglado
+
+  // fetch(
+  //   `${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(
+  //     json_token.id
+  //   )}`,
+  //   {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/x-www-form-urlencoded",
+  //       Authorization: `Bearer ${Token}`,
+  //     },
+  //   }
+  // ).then((res) => {
+  //   res.json().then((data) => {
+  //     // Actualizamos el estado de cosas
+  //     const img =
+  //       data.saved_music === "default"
+  //         ? "http://localhost:3000/fotos_perfil/personaje1.png"
+  //         : `http://localhost:3000/fotos_perfil/personaje${flecha}.png`;
+
+  //     set_id(data.id);
+  //     set_nombre(data.username);
+  //     set_foto(img);
+  //     // console.log(data);
+  //   });
+  // });
 
   // Aquí los resultados de la búsqueda, estos se sustituirán por los resultados
   // de la búsqueda cuando se implemente la búsqueda llamando al backend
@@ -134,4 +180,3 @@ function Amigos_todos() {
   );
 }
 
-export default Amigos_todos;
