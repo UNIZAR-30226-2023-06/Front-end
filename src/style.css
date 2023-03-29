@@ -718,3 +718,8 @@ h2 span:nth-of-type(7) {
   text-decoration: none;
   overflow: hidden;
 }
+
+/* PrivateHome */
+.sidebar_PrivateHome{
+  background-image: radial-gradient( rgba(22,18,19,1) 50%, rgba(22,18,19,1) 150%); 
+}
