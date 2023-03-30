@@ -2,47 +2,39 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
+import { useHistory } from "react-router-dom";
 import jwt_decode from "jwt-decode";
-import { useRef } from "react";
+import { toast } from "react-hot-toast";
 
 export default function PrivateHome() {
-  {
-    /* --------------------------- "variables" de la página  --------------------------- */
-  }
+  /* --------------------------- "variables" de la página  --------------------------- */
 
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]); // Agregamos removeCookie
+  const [cookies, removeCookie] = useCookies(["token"]); // Agregamos removeCookie
   const [open, setOpen] = useState(true);
   const [dinero, set_dinero] = React.useState(null);
   const [nombre, set_nombre] = React.useState(null);
   const [codigo, set_codigo] = React.useState(null);
   const [imagen, set_imagen] = React.useState(null);
   const [elo, set_elo] = React.useState(null);
-  const inputRef = useRef(null);
 
   // leemos el token y lo imprimimos por consola
   // console.log(cookies.token);
 
-  {
-    /* --------------------------- seguridad  --------------------------- */
-  }
+  /* --------------------------- seguridad  --------------------------- */
 
   // en caso de que no estemos logueados ve a la página de login
   if (cookies.token === undefined) {
     window.location.href = "http://localhost:3000/login";
   }
 
-  {
-    /* --------------------------- cookies  --------------------------- */
-  }
+  /* --------------------------- cookies  --------------------------- */
 
   // cargamos los datos de los usuarios y hacemos decode del token
   const Token = cookies.token;
   const json_token = jwt_decode(Token);
   console.log(json_token);
 
-  {
-    /* --------------------------- obtener datos usuario  --------------------------- */
-  }
+  /* --------------------------- obtener datos usuario  --------------------------- */
 
   fetch(
     `${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(
@@ -59,24 +51,24 @@ export default function PrivateHome() {
     res.json().then((data) => {
       // Actualizamos el estado de cosas
       const img =
-        data.saved_music === "default"
+        data.profile_picture === "default"
           ? "http://localhost:3000/fotos_perfil/personaje1.png"
           : `http://localhost:3000/fotos_perfil/personaje${imagen}.png`;
 
       set_dinero(data.coins);
       set_codigo(data.id);
       set_nombre(data.username);
-      set_imagen(img);
+      set_imagen("http://localhost:3000/fotos_perfil/personaje1.png");
       set_elo(data.elo);
       // console.log(data);
     });
   });
 
-{/* --------------------------- función del boton añadir amigos --------------------------- */}
+  /* --------------------------- función del boton añadir amigos --------------------------- */
 
   const handleClick = () => {
-    const value = inputRef.current.value;
-    console.log(value); // haz algo con el valor obtenido del input
+    //const value = inputRef.current.value;
+    // console.log(value); // haz algo con el valor obtenido del input
   };
 
   return (
@@ -98,6 +90,7 @@ export default function PrivateHome() {
             !open && "rotate-180"
           }`}
           onClick={() => setOpen(!open)}
+          alt="si le das a esta flecha la sidebar se hace más pequeña"
         />
 
         {/* --------------------------- foto del avatar --------------------------- */}
@@ -190,7 +183,7 @@ export default function PrivateHome() {
             onClick={() => {
               // borramos las cookies
               removeCookie("token");
-              console.log(cookies.token);
+              window.location.href = "http://localhost:3000/login";
             }}
           >
             {/* imagen log out*/}
@@ -215,21 +208,52 @@ export default function PrivateHome() {
 
           {/* --------------------------- añadir amigos --------------------------- */}
 
-          <div className="fixed bottom-10 rounded-lg flex"  onClick={handleClick}>
+          <form
+            className={`fixed bottom-0 left-0 p-4 ${!open && `scale-0`}`}
+            onSubmit={(e) => {
+              e.preventDefault(); // Agregar esto para evitar que la página se recargue
+              fetch(
+                `${process.env.REACT_APP_URL_BACKEND}/send_friend_request?friend_id=${e.target.amigo_id.value}`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    Authorization: `Bearer ${Token}`,
+                  },
+                }
+              ).then((res) => {
+                res.json().then((data) => {
+                  if ( data.detail === `Friend request already exists`) {
+                    toast.error("este usuario ya tiene una solicitud tuya pendiente");
+                  } else if (data.detail === `User not found`) {
+                    toast.error("usuario no encontrado");
+                    toast("si quieres enviar una solicitud pon solo el id", {
+                      ico: `😉`,
+                    });
+                  } else if (data.detail === `Friend request sent`){
+                    toast.success("solicitud enviada con éxito");
+                  }
+                });
+              });
+                       
+            }}
+          >
             <input
-              className="w-full border border-transparent border-b-white bg-transparent text-white focus:outline-none focus:border-b-white"
+              id="amigo_id"
+              className="p-2 mr-2 border border-transparent border-b-white bg-transparent text-white focus:outline-none focus:border-b-white"
               type="text"
               placeholder="Añadir amigo"
-            />
-            <button className=" inline-flex items-center rounded-full bg-cyan-900 hover:bg-slate-900 text-white w-12 h-10">
+            ></input>
+            <button className="px-4 py-2 rounded-full bg-cyan-900 hover:bg-slate-900 text-white w-12 h-10">
               <img
-                className=" scale-50 "
                 src="http://localhost:3000/add-friend.png"
+                alt="boton de añadir amigos"
               />
             </button>
-          </div>
+          </form>
         </ul>
       </div>
+
       {/* --------------------------- cuerpo de la página --------------------------- */}
 
       <div className="absolute top-0 right-0 m-4">
@@ -238,12 +262,14 @@ export default function PrivateHome() {
           <img
             className="w-7 h-7 mt-5"
             src="http://localhost:3000/dinero.png"
+            alt="indicamos el dinero que los jugadores tienen es una imagen de un billete y a su izquierda esta el número"
           />
 
           <img
             onClick={() => {
               window.location.href = "http://localhost:3000/tienda";
             }}
+            alt="lin para ir a la tienda del juego"
             className="w-10 h-10 m-4 hover:cursor-pointer"
             src="http://localhost:3000/carrito.png"
           />
