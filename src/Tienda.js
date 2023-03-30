@@ -13,68 +13,34 @@ import { useCookies } from "react-cookie";
 import jwt_decode from "jwt-decode";
 
 function Tienda() {
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////////////// DECLARACIÓN DE LAS CONSTANTES ///////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+    // Dinero del jugador
     const [dinero, set_dinero] = React.useState(null);
 
+    const [fotos_perfil_compradas, set_fotos_perfil_compradas] =
+        React.useState([ true, true, false, false, false, true, false, false,
+            false ]);
+
     // 2-- Creamos la estructura de las cookies
-    const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+    const [cookies] = useCookies(["token"]);
 
     // 3-- Obtenemos el token de las cookies
     const Token = cookies.token;
 
     // 4-- Obtenemos la información del token
     const json_token = jwt_decode(Token);
-    console.log(json_token);
-
-    // 5-- Hacemos el fetch para obtener la información del usuario
-    fetch(`${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(json_token.id)}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Authorization": `Bearer ${Token}`
-        }
-    })
-        .then((res) => {
-            res.json().then((data) => {
-                
-                console.log(data.coins);
-                console.log(res);
-                console.log(data);
-                info.dinero = data.coins;
-                console.log(info.dinero);
-
-                // 6-- Actualizamos el estado de cosas
-                set_dinero(data.coins)
-              });
-        })
-
-
-    // Cantidad del dinero obtenida del backend
-    var info = {
-        dinero: 50,
-        iconos_desbloqueados: [
-            true,
-            true,
-            false,
-            false,
-            false,
-            true,
-            false,
-            false,
-            false
-        ]
-    }
 
     // Función para acceder a la historia de navegación
     const navigate = useNavigate();
 
     // Función para volver a la página anterior
-    const handleBack = () => {
-        navigate(-1);
-    };
+    const handleBack = () => { navigate(-1); };
 
     const handleDragStart = (e) => e.preventDefault();
-
-    /////////////////////// CARRUSEL DE FOTOS DE PERFIL ////////////////////////
 
     const precio_foto_perfil = "10 $";
 
@@ -87,16 +53,65 @@ function Tienda() {
         5: { items: 6 },
     };
 
-    function comprar_foto_perfil(indice_foto) {
-        info.dinero -= 10;
-        info.iconos_desbloqueados[indice_foto] = true;
+    const precio_fichas = "50 $";
+
+    const responsive_fotos_fichas = {
+        6: { items: 1 },
+        7: { items: 2 },
+        8: { items: 3 },
+        9: { items: 4 },
+        10: { items: 5 },
+        11: { items: 6 },
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    /////////////////////// FETCHS INICIALES NECESARIOS ////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+    // 5-- Hacemos el fetch para obtener la información del usuario
+    fetch(`${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(json_token.id)}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": `Bearer ${Token}`
+        }
+    })
+        .then((res) => {
+            res.json().then((data) => {
+                set_dinero(data.coins)
+            });
+        })
+
+    ////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////// FUNCIONES /////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+    function comprar(dinero) {
+        const url = `${process.env.REACT_APP_URL_BACKEND}/add-coins?amount=
+            ${dinero}`;
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                accept: "application/json",
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Authorization": `Bearer ${Token}`,
+            },
+        });
+
+        set_dinero();
     }
 
-    const items_fotos_perfil = info.iconos_desbloqueados.map((foto, i) => (
+    ////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////// COMPONENTES ////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+    // CARRUSEL DE FOTOS DE PERFIL
+    const items_fotos_perfil = fotos_perfil_compradas.map((foto, i) => (
         <div className="slide_tienda">
             {
                 <Popup trigger={
-                    info.iconos_desbloqueados[i] ?
+                    fotos_perfil_compradas[i] ?
                         (
                             <img src="http://localhost:3000/ladron.png" onDragStart={handleDragStart} role="presentation"
                                 className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle" />
@@ -128,7 +143,7 @@ function Tienda() {
                             <img src={"http://localhost:3000/fotos_perfil/personaje" + i + ".png"} onDragStart={handleDragStart} role="presentation"
                                 className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle" />
 
-                            {/* Texto de compra en el centro */}
+                            {/* Texto de "¿Estás seguro?" en el centro */}
                             <div className="text-center">
                                 <br />
                                 <p className="text-2xl font-bold">¿Estás seguro?</p>
@@ -138,9 +153,8 @@ function Tienda() {
                             <br /> <br />
                             <div className="flex justify-center">
                                 <button className="boton_comprar_tienda"
-                                    onClick={() => {
-                                        comprar_foto_perfil(i);
-                                        console.log(info.dinero);
+                                    onClick={ () => {
+                                        comprar(10);
                                         close();
                                     }}
                                 >
@@ -159,32 +173,8 @@ function Tienda() {
         </div>
     ));
 
-    /////////////////////////// CARRUSEL DE FICHAS /////////////////////////////
-
-    const precio_fichas = "50 $";
-
-    const responsive_fotos_fichas = {
-        6: { items: 1 },
-        7: { items: 2 },
-        8: { items: 3 },
-        9: { items: 4 },
-        10: { items: 5 },
-        11: { items: 6 },
-    };
-
-    const fotos_fichas = [
-        "http://localhost:3000/perfil1.avif",
-        "http://localhost:3000/perfil1.avif",
-        "http://localhost:3000/perfil1.avif",
-        "http://localhost:3000/perfil1.avif",
-        "http://localhost:3000/perfil1.avif",
-        "http://localhost:3000/perfil1.avif",
-        "http://localhost:3000/perfil1.avif",
-        "http://localhost:3000/perfil1.avif",
-        "http://localhost:3000/perfil1.avif"
-    ]
-
-    const items_fotos_fichas = info.iconos_desbloqueados.map((foto, i) => (
+    // CARRUSEL DE FICHAS
+    const items_fotos_fichas = fotos_perfil_compradas.map((foto, i) => (
         <div className="slide_tienda">
             {/* Imagen del objeto */}
             <img src="http://localhost:3000/perfil1.avif" onDragStart={handleDragStart} role="presentation"
@@ -195,18 +185,18 @@ function Tienda() {
         </div>
     ));
 
+    ////////////////////////////////////////////////////////////////////////////
     //////////////////////////// FUNCIÓN PRINCIPAL /////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
 
     return (
         <div className="estilo">
             {/* Flecha de retroceso */}
             <img src="http://localhost:3000/flecha_retroceso.png" className="icono_retroceso" onClick={handleBack} alt="flecha_retroceso" />
 
-            {/* Icono del dinero con el dinero */}
+            {/* Icono y texto del dinero */}
             <img src="http://localhost:3000/dinero.png" className="icono_dinero_tienda" alt="icono_dinero" />
-            { console.log("aaa") }
-            { console.log(info.dinero) }
-            <a className="dinero_tienda">{dinero}</a>
+            <TextComponent dinero={dinero} />
 
             {/*************************** Sliders ****************************/}
 
@@ -224,7 +214,7 @@ function Tienda() {
             </div>
 
             {/* Titulo de "fotos de perfil" */}
-            <a className="titulo_fotos_fichas_tienda">Fotos de perfil</a>
+            <a className="titulo_fotos_fichas_tienda">Fichas</a>
 
             {/* Slider de fotos de perfil */}
             <div className="slider_fotos_fichas_tienda">
@@ -236,6 +226,13 @@ function Tienda() {
                 />
             </div>
         </div>
+    );
+}
+
+// Para que el otro componente se actualice, lo paso como prop al componente.
+function TextComponent(props) {
+    return (
+        <a className="dinero_tienda">{props.dinero}</a>
     );
 }
 
