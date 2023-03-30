@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
-import { useHistory } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { toast } from "react-hot-toast";
 
@@ -15,6 +14,7 @@ export default function PrivateHome() {
   const [nombre, set_nombre] = React.useState(null);
   const [codigo, set_codigo] = React.useState(null);
   const [imagen, set_imagen] = React.useState(null);
+  const [nummensajes, set_nummensajes] = React.useState(null);
   const [elo, set_elo] = React.useState(null);
 
   // leemos el token y lo imprimimos por consola
@@ -47,29 +47,50 @@ export default function PrivateHome() {
         Authorization: `Bearer ${Token}`,
       },
     }
-  ).then((res) => {
-    res.json().then((data) => {
-      // Actualizamos el estado de cosas
-      const img =
-        data.profile_picture === "default"
-          ? "http://localhost:3000/fotos_perfil/personaje1.png"
-          : `http://localhost:3000/fotos_perfil/personaje${imagen}.png`;
+  )
+    .then((res) => {
+      res.json().then((data) => {
+        // Actualizamos el estado de cosas
+        const img =
+          data.profile_picture === "default"
+            ? "http://localhost:3000/fotos_perfil/personaje1.png"
+            : `http://localhost:3000/fotos_perfil/personaje${imagen}.png`;
 
-      set_dinero(data.coins);
-      set_codigo(data.id);
-      set_nombre(data.username);
-      set_imagen("http://localhost:3000/fotos_perfil/personaje1.png");
-      set_elo(data.elo);
-      // console.log(data);
+        set_dinero(data.coins);
+        set_codigo(data.id);
+        set_nombre(data.username);
+        set_imagen(img);
+        set_elo(data.elo);
+        // console.log(data);
+      });
+    })
+    .catch((error) => {
+      console.error("Error:", error);
     });
-  });
 
-  /* --------------------------- función del boton añadir amigos --------------------------- */
+  {
+    /* --------------------------- miramos si hay mensajes pendientes --------------------------- */
+  }
 
-  const handleClick = () => {
-    //const value = inputRef.current.value;
-    // console.log(value); // haz algo con el valor obtenido del input
-  };
+  fetch(`${process.env.REACT_APP_URL_BACKEND}/get_friend_requests`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${Token}`,
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      response.json().then((data) => {
+        console.log(data.number_of_requests);
+        set_nummensajes(data.number_of_requests);
+      });
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
 
   return (
     // fondo
@@ -151,20 +172,36 @@ export default function PrivateHome() {
           </a>
 
           {/* --------------------------- amigos ---------------------------*/}
-
           <a
             href="http://localhost:3000/amigosT"
-            className="gap-3 mt-2 flex flex-grow"
+            className="gap-3 mt-2 flex flex-grow relative"
           >
             {/* imagen amigos*/}
             <img
               alt="profil"
               src="http://localhost:3000/friends.png"
-              className={`object-cover h-8 w-8 ${
-                !open && "h-8 w-8 duration-300 ml-12"
-              }`}
+              className={`object-cover h-8 w-8 ${!open ? "ml-10 mb-4" : ""}`}
             />
-
+            {nummensajes > 0 && (
+              <>
+                {open && (
+                  <div
+                    className="absolute top-0 right-0 transform translate-x-14 -translate-y-1/4 h-4 w-4 bg-red-800 text-white text-xs flex items-center justify-center rounded-full"
+                    style={{ left: "50%" }}
+                  >
+                    {nummensajes}
+                  </div>
+                )}
+                {!open && (
+                  <div
+                    className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 h-4 w-4 bg-red-800 text-white text-xs flex items-center justify-center rounded-full"
+                    style={{ left: "50%" }}
+                  >
+                    {nummensajes}
+                  </div>
+                )}
+              </>
+            )}
             <h1
               href="/login"
               variant={Link}
@@ -221,21 +258,26 @@ export default function PrivateHome() {
                     Authorization: `Bearer ${Token}`,
                   },
                 }
-              ).then((res) => {
-                res.json().then((data) => {
-                  if ( data.detail === `Friend request already exists`) {
-                    toast.error("este usuario ya tiene una solicitud tuya pendiente");
-                  } else if (data.detail === `User not found`) {
-                    toast.error("usuario no encontrado");
-                    toast("si quieres enviar una solicitud pon solo el id", {
-                      ico: `😉`,
-                    });
-                  } else if (data.detail === `Friend request sent`){
-                    toast.success("solicitud enviada con éxito");
-                  }
+              )
+                .then((res) => {
+                  res.json().then((data) => {
+                    if (data.detail === `Friend request already exists`) {
+                      toast.error(
+                        "este usuario ya tiene una solicitud tuya pendiente"
+                      );
+                    } else if (data.detail === `User not found`) {
+                      toast.error("usuario no encontrado");
+                      toast("si quieres enviar una solicitud pon solo el id", {
+                        ico: `😉`,
+                      });
+                    } else if (data.detail === `Friend request sent`) {
+                      toast.success("solicitud enviada con éxito");
+                    }
+                  });
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
                 });
-              });
-                       
             }}
           >
             <input
