@@ -13,9 +13,6 @@ export default function Amigos_todos() {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]); // Agregamos removeCookie
   const [open, setOpen] = useState(true);
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [nombre, set_nombre] = React.useState(null);
-  const [id, set_id] = React.useState(null);
-  const [foto, set_foto] = React.useState(null);
   const inputRef = useRef(null);
   // Función para acceder a la historia de navegación
   const navigate = useNavigate();
@@ -23,6 +20,7 @@ export default function Amigos_todos() {
   const handleBack = () => {
     navigate(-1);
   };
+
 
   {
     /* --------------------------- cookies  --------------------------- */
@@ -36,95 +34,101 @@ export default function Amigos_todos() {
   {
     /* --------------------------- obtener datos usuario  --------------------------- */
   }
+// Obtener la cookie de sesión del back-end
+const sessionCookie = getCookie('session');
 
-  //En espera hasta que el back-end este arreglado
+// Si la cookie existe, realizar una petición PUT al endpoint correspondiente para obtener la lista de amigos
 
-  // fetch(
-  //   `${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(
-  //     json_token.id
-  //   )}`,
-  //   {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/x-www-form-urlencoded",
-  //       Authorization: `Bearer ${Token}`,
-  //     },
-  //   }
-  // ).then((res) => {
-  //   res.json().then((data) => {
-  //     // Actualizamos el estado de cosas
-  //     const img =
-  //       data.saved_music === "default"
-  //         ? "http://localhost:3000/fotos_perfil/personaje1.png"
-  //         : `http://localhost:3000/fotos_perfil/personaje${flecha}.png`;
+const [Amigos, setAmigos] = useState([]);
+fetch(`${process.env.REACT_APP_URL_BACKEND}/get_friends`, {
+  method: "PUT",
+  headers: {
+    "Content-Type": "application/x-www-form-urlencoded",
+    Authorization: `Bearer ${Token}`,
+  },
+})
+  .then((res) => {
+    res.json().then((data) => {
+      // Update state
+      const nFriends = data.number_of_friends;
+      const newAmigos = [];
+      for (let i = 0; i < data.number_of_friends; i++) {
+        const imagen =
+          data.friends[i].profile_picture === "default"
+            ? "http://localhost:3000/fotos_perfil/personaje1.png"
+            : `http://localhost:3000/fotos_perfil/personaje${data.friends[i].profile_picture}.png`;
+        const codigo = data.friends[i].friend_id;
+        const name = data.friends[i].friend_name;
 
-  //     set_id(data.id);
-  //     set_nombre(data.username);
-  //     set_foto(img);
-  //     // console.log(data);
-  //   });
-  // });
+        newAmigos.push({
+          nombre: name,
+          id: codigo,
+          foto: imagen
+        });
+      }
+      setAmigos(newAmigos);
+      console.log(newAmigos);
+    });
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+  });
 
-  // Aquí los resultados de la búsqueda, estos se sustituirán por los resultados
-  // de la búsqueda cuando se implemente la búsqueda llamando al backend
-  const results = [
-    {
-      nombre: "Nombre_1",
-      id: "0001",
-      foto: 1
-    },
-    {
-      nombre: "Nombre_2",
-      id: "0002",
-      foto: 2
+fetch(`${process.env.REACT_APP_URL_BACKEND}/get_friends`, {
+  method: "PUT",
+  headers: {
+    "Content-Type": "application/x-www-form-urlencoded",
+    Authorization: `Bearer ${Token}`,
+  },
+})
+  .then((res) => {
+    res.json().then((data) => {
+      // Update state
+      const nFriends = data.number_of_friends;
+      const newAmigos = [];
+      for (let i = 0; i < data.number_of_friends; i++) {
+        const imagen =
+          data.friends[i].profile_picture === "default"
+            ? "http://localhost:3000/fotos_perfil/personaje1.png"
+            : `http://localhost:3000/fotos_perfil/personaje${data.friends[i].profile_picture}.png`;
+        const codigo = data.friends[i].friend_id;
+        const name = data.friends[i].friend_name;
 
-    },
-    {
-      nombre: "Nombre_3",
-      id: "0003",
-      foto: 3
+        newAmigos.push({
+          nombre: name,
+          id: codigo,
+          foto: imagen
+        });
+      }
+      setAmigos(newAmigos);
+      console.log(newAmigos);
+    });
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+  });
 
-    },
-    {
-      nombre: "Nombre_4",
-      id: "0004",
-      foto: 4
-    },
-    {
-      nombre: "Nombre_5",
-      id: "0005",
-      foto: 5
-    },
-    {
-      nombre: "Nombre_6",
-      id: "0006",
-      foto: 6
-    },
-    {
-      nombre: "Nombre_7",
-      id: "0007",
-      foto: 7
-    },
 
-    {
-      nombre: "Nombre_8",
-      id: "0008",
-      foto: 8
-    },
-    {
-      nombre: "Nombre_9",
-      id: "0009",
-      foto: 9
+// Función para obtener una cookie por su nombre
+function getCookie(name) {
+  const cookies = document.cookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i].trim();
+    if (cookie.startsWith(`${name}=`)) {
+      return cookie.substring(name.length + 1);
     }
-  ];
+  }
+  return null;
+}
 
+  
   // Un lista de resultados
-  const resultados = results.map((index) => (
-    <a className="resultado_busqueda" href={`https://www.ejemplo.com/${index.id}`}>
+  const resultados = Amigos.map((index) => (
+    <a className="resultado_busqueda">
       <code>
         {index.nombre}#{index.id}
       </code>
-      <img src="foto" className="icono_jugadores" alt="icono_jugadores"/>
+      <img src={index.foto} className="icono_jugadores" alt="icono_jugadores"/>
       {/* Botón para dejar de seguir */}
       <button type="button" id="search-button" className="boton-dejar-de-seguir">Dejar de seguir</button>
     </a>
@@ -179,4 +183,5 @@ export default function Amigos_todos() {
 
   );
 }
+
 
