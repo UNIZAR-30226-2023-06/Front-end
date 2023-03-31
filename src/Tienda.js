@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
@@ -22,8 +22,19 @@ function Tienda() {
     const [dinero, set_dinero] = React.useState(null);
 
     const [fotos_perfil_compradas, set_fotos_perfil_compradas] =
-        React.useState([ true, true, false, false, false, true, false, false,
-            false ]);
+        React.useState([]);
+
+    const fotos_perfil = [
+        "personaje1",
+        "personaje2",
+        "personaje3",
+        "personaje4",
+        "personaje5",
+        "personaje6",
+        "personaje7",
+        "personaje8",
+        "personaje9",
+    ]
 
     // 2-- Creamos la estructura de las cookies
     const [cookies] = useCookies(["token"]);
@@ -43,6 +54,8 @@ function Tienda() {
     const handleDragStart = (e) => e.preventDefault();
 
     const precio_foto_perfil = "10 $";
+
+    const precio_foto_perfil_int = 10;
 
     const responsive = {
         0: { items: 1 },
@@ -64,47 +77,52 @@ function Tienda() {
         11: { items: 6 },
     };
 
+    const [compra_realizada, set_compra_realizada] = React.useState(false);
+
     ////////////////////////////////////////////////////////////////////////////
     /////////////////////// FETCHS INICIALES NECESARIOS ////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    // 5-- Hacemos el fetch para obtener la información del usuario
-    fetch(`${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(json_token.id)}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Authorization": `Bearer ${Token}`
-        }
-    })
-        .then((res) => {
-            res.json().then((data) => {
-                set_dinero(data.coins)
-            });
+    useEffect(() => {
+        // 5-- Hacemos el fetch para obtener la información del usuario
+        fetch(`${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(json_token.id)}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Authorization": `Bearer ${Token}`,
+            }
         })
-    
-    // Fetch para obtener qué skins tiene compradas el usuario
-    fetch(`${process.env.REACT_APP_URL_BACKEND}/list-piece-skins`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Authorization": `Bearer ${Token}`
-        }
-    })
-        .then((res) => {
-            res.json().then((data) => {
-                console.log("Skins compradas: ");
-                console.log(data);
-            });
+            .then((res) => {
+                res.json().then((data) => {
+                    set_dinero(data.coins)
+                });
+            })
+
+        // Fetch para obtener qué skins tiene compradas el usuario
+        fetch(`${process.env.REACT_APP_URL_BACKEND}/list-piece-skins`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Authorization": `Bearer ${Token}`
+            }
         })
+            .then((res) => {
+                res.json().then((data) => {
+                    console.log("Skins compradas:");
+                    console.log(data);
+                    set_fotos_perfil_compradas(data.piece_skins);
+                });
+            })
+    }, []);
 
     ////////////////////////////////////////////////////////////////////////////
     //////////////////////////////// FUNCIONES /////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    function comprar(dinero, nombre_producto) {
+    function comprar(precio, nombre_producto) {
 
         const url_1 = `${process.env.REACT_APP_URL_BACKEND}/buy_piece_skin?piece_skin_name=${nombre_producto}`;
-        
+
         fetch(url_1, {
             method: "POST",
             headers: {
@@ -112,21 +130,19 @@ function Tienda() {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "Authorization": `Bearer ${Token}`,
             },
-        });
+        })
+            .then((res) => {
+                res.json().then((data) => {
+                    console.log("Respuesta del servidor:");
+                    console.log(data);
 
+                    if (data.detail === "Piece skin bought successfully") {
+                        set_dinero(dinero - precio);
 
-        const url_2 = `${process.env.REACT_APP_URL_BACKEND}/add-coins?amount=${dinero}`;
-
-        fetch(url_2, {
-            method: "POST",
-            headers: {
-                accept: "application/json",
-                "Content-Type": "application/x-www-form-urlencoded",
-                "Authorization": `Bearer ${Token}`,
-            },
-        });
-
-        set_dinero();
+                        set_fotos_perfil_compradas([...fotos_perfil_compradas, nombre_producto]);
+                    }
+                });
+            })
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -134,18 +150,35 @@ function Tienda() {
     ////////////////////////////////////////////////////////////////////////////
 
     // CARRUSEL DE FOTOS DE PERFIL
-    const items_fotos_perfil = fotos_perfil_compradas.map((foto, i) => (
+    const items_fotos_perfil = fotos_perfil.map((foto, i) => (
         <div className="slide_tienda">
             {
                 <Popup trigger={
-                    fotos_perfil_compradas[i] ?
+                    fotos_perfil_compradas.includes("personaje" + (i + 1)) ?
                         (
-                            <img src="http://localhost:3000/ladron.png" onDragStart={handleDragStart} role="presentation"
-                                className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle" />
+                            <div>
+                                <img src={"http://localhost:3000/fotos_perfil/personaje" + (i + 1) + ".png"} onDragStart={handleDragStart} role="presentation"
+                                    className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
+                                    style={{
+                                        position: 'relative',
+                                        zIndex: 1
+                                    }}
+                                />
+
+                                <img src="http://localhost:3000/fotos_perfil/comprado.png" onDragStart={handleDragStart} role="presentation"
+                                    className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
+                                    style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 19,
+                                        zIndex: 9999
+                                    }}
+                                />
+                            </div>
                         )
                         :
                         (
-                            <img src={"http://localhost:3000/fotos_perfil/personaje" + i + ".png"} onDragStart={handleDragStart} role="presentation"
+                            <img src={"http://localhost:3000/fotos_perfil/personaje" + (i + 1) + ".png"} onDragStart={handleDragStart} role="presentation"
                                 className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle" />
                         )
                 } modal nested
@@ -167,28 +200,60 @@ function Tienda() {
                             </button>
 
                             {/* Imagen del objeto */}
-                            <img src={"http://localhost:3000/fotos_perfil/personaje" + i + ".png"} onDragStart={handleDragStart} role="presentation"
+                            <img src={"http://localhost:3000/fotos_perfil/personaje" + (i + 1) + ".png"} onDragStart={handleDragStart} role="presentation"
                                 className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle" />
 
                             {/* Texto de "¿Estás seguro?" en el centro */}
                             <div className="text-center">
                                 <br />
-                                <p className="text-2xl font-bold">¿Estás seguro?</p>
+                                <br />
+                                <div>
+                                    {fotos_perfil_compradas.includes("personaje" + (i + 1)) ? (
+                                        <img src={"http://localhost:3000/green_check.png"} alt="Icono" className="icono_tienda" />
+                                    ) : (
+                                        <div>
+                                            {dinero >= precio_foto_perfil_int ? (
+                                                <p className="text-2xl font-bold">¿Estás seguro?</p>
+                                            ) : (
+                                                <img src={"http://localhost:3000/red_cross.png"} alt="Icono" className="icono_tienda" />
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
 
                             {/* Boton de comprar */}
                             <br /> <br />
                             <div className="flex justify-center">
-                                <button className="boton_comprar_tienda"
-                                    onClick={ () => {
-                                        comprar(10, "personaje" + i);
-                                        close();
-                                    }}
-                                >
-                                    Confirmar compra:
-                                    <br />
-                                    {precio_foto_perfil}
-                                </button>
+
+                                {fotos_perfil_compradas.includes("personaje" + (i + 1)) ? (
+                                    // Texto verde de "compra realizada", en
+                                    // tamaño de letra mediano y centrado
+                                    <p className="compra_realizada_tienda" >
+                                        Compra realizada
+                                    </p>
+                                ) : (
+                                    <div>
+                                        {dinero >= precio_foto_perfil_int ? (
+                                            <button className="boton_comprar_tienda"
+                                                onClick={() => {
+                                                    comprar(10, "personaje" + (i + 1));
+                                                    set_compra_realizada(true);
+                                                }}
+                                            >
+                                                Confirmar compra:
+                                                <br />
+                                                {precio_foto_perfil}
+                                            </button>
+                                        ) : (
+                                            <p className="saldo_insuficiente_tienda" >
+                                                Saldo insuficiente
+                                            </p>
+                                        )}
+                                    </div>
+                                    
+                                )}
+
                             </div>
                         </div>
                     )}
@@ -201,7 +266,7 @@ function Tienda() {
     ));
 
     // CARRUSEL DE FICHAS
-    const items_fotos_fichas = fotos_perfil_compradas.map((foto, i) => (
+    const items_fotos_fichas = fotos_perfil.map((foto, i) => (
         <div className="slide_tienda">
             {/* Imagen del objeto */}
             <img src="http://localhost:3000/perfil1.avif" onDragStart={handleDragStart} role="presentation"
