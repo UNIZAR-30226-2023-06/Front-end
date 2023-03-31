@@ -1,84 +1,101 @@
 import React from 'react';
 import { useState } from "react";
-
+import { useCookies } from "react-cookie";
 import { useNavigate } from 'react-router-dom';
+import jwt_decode from "jwt-decode";
+import { useRef } from "react";
 
-function Amigos_pendiente() {
+export default function Amigos_todos() {
+  {
+    /* --------------------------- "variables" de la página  --------------------------- */
+  }
 
+  const [cookies, setCookie, removeCookie] = useCookies(["token"]); // Agregamos removeCookie
+  const [open, setOpen] = useState(true);
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const inputRef = useRef(null);
   // Función para acceder a la historia de navegación
   const navigate = useNavigate();
-
   // Función para volver a la página anterior
   const handleBack = () => {
     navigate(-1);
   };
 
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const [open, setOpen] = useState(false);
-  /*const filteredResults = results.filter((result) => {
-    return result.partida.toLowerCase().includes(searchTerm.toLowerCase());
-  });*/
 
-  // Aquí los resultados de la búsqueda, estos se sustituirán por los resultados
-  // de la búsqueda cuando se implemente la búsqueda llamando al backend
-  const results = [
-    {
-      nombre: "Nombre_1",
-      id: "0001",
-      foto: 1
-    },
-    {
-      nombre: "Nombre_2",
-      id: "0002",
-      foto: 2
+  {
+    /* --------------------------- cookies  --------------------------- */
+  }
 
-    },
-    {
-      nombre: "Nombre_3",
-      id: "0003",
-      foto: 3
+  // cargamos los datos de los usuarios y hacemos decode del token
+  const Token = cookies.token;
+  const json_token = jwt_decode(Token);
+  console.log(json_token);
 
-    },
-    {
-      nombre: "Nombre_4",
-      id: "0004",
-      foto: 4
-    },
-    {
-      nombre: "Nombre_5",
-      id: "0005",
-      foto: 5
-    },
-    {
-      nombre: "Nombre_6",
-      id: "0006",
-      foto: 6
-    },
-    {
-      nombre: "Nombre_7",
-      id: "0007",
-      foto: 7
-    },
+  {
+    /* --------------------------- obtener datos usuario  --------------------------- */
+  }
+// Obtener la cookie de sesión del back-end
+const sessionCookie = getCookie('session');
 
-    {
-      nombre: "Nombre_8",
-      id: "0008",
-      foto: 8
-    },
-    {
-      nombre: "Nombre_9",
-      id: "0009",
-      foto: 9
+// Si la cookie existe, realizar una petición PUT al endpoint correspondiente para obtener la lista de amigos
+
+const [Amigos, setAmigos] = useState([]);
+fetch(`${process.env.REACT_APP_URL_BACKEND}/get_friend_requests`, {
+  method: "PUT",
+  headers: {
+    "Content-Type": "application/x-www-form-urlencoded",
+    Authorization: `Bearer ${Token}`,
+  },
+})
+  .then((res) => {
+    res.json().then((data) => {
+      // Update state
+      const nRequests = data.number_of_requests;
+      const newRequests = [];
+      for (let i = 0; i < nRequests; i++) {
+        const imagen =
+          data.friend_requests[i].profile_picture === "default"
+            ? "http://localhost:3000/fotos_perfil/personaje1.png"
+            : `http://localhost:3000/fotos_perfil/personaje${data.friend_requests[i].profile_picture}.png`;
+        const codigo = data.friend_requests[i].requester_id;
+        const name = data.friend_requests[i].requester_name;
+
+        newRequests.push({
+          nombre: name,
+          id: codigo,
+          foto: imagen
+        });
+      }
+      setAmigos(newRequests);
+      console.log(newRequests);
+    });
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+  });
+
+
+
+// Función para obtener una cookie por su nombre
+function getCookie(name) {
+  const cookies = document.cookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i].trim();
+    if (cookie.startsWith(`${name}=`)) {
+      return cookie.substring(name.length + 1);
     }
-  ];
+  }
+  return null;
+}
 
+  
   // Un lista de resultados
-  const resultados = results.map((index) => (
+  const resultados = Amigos.map((index) => (
     <a className="resultado_busqueda" href={`https://www.ejemplo.com/${index.id}`}>
+      <img src={index.foto} className="icono_jugadores" alt="icono_jugadores"/>
       <code className="text-lg">
         {index.nombre} te ha invitado a una partida
       </code>
-      <img src="foto" className="icono_jugadores" alt="icono_jugadores"/>
       {/* Botón para dejar de seguir */}
       <button type="button" id="search-button" className="boton-aceptar">Aceptar</button>
       <button type="button" id="search-button" className="boton-rechazar">Rechazar</button>
@@ -134,4 +151,3 @@ function Amigos_pendiente() {
   );
 }
 
-export default Amigos_pendiente;

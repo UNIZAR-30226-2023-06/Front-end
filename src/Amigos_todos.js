@@ -74,39 +74,6 @@ fetch(`${process.env.REACT_APP_URL_BACKEND}/get_friends`, {
     console.error("Error:", error);
   });
 
-fetch(`${process.env.REACT_APP_URL_BACKEND}/get_friends`, {
-  method: "PUT",
-  headers: {
-    "Content-Type": "application/x-www-form-urlencoded",
-    Authorization: `Bearer ${Token}`,
-  },
-})
-  .then((res) => {
-    res.json().then((data) => {
-      // Update state
-      const nFriends = data.number_of_friends;
-      const newAmigos = [];
-      for (let i = 0; i < data.number_of_friends; i++) {
-        const imagen =
-          data.friends[i].profile_picture === "default"
-            ? "http://localhost:3000/fotos_perfil/personaje1.png"
-            : `http://localhost:3000/fotos_perfil/personaje${data.friends[i].profile_picture}.png`;
-        const codigo = data.friends[i].friend_id;
-        const name = data.friends[i].friend_name;
-
-        newAmigos.push({
-          nombre: name,
-          id: codigo,
-          foto: imagen
-        });
-      }
-      setAmigos(newAmigos);
-      console.log(newAmigos);
-    });
-  })
-  .catch((error) => {
-    console.error("Error:", error);
-  });
 
 
 // Función para obtener una cookie por su nombre
@@ -125,10 +92,10 @@ function getCookie(name) {
   // Un lista de resultados
   const resultados = Amigos.map((index) => (
     <a className="resultado_busqueda">
+      <img src={index.foto} className="icono_jugadores" alt="icono_jugadores"/>
       <code>
         {index.nombre}#{index.id}
       </code>
-      <img src={index.foto} className="icono_jugadores" alt="icono_jugadores"/>
       {/* Botón para dejar de seguir */}
       <button type="button" id="search-button" className="boton-dejar-de-seguir">Dejar de seguir</button>
     </a>
