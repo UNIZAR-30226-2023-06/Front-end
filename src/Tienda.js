@@ -266,16 +266,14 @@ function Tienda() {
     ));
 
     // CARRUSEL DE FICHAS
-    const items_fotos_fichas = fotos_perfil.map((foto, i) => (
+    /*const items_fotos_fichas = fotos_perfil.map((foto, i) => (
         <div className="slide_tienda">
-            {/* Imagen del objeto */}
             <img src="http://localhost:3000/perfil1.avif" onDragStart={handleDragStart} role="presentation"
                 className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle" />
 
-            {/* Precio del objeto */}
             {precio_fichas}
         </div>
-    ));
+    ));*/
 
     ////////////////////////////////////////////////////////////////////////////
     //////////////////////////// FUNCIÓN PRINCIPAL /////////////////////////////
@@ -305,18 +303,19 @@ function Tienda() {
                 />
             </div>
 
+            
             {/* Titulo de "fotos de perfil" */}
-            <a className="titulo_fotos_fichas_tienda">Fichas</a>
+            {/*<a className="titulo_fotos_fichas_tienda">Fichas</a>*/}
 
             {/* Slider de fotos de perfil */}
-            <div className="slider_fotos_fichas_tienda">
+            {/*<div className="slider_fotos_fichas_tienda">
                 <AliceCarousel
                     mouseTracking
                     items={items_fotos_fichas}
                     responsive={responsive_fotos_fichas}
                     controlsStrategy="alternate"
                 />
-            </div>
+            </div>*/}
         </div>
     );
 }
