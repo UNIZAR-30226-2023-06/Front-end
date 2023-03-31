@@ -81,16 +81,43 @@ function Tienda() {
                 set_dinero(data.coins)
             });
         })
+    
+    // Fetch para obtener qué skins tiene compradas el usuario
+    fetch(`${process.env.REACT_APP_URL_BACKEND}/list-piece-skins`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": `Bearer ${Token}`
+        }
+    })
+        .then((res) => {
+            res.json().then((data) => {
+                console.log("Skins compradas: ");
+                console.log(data);
+            });
+        })
 
     ////////////////////////////////////////////////////////////////////////////
     //////////////////////////////// FUNCIONES /////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    function comprar(dinero) {
-        const url = `${process.env.REACT_APP_URL_BACKEND}/add-coins?amount=
-            ${dinero}`;
+    function comprar(dinero, nombre_producto) {
 
-        fetch(url, {
+        const url_1 = `${process.env.REACT_APP_URL_BACKEND}/buy_piece_skin?piece_skin_name=${nombre_producto}`;
+        
+        fetch(url_1, {
+            method: "POST",
+            headers: {
+                accept: "application/json",
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Authorization": `Bearer ${Token}`,
+            },
+        });
+
+
+        const url_2 = `${process.env.REACT_APP_URL_BACKEND}/add-coins?amount=${dinero}`;
+
+        fetch(url_2, {
             method: "POST",
             headers: {
                 accept: "application/json",
@@ -154,7 +181,7 @@ function Tienda() {
                             <div className="flex justify-center">
                                 <button className="boton_comprar_tienda"
                                     onClick={ () => {
-                                        comprar(10);
+                                        comprar(10, "personaje" + i);
                                         close();
                                     }}
                                 >
