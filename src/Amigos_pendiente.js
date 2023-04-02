@@ -4,8 +4,9 @@ import { useCookies } from "react-cookie";
 import { useNavigate } from 'react-router-dom';
 import jwt_decode from "jwt-decode";
 import { useRef } from "react";
+import toast from "react-hot-toast";
 
-export default function Amigos_todos() {
+export default function Amigos_Pendiente() {
   {
     /* --------------------------- "variables" de la página  --------------------------- */
   }
@@ -74,6 +75,29 @@ fetch(`${process.env.REACT_APP_URL_BACKEND}/get_friend_requests`, {
     console.error("Error:", error);
   });
 
+  {
+    /* --------------------------- obtener el numero de solicitudes de amistad --------------------------- */
+  }
+  const [nummensajes, set_nummensajes] = React.useState(null);
+  fetch(`${process.env.REACT_APP_URL_BACKEND}/get_friend_requests`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${Token}`,
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      response.json().then((data) => {
+        console.log(data.number_of_requests);
+        set_nummensajes(data.number_of_requests);
+      });
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
 
 
 // Función para obtener una cookie por su nombre
@@ -91,17 +115,69 @@ function getCookie(name) {
   
   // Un lista de resultados
   const resultados = Amigos.map((index) => (
-    <a className="resultado_busqueda" href={`https://www.ejemplo.com/${index.id}`}>
+    <a className="resultado_busqueda">
       <img src={index.foto} className="icono_jugadores" alt="icono_jugadores"/>
       <code className="text-lg">
-        {index.nombre} te ha invitado a una partida
+        {index.nombre} te ha enviado una solicitud de amistad
       </code>
       {/* Botón para dejar de seguir */}
-      <button type="button" id="search-button" className="boton-aceptar">Aceptar</button>
-      <button type="button" id="search-button" className="boton-rechazar">Rechazar</button>
-
+      <button type="button" id="search-button" className="boton-aceptar" onClick={() => aceptarInvitacion(index.id, index.nombre)}>Aceptar</button>
+      <button type="button" id="search-button" className="boton-rechazar" onClick={() => rechazarInvitacion(index.id, index.nombre)}>Rechazar</button>
     </a>
   ));
+  
+  function aceptarInvitacion(id, nombre) {
+    fetch(
+      `${process.env.REACT_APP_URL_BACKEND}/accept_friend_request?requester_id=${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${Token}`,
+        },
+      })
+      .then((res) => {
+        res.json().then((data) => {
+          // Si el código es correcto, mostrar un mensaje de éxito en el toast
+          if (res.status === 200) {
+            window.location.reload();
+            toast.success(`${nombre} ha sido aceptado como amigo`);
+
+
+          }
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+  
+
+  function rechazarInvitacion(id, nombre) {
+    fetch(
+      `${process.env.REACT_APP_URL_BACKEND}/reject_friend_request?requester_id=${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${Token}`,
+        },
+      })
+      .then((res) => {
+        res.json().then((data) => {
+          // Si el código es correcto, mostrar un mensaje de éxito en el toast
+          if (res.status === 200) {
+            window.location.reload();
+            toast.success(`${nombre} ha sido rechazado como amigo`);
+
+
+          }
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+  
+  
 
   return (
       
@@ -132,7 +208,26 @@ function getCookie(name) {
         <button type="button" id="todos-button" className="text-white font-bold py-2 px-4 mr-20 mb-2" onClick={() => setOpen(!open)}>Todos</button>
       </a>
       <button type="button" id="pendientes-button" className="text-black-500 font-bold py-2 px-4 ml-20 border-b border-black border-b-4 mb-2" >Pendientes</button>
-
+      {nummensajes > 0 && (
+              <>
+                {open && (
+                  <div
+                  className="absolute top-20 right-0 h-4 w-4 bg-red-800 text-white text-xs flex items-center justify-center rounded-full"
+                  style={{ left: "50%", transform: "translate(1050%, 1050%)" }}
+                >
+                    {nummensajes}
+                  </div>
+                )}
+                {!open && (
+                  <div
+                  className="absolute top-20 right-0 h-4 w-4 bg-red-800 text-white text-xs flex items-center justify-center rounded-full"
+                  style={{ left: "50%", transform: "translate(1050%, 1050%)" }}
+                >
+                    {nummensajes}
+                  </div>
+                )}
+              </>
+            )}
   
 </div>
 
