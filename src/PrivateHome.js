@@ -365,9 +365,9 @@ export default function PrivateHome() {
       />
       {/* --------------------------- botones centrales ---------------------------*/}
 
-      <div className="felx flex-col gap-8 mx-auto my-auto  w-96">
+      <div className={`flex justify-center items-center flex-col mx-auto my-auto w-96`}>
         <button
-          className="-mt-40 w-80 flex h-20 btn_private_home "
+          className="w-80 flex h-20 btn_private_home"
           onClick={() => {
             window.location.href = "http://localhost:3000/login";
           }}
