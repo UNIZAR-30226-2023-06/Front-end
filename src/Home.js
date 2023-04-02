@@ -156,7 +156,7 @@ export default function PrivateHome() {
           <img
             alt="profil"
             src={imagen}
-            className={`mx-auto object-cover rounded-full h-28 w-28 mt-9`}
+            className={`mx-auto object-cover rounded-full h-28 w-28 mt-9 bg-teal-200`}
           />
           {/* --------------------------- nombre del usuario --------------------------- */}
 
@@ -329,7 +329,7 @@ export default function PrivateHome() {
           >
             <input
               id="amigo_id"
-              className={`w-48 p-2 mr-2 border border-transparent border-b-white bg-transparent text-white focus:outline-none focus:border-b-white`}
+              className={`w-48 p-2 mr-2 border border-transparent border-b-white focus:border focus:border-white bg-transparent text-white`}
               type="text"
               placeholder="Añadir amigo: 2345"
             ></input>

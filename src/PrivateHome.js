@@ -127,15 +127,6 @@ export default function PrivateHome() {
       console.error("Error:", error);
     });
 
-  {
-    /* --------------------------- zona debug --------------------------- */
-  }
-  console.log("tamaño de la pantalla:");
-  console.log(screenSize < 720);
-  console.log("valor de open:");
-  console.log(!desplegado);
-  console.log("resultado");
-  console.log(screenSize < 720 && desplegado);
 
   return (
     /* --------------------------- fondo de las montañas --------------------------- */
@@ -166,7 +157,7 @@ export default function PrivateHome() {
           <img
             alt="profil"
             src={imagen}
-            className={`mx-auto object-cover rounded-full h-28 w-28 mt-9`}
+            className={`mx-auto object-cover rounded-full h-28 w-28 mt-9 bg-teal-200`}
           />
           {/* --------------------------- nombre del usuario --------------------------- */}
 
@@ -196,7 +187,7 @@ export default function PrivateHome() {
             />
           </h1>
         </div>
-        <ul className="flex flex-col w-full items-start py-6 px-4 gap-2 ">
+        <ul className="flex flex-col w-full items-start py-6 px-4 gap-2">
           {/* --------------------------- volver al home --------------------------- */}
           <a href="http://localhost:3000/home" className={styleLinks}>
             <img
@@ -339,10 +330,10 @@ export default function PrivateHome() {
           >
             <input
               id="amigo_id"
-              className={`w-48 p-2 mr-2 border border-transparent border-b-white bg-transparent text-white focus:outline-none focus:border-b-white`}
+              className={`w-48 p-2 mr-2 border border-transparent border-b-white focus:border focus:border-white bg-transparent text-white`}
               type="text"
               placeholder="Añadir amigo: 2345"
-            ></input>
+            />
             <button className="px-4 py-2 rounded-full bg-cyan-900 hover:bg-slate-900 text-white w-12 h-10">
               <img
                 src="http://localhost:3000/add-friend.png"
@@ -365,7 +356,9 @@ export default function PrivateHome() {
       />
       {/* --------------------------- botones centrales ---------------------------*/}
 
-      <div className={`flex justify-center items-center flex-col mx-auto my-auto w-96`}>
+      <div
+        className={`flex justify-center items-center flex-col mx-auto my-auto w-96`}
+      >
         <button
           className="w-80 flex h-20 btn_private_home"
           onClick={() => {
