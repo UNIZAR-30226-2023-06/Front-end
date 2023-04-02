@@ -12,6 +12,7 @@ import Lista_partidas from "./Lista_partidas";
 import Sala_partida from "./Sala_partida";
 import Partida from "./Partida";
 import Tienda from "./Tienda";
+import EditaPerfil from "./EditarPerfil";
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
           <Route exact path="/sala_partida" element={<Sala_partida/>} />
           <Route exact path="/partida" element={<Partida/>} />
           <Route exact path="/tienda" element={<Tienda/>} />
+          <Route exact path="/editarPerfil" element={<EditaPerfil/>} />
         </Routes>
       </Router>
     </>

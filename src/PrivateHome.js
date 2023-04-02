@@ -147,7 +147,7 @@ export default function PrivateHome() {
         </div>
         <ul className="flex flex-col w-full items-center py-6 px-4 gap-2 ">
           <a
-            href="http://localhost:3000/amigosT"
+            href="http://localhost:3000/editarPerfil"
             className="gap-3 mt-2 flex flex-grow"
           >
             {/* --------------------------- editar perfil --------------------------- */}
@@ -161,7 +161,7 @@ export default function PrivateHome() {
             />
 
             <h1
-              href="/login"
+              href="http://localhost:3000/editarPerfil"
               variant={Link}
               className={`text-white origin-center content-center font-medium text-xl duration-300 ${
                 !open && `scale-0`
@@ -180,7 +180,7 @@ export default function PrivateHome() {
             <img
               alt="profil"
               src="http://localhost:3000/friends.png"
-              className={`object-cover h-8 w-8 ${!open ? "ml-10 mb-4" : ""}`}
+              className={`object-cover h-7 w-7 ${!open ? "ml-10 mb-4" : ""}`}
             />
             {nummensajes > 0 && (
               <>
@@ -246,7 +246,7 @@ export default function PrivateHome() {
           {/* --------------------------- añadir amigos --------------------------- */}
 
           <form
-            className={`fixed bottom-0 left-0 p-4 ${!open && `scale-0`}`}
+            className={`fixed bottom-0 left-0 p-4`}
             onSubmit={(e) => {
               e.preventDefault(); // Agregar esto para evitar que la página se recargue
               fetch(

@@ -7,6 +7,8 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "alice-carousel": "^0.0.1",
+    "flowbite": "^1.6.4",
+    "flowbite-react": "^0.4.2",
     "jose": "^4.13.1",
     "js-cookie": "^3.0.1",
     "jwt-decode": "^3.1.2",

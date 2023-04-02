@@ -4,6 +4,14 @@
 
 @import "react-alice-carousel/lib/alice-carousel.css";
 
+@media (max-width: 800px) and (max-height: 500px) {
+  .container {
+    width: 800px !important;
+    height: 500px !important;
+    overflow: hidden;
+  }
+}
+
 .imagenCustom {
   width: 100vw;
   height: 100vh;
@@ -745,4 +753,11 @@ h2 span:nth-of-type(7) {
 /* PrivateHome */
 .sidebar_PrivateHome{
   background-image: radial-gradient( rgba(22,18,19,1) 50%, rgba(22,18,19,1) 150%); 
+}
+
+.over_SideBaar{
+  max-width: 650;
+  max-height: 650;
+  overflow-y: auto;
+  overflow-x: auto;
 }

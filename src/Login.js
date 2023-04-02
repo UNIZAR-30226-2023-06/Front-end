@@ -101,7 +101,7 @@ export default function Login() {
           type="submit"
           className="w-full py-2 bg-cyan-900 text-white font-bold rounded-full hover:bg-slate-900 duration-300"
         >
-          Enviar
+          Iniciar sesión
         </button>
         <Link
           to="/registro"
