@@ -127,16 +127,6 @@ export default function PrivateHome() {
       console.error("Error:", error);
     });
 
-  {
-    /* --------------------------- zona debug --------------------------- */
-  }
-  console.log("tamaño de la pantalla:");
-  console.log(screenSize < 720);
-  console.log("valor de open:");
-  console.log(!desplegado);
-  console.log("resultado");
-  console.log(screenSize < 720 && desplegado);
-
   return (
     /* --------------------------- fondo de las montañas --------------------------- */
     <div className="w-full h-full flex imagenCustomPrivateHome">

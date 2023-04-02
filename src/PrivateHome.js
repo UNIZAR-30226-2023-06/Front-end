@@ -1,15 +1,31 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { useState } from "react";
-import { useCookies } from "react-cookie";
 import jwt_decode from "jwt-decode";
+
+import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import { Navigate } from "react-router-dom";
+import { useState } from "react";
+import { useEffect } from "react";
+import { useCookies } from "react-cookie";
 
 export default function PrivateHome() {
-  /* --------------------------- "variables" de la página  --------------------------- */
+  {
+    /* --------------------------- variables --------------------------- */
+  }
 
-  const [cookies, removeCookie] = useCookies(["token"]); // Agregamos removeCookie
-  const [open, setOpen] = useState(true);
+  const [desplegado, setDesplegado] = useState(true);
+  const styleSidebarOn =
+    "transition-all duration-900 w-80 h-full opacity-95 p-5 pt-8 border border-solid border-cyan-900 sidebar_PrivateHome";
+  const styleSidebarOff = "hidden transition-all duration-900";
+  const styleMenuOn =
+    "transition-all duration-900 absolute top-0 left-0 w-10 h-10 object-cover";
+  const styleMenuOff = "hidden transition-all duration-900";
+  const styleCruzOn =
+    "hover:cursor-pointer transition-all duration-900 absolute top-0 right-0 w-8 h-8 mr-2 mt-2 object-cover";
+  const styleCruzOff = "transition-all duration-900 hidden";
+  const styleLinks = "gap-3 mt-2 ml-1 flex flex-grow relative ";
+  const [screenSize, setScreenSize] = useState(window.innerWidth);
+
   const [dinero, set_dinero] = React.useState(null);
   const [nombre, set_nombre] = React.useState(null);
   const [codigo, set_codigo] = React.useState(null);
@@ -17,14 +33,33 @@ export default function PrivateHome() {
   const [nummensajes, set_nummensajes] = React.useState(null);
   const [elo, set_elo] = React.useState(null);
 
-  // leemos el token y lo imprimimos por consola
-  // console.log(cookies.token);
+  const [cookies, setCookie] = useCookies(["token"]); // Agregamos removeCookie
+
+  {
+    /* --------------------------- calculamos el tamaño de la ventana --------------------------- */
+  }
+
+  useEffect(() => {
+    const handleResize = () => {
+      const newScreenWidth = window.innerWidth;
+      setScreenSize(newScreenWidth);
+      if (newScreenWidth < 720) {
+        setDesplegado(false);
+      } else {
+        setDesplegado(true);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [screenSize]);
 
   /* --------------------------- seguridad  --------------------------- */
 
   // en caso de que no estemos logueados ve a la página de login
-  if (cookies.token === undefined) {
-    window.location.href = "http://localhost:3000/login";
+  if (cookies.token === "") {
+    return <Navigate to="/login" />;
   }
 
   /* --------------------------- cookies  --------------------------- */
@@ -92,134 +127,158 @@ export default function PrivateHome() {
       console.error("Error:", error);
     });
 
+  {
+    /* --------------------------- zona debug --------------------------- */
+  }
+  console.log("tamaño de la pantalla:");
+  console.log(screenSize < 720);
+  console.log("valor de open:");
+  console.log(!desplegado);
+  console.log("resultado");
+  console.log(screenSize < 720 && desplegado);
+
   return (
-    // fondo
+    /* --------------------------- fondo de las montañas --------------------------- */
     <div className="w-full h-full flex imagenCustomPrivateHome">
-      {/* --------------------------- sidebar --------------------------- */}
-
+      {/* --------------------------- menu --------------------------- */}
       <div
-        className={` h-full opacity-95 ${
-          open ? "w-72" : "w-20"
-        } duration-300 h-screen p-5 pt-8 border border-solid border-cyan-900 relative sidebar_PrivateHome`}
+        className={`over_SideBaar relative h-full ${
+          // si la ventana es pequeña o desplegado falso que no se vea
+          screenSize < 720 && !desplegado ? styleSidebarOff : styleSidebarOn
+        }`}
       >
-        {/* --------------------------- flecha ---------------------------*/}
-
+        {/* --------------------------- cruz de cerrar menu --------------------------- */}
         <img
-          src="http://localhost:3000/flecha2.png"
-          className={`absolute cursor-pointer rounded-full 
-          -right-3 top-9 w-7 border-2 p-1 bg-white border-cyan-900 ${
-            !open && "rotate-180"
+          src="http://localhost:3000/white_cross.png"
+          alt="imagen para cerrar la sidebar"
+          className={`hover:cursor-pointer ${
+            screenSize < 720 && desplegado ? styleCruzOn : styleCruzOff
           }`}
-          onClick={() => setOpen(!open)}
-          alt="si le das a esta flecha la sidebar se hace más pequeña"
+          onClick={() => {
+            setDesplegado(false);
+          }}
         />
 
-        {/* --------------------------- foto del avatar --------------------------- */}
+        {/* --------------------------- datos del usuario --------------------------- */}
 
         <div className="relative block gap-x-4 mx-auto">
+          {/* --------------------------- foto del avatar --------------------------- */}
           <img
             alt="profil"
             src={imagen}
-            className={`mx-auto object-cover rounded-full h-28 w-28 mt-9 ${
-              !open &&
-              "h-9 w-9 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
-            }`}
+            className={`mx-auto object-cover rounded-full h-28 w-28 mt-9`}
           />
-
           {/* --------------------------- nombre del usuario --------------------------- */}
 
           <h1
-            className={`text-white origin-center content-center font-medium text-xl duration-300 mt-2 ${
-              !open && `scale-0`
-            }`}
+            className={`text-white origin-center content-center font-medium text-xl mt-2`}
             style={{ display: "flex", justifyContent: "center" }}
           >
             {nombre}#{codigo}
           </h1>
           <h1
-            className={`text-white origin-center content-center font-medium text-xl duration-300 mt-2 ${
-              !open && `scale-0`
-            }`}
+            className={`text-white origin-center content-center font-medium text-lg mt-2`}
             style={{ display: "flex", justifyContent: "center" }}
           >
             ELO: {elo} ⚔
           </h1>
-        </div>
-        <ul className="flex flex-col w-full items-center py-6 px-4 gap-2 ">
-          <a
-            href="http://localhost:3000/editarPerfil"
-            className="gap-3 mt-2 flex flex-grow"
+          {/* --------------------------- dinero --------------------------- */}
+          <h1
+            className={`text-white origin-center content-center font-medium text-lg mt-1`}
+            style={{ display: "flex", justifyContent: "center" }}
           >
-            {/* --------------------------- editar perfil --------------------------- */}
+            {dinero}
 
             <img
               alt="profil"
-              src="http://localhost:3000/editProfile.png"
-              className={`object-cover h-8 w-8 ${
-                !open && "h-8 w-8 duration-300 ml-8"
-              }`}
+              src="http://localhost:3000/white_dinero.png"
+              className={`w-6 h-6 ml-2`}
+            />
+          </h1>
+        </div>
+        <ul className="flex flex-col w-full items-start py-6 px-4 gap-2 ">
+          {/* --------------------------- volver al home --------------------------- */}
+          <a href="http://localhost:3000/home" className={styleLinks}>
+            <img
+              alt="profil"
+              src="http://localhost:3000/home.png"
+              className={`object-cover h-7 w-7`}
             />
 
             <h1
               href="http://localhost:3000/editarPerfil"
               variant={Link}
-              className={`text-white origin-center content-center font-medium text-xl duration-300 ${
-                !open && `scale-0`
-              }`}
+              className={`text-white origin-center content-center font-medium text-xl`}
+            >
+              Inicio
+            </h1>
+          </a>
+          {/* --------------------------- editar perfil --------------------------- */}
+          <a href="http://localhost:3000/editarPerfil" className={styleLinks}>
+            <img
+              alt="profil"
+              src="http://localhost:3000/editProfile.png"
+              className={`object-cover h-7 w-7`}
+            />
+
+            <h1
+              href="http://localhost:3000/editarPerfil"
+              variant={Link}
+              className={`text-white origin-center content-center font-medium text-xl`}
             >
               Editar perfil
             </h1>
           </a>
-
           {/* --------------------------- amigos ---------------------------*/}
-          <a
-            href="http://localhost:3000/amigosT"
-            className="gap-3 mt-2 flex flex-grow relative"
-          >
+          <a href="http://localhost:3000/amigosT" className={styleLinks}>
             {/* imagen amigos*/}
             <img
               alt="profil"
               src="http://localhost:3000/friends.png"
-              className={`object-cover h-7 w-7 ${!open ? "ml-10 mb-4" : ""}`}
+              className={`object-cover h-7 w-7}`}
             />
             {nummensajes > 0 && (
               <>
-                {open && (
-                  <div
-                    className="absolute top-0 right-0 transform translate-x-14 -translate-y-1/4 h-4 w-4 bg-red-800 text-white text-xs flex items-center justify-center rounded-full"
-                    style={{ left: "50%" }}
-                  >
-                    {nummensajes}
-                  </div>
-                )}
-                {!open && (
-                  <div
-                    className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 h-4 w-4 bg-red-800 text-white text-xs flex items-center justify-center rounded-full"
-                    style={{ left: "50%" }}
-                  >
-                    {nummensajes}
-                  </div>
-                )}
+                <div
+                  className="absolute top-0 right-0 transform translate-x-14 -translate-y-1/4 h-4 w-4 bg-red-800 text-white text-xs flex items-center justify-center rounded-full"
+                  style={{ left: "50%" }}
+                >
+                  {nummensajes}
+                </div>
               </>
             )}
             <h1
               href="/login"
               variant={Link}
-              className={`text-white font-medium text-xl duration-300 ${
-                !open && `scale-0`
-              }`}
+              className={`text-white font-medium text-xl duration-300`}
             >
               Amigos
+            </h1>
+          </a>
+          {/* --------------------------- tienda --------------------------- */}
+          <a href="http://localhost:3000/tienda" className={styleLinks}>
+            <img
+              alt="profil"
+              src="http://localhost:3000/shopping-cart.png"
+              className={`object-cover h-7 w-7`}
+            />
+
+            <h1
+              href="http://localhost:3000/editarPerfil"
+              variant={Link}
+              className={`text-white origin-center content-center font-medium text-xl`}
+            >
+              Tienda
             </h1>
           </a>
 
           {/* --------------------------- logout --------------------------- */}
 
           <div
-            className="gap-3 mt-2 flex flex-grow hover:cursor-pointer"
+            className={`hover:cursor-pointer ${styleLinks}`}
             onClick={() => {
-              // borramos las cookies
-              removeCookie("token");
+              // "borramos" las cookies
+              setCookie("token", "", { path: "/" });
               window.location.href = "http://localhost:3000/login";
             }}
           >
@@ -227,26 +286,24 @@ export default function PrivateHome() {
             <img
               alt="profil"
               src="http://localhost:3000/logout.png"
-              className={`object-cover h-8 w-8 ${
-                !open && "h-8 w-8 duration-300 ml-8"
-              }`}
+              className={`object-cover h-7 w-7`}
             />
 
             <h1
               href="/login"
               variant={Link}
-              className={`text-white origin-center content-center font-medium text-xl duration-300 ${
-                !open && `scale-0`
-              }`}
+              className={`text-white origin-center content-center font-medium text-xl`}
             >
               Cerrar sesión
             </h1>
           </div>
-
           {/* --------------------------- añadir amigos --------------------------- */}
 
           <form
-            className={`fixed bottom-0 left-0 p-4`}
+            className={`flex bottom-0 left-0 mt-72`}
+            // `bottom-0 left-0 p-4 w-auto fixed`
+            // "absolute left-0 w-full bg-gray-200 p-4">
+
             onSubmit={(e) => {
               e.preventDefault(); // Agregar esto para evitar que la página se recargue
               fetch(
@@ -282,9 +339,9 @@ export default function PrivateHome() {
           >
             <input
               id="amigo_id"
-              className="p-2 mr-2 border border-transparent border-b-white bg-transparent text-white focus:outline-none focus:border-b-white"
+              className={`w-48 p-2 mr-2 border border-transparent border-b-white bg-transparent text-white focus:outline-none focus:border-b-white`}
               type="text"
-              placeholder="Añadir amigo"
+              placeholder="Añadir amigo: 2345"
             ></input>
             <button className="px-4 py-2 rounded-full bg-cyan-900 hover:bg-slate-900 text-white w-12 h-10">
               <img
@@ -295,29 +352,17 @@ export default function PrivateHome() {
           </form>
         </ul>
       </div>
-
-      {/* --------------------------- cuerpo de la página --------------------------- */}
-
-      <div className="absolute top-0 right-0 m-4">
-        <div className="flex top-0 right-0 justify-end">
-          <h1 className="mt-6 mr-1">{dinero}</h1>
-          <img
-            className="w-7 h-7 mt-5"
-            src="http://localhost:3000/dinero.png"
-            alt="indicamos el dinero que los jugadores tienen es una imagen de un billete y a su izquierda esta el número"
-          />
-
-          <img
-            onClick={() => {
-              window.location.href = "http://localhost:3000/tienda";
-            }}
-            alt="lin para ir a la tienda del juego"
-            className="w-10 h-10 m-4 hover:cursor-pointer"
-            src="http://localhost:3000/carrito.png"
-          />
-        </div>
-      </div>
-
+      {/* --------------------------- menu plegado --------------------------- */}
+      <img
+        src="http://localhost:3000/menu.png"
+        alt="Example image"
+        className={`hover:cursor-pointer w-8 h-8 m-4 ${
+          screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
+        }`}
+        onClick={() => {
+          setDesplegado(true);
+        }}
+      />
       {/* --------------------------- botones centrales ---------------------------*/}
 
       <div className="felx flex-col gap-8 mx-auto my-auto  w-96">
