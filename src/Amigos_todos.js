@@ -43,7 +43,6 @@ export default function Amigos_Todos() {
   const inputRef = useRef(null);
   // Función para acceder a la historia de navegación
   const navigate = useNavigate();
-  const [AmigosFiltrados, setAmigosFiltrados] = useState([]);
 
   // Función para volver a la página anterior
   const handleBack = () => {
@@ -95,127 +94,128 @@ export default function Amigos_Todos() {
 
 
   /* --------------------------- obtener datos usuario  --------------------------- */
-  function GetResultados(){
+  function GetResultados() {
 
-  
-  useEffect(() => {
 
-    fetch(
-      `${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(
-        json_token.id
-      )}`,
+    useEffect(() => {
+      if (!filtradoTrue) {
+        fetch(
+          `${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(
+            json_token.id
+          )}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              Authorization: `Bearer ${Token}`,
+            },
+          }
+        )
+          .then((res) => {
+            res.json().then((data) => {
+              // Actualizamos el estado de cosas
+              const img =
+                data.profile_picture === "default"
+                  ? "http://localhost:3000/fotos_perfil/personaje1.png"
+                  : `http://localhost:3000/fotos_perfil/personaje${imagen}.png`;
+
+              set_dinero(data.coins);
+              set_codigo(data.id);
+              set_nombre(data.username);
+              set_imagen(img);
+              set_elo(data.elo);
+              // console.log(data);
+            });
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+
       {
-        method: "GET",
+        /* --------------------------- miramos si hay mensajes pendientes --------------------------- */
+      }
+
+      fetch(`${process.env.REACT_APP_URL_BACKEND}/get_friend_requests`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Token}`,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          response.json().then((data) => {
+            console.log(data.number_of_requests);
+            set_nummensajes(data.number_of_requests);
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+
+
+
+      fetch(`${process.env.REACT_APP_URL_BACKEND}/get_friends`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
           Authorization: `Bearer ${Token}`,
         },
+      })
+        .then((res) => {
+          res.json().then((data) => {
+            // Update state
+            const nFriends = data.number_of_friends;
+            const newAmigos = [];
+            for (let i = 0; i < data.number_of_friends; i++) {
+              const imagen =
+                data.friends[i].profile_picture === "default"
+                  ? "http://localhost:3000/fotos_perfil/personaje1.png"
+                  : `http://localhost:3000/fotos_perfil/personaje${data.friends[i].profile_picture}.png`;
+              const codigo = data.friends[i].friend_id;
+              const name = data.friends[i].friend_name;
+
+              newAmigos.push({
+                nombre: name,
+                id: codigo,
+                foto: imagen
+              });
+            }
+            setAmigos(newAmigos);
+            console.log(Amigos);
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+
+
+      {
+        /* --------------------------- obtener el numero de solicitudes de amistad --------------------------- */
       }
-    )
-      .then((res) => {
-        res.json().then((data) => {
-          // Actualizamos el estado de cosas
-          const img =
-            data.profile_picture === "default"
-              ? "http://localhost:3000/fotos_perfil/personaje1.png"
-              : `http://localhost:3000/fotos_perfil/personaje${imagen}.png`;
-
-          set_dinero(data.coins);
-          set_codigo(data.id);
-          set_nombre(data.username);
-          set_imagen(img);
-          set_elo(data.elo);
-          // console.log(data);
-        });
+      fetch(`${process.env.REACT_APP_URL_BACKEND}/get_friend_requests`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Token}`,
+        },
       })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-
-    {
-      /* --------------------------- miramos si hay mensajes pendientes --------------------------- */
-    }
-
-    fetch(`${process.env.REACT_APP_URL_BACKEND}/get_friend_requests`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${Token}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        response.json().then((data) => {
-          console.log(data.number_of_requests);
-          set_nummensajes(data.number_of_requests);
-        });
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-
-
-
-    fetch(`${process.env.REACT_APP_URL_BACKEND}/get_friends`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Bearer ${Token}`,
-      },
-    })
-      .then((res) => {
-        res.json().then((data) => {
-          // Update state
-          const nFriends = data.number_of_friends;
-          const newAmigos = [];
-          for (let i = 0; i < data.number_of_friends; i++) {
-            const imagen =
-              data.friends[i].profile_picture === "default"
-                ? "http://localhost:3000/fotos_perfil/personaje1.png"
-                : `http://localhost:3000/fotos_perfil/personaje${data.friends[i].profile_picture}.png`;
-            const codigo = data.friends[i].friend_id;
-            const name = data.friends[i].friend_name;
-
-            newAmigos.push({
-              nombre: name,
-              id: codigo,
-              foto: imagen
-            });
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
           }
-          setAmigos(newAmigos);
-          console.log(Amigos);
+          response.json().then((data) => {
+            set_nummensajes(data.number_of_requests);
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
         });
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
 
-
-    {
-      /* --------------------------- obtener el numero de solicitudes de amistad --------------------------- */
-    }
-    fetch(`${process.env.REACT_APP_URL_BACKEND}/get_friend_requests`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${Token}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        response.json().then((data) => {
-          set_nummensajes(data.number_of_requests);
-        });
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-
-  }, []);
+    }, []);
   }
 
 
@@ -277,6 +277,11 @@ export default function Amigos_Todos() {
   }
 
   function filtrar(searchTerm) {
+    if (searchTerm.length === 0) {
+      window.location.reload();
+      return;
+    }
+
     if (!searchTerm.includes("#")) {
       toast.error(`La busqueda tiene que ser del formato nombre#id`);
       return;
@@ -299,23 +304,17 @@ export default function Amigos_Todos() {
         foto: foto
       });
       console.log(newFiltrado);
-      setAmigosFiltrados({
+      setAmigos([]);
+      const newAmigos = [];
+
+      newAmigos.push({
         nombre: nombre,
         id: id,
         foto: foto
       });
-      console.log(AmigosFiltrados);
+      setAmigos(newAmigos);
+      console.log(Amigos);
       setFiltradoTrue(true);
-      const resultadosFiltrado = AmigosFiltrados.map((index) => (
-        <a className="resultado_busqueda">
-          <img src={index.foto} className="icono_jugadores" alt="icono_jugadores" />
-          <code>
-            {index.nombre}#{index.id}
-          </code>
-          {/* Botón para dejar de seguir */}
-          <button type="button" id="search-button" className="boton-dejar-de-seguir" onClick={() => dejarDeSeguir(index.id, index.nombre)}>Dejar de seguir</button>
-        </a>
-      ));
 
     } else {
       toast.error(`No se ha encontrado el amigo`);
@@ -585,7 +584,7 @@ export default function Amigos_Todos() {
                     {open && (
                       <div
                         className="absolute top-20 right-0 h-4 w-4 bg-red-800 text-white text-xs flex items-center justify-center rounded-full"
-                        style={{ left: "50%", transform: "translate(1050%, 1050%)" }}
+                        style={{ left: "30%", transform: "translate(3925%, 600%)" }}
                       >
                         {nummensajes}
                       </div>
@@ -593,13 +592,15 @@ export default function Amigos_Todos() {
                     {!open && (
                       <div
                         className="absolute top-20 right-0 h-4 w-4 bg-red-800 text-white text-xs flex items-center justify-center rounded-full"
-                        style={{ left: "50%", transform: "translate(1050%, 1050%)" }}
+                        style={{ left: "30%", transform: "translate(1050%, 1050%)" }}
                       >
                         {nummensajes}
                       </div>
                     )}
                   </>
                 )}
+
+
               </a>
 
             </div>
@@ -608,12 +609,9 @@ export default function Amigos_Todos() {
 
             {/* Lista de resultados */}
             <ul className="opacity-95 bg-cyan-900 w-full rounded-xl shadow-xl mb-20 flex-col justify-center items-center p-4 max-h-98 overflow-y-scroll">
-            {!filtradoTrue ? 
-  <>
-    {GetResultados()}
-    {resultados}
-  </>
-: null}
+              {GetResultados()}
+              {resultados}
+
             </ul>
           </div>
 
