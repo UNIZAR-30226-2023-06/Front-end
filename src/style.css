@@ -443,13 +443,22 @@ h2 span:nth-of-type(7) {
   margin: 30px;
 }
 
-.menu_superior {
+/******************************************************************************/
+/********************************** PARTIDA ***********************************/
+/******************************************************************************/
+
+.menu_superior_partida {
   background-color: #1c2c4d;
 
   width: 100%;
   height: 100px;
 
   position: fixed;
+
+  display: flex;
+  align-items: center;
+
+  justify-content: flex-end;
 }
 
 .contador_tiempo {
@@ -474,7 +483,7 @@ h2 span:nth-of-type(7) {
   position: fixed;
 }
 
-.superior_jugador_1 {
+.superior_jugador_1_partida {
   background-color: #e9d209;
   border-radius: 30px;
 
@@ -498,14 +507,14 @@ h2 span:nth-of-type(7) {
   overflow: hidden;
 }
 
-.superior_jugador_2 {
+.superior_jugador_2_partida {
   background-color: #29e959;
   border-radius: 30px;
 
   width: 20%;
   height: 60px;
 
-  left: 40%;
+  left: 35%;
 
   top: 20%;
 
@@ -522,14 +531,14 @@ h2 span:nth-of-type(7) {
   overflow: hidden;
 }
 
-.superior_jugador_3 {
+.superior_jugador_3_partida {
   background-color: #e92929;
   border-radius: 30px;
 
   width: 20%;
   height: 60px;
 
-  right: 5%;
+  left: 65%;
 
   top: 20%;
 
@@ -553,7 +562,34 @@ h2 span:nth-of-type(7) {
   margin: 20px;
 }
 
+.icono_salir {
+  width: 40px;
+  height: width;
+
+  margin: 60px;
+
+  right: 20px;
+}
+
+.hexagono_partida {
+  display:inline-block;
+  color: #fff;
+  font-weight: 500;
+  font-size: 3.0em;
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 15px 50px;
+  text-align: center;
+  clip-path: polygon(20% 0, 80% 0, 100% 50%, 80% 100%, 20% 100%, 0 50%);
+  background-color: #161213;
+  background-image: radial-gradient(200% 70% at center 20%, rgba(48,44,45,1) -30%, rgba(50,46,47,1) 49%, rgba(22,18,19,1) 50%, rgba(22,18,19,1) 150%);
+  background-repeat: no-repeat;
+  transition: background-position-y ease-in-out 250ms;
+}
+
+/******************************************************************************/
 /*********************************** TIENDA ***********************************/
+/******************************************************************************/
 
 .icono_dinero_tienda {
   width: 80px;
