@@ -580,11 +580,25 @@ h2 span:nth-of-type(7) {
   text-transform: uppercase;
   padding: 15px 50px;
   text-align: center;
-  clip-path: polygon(20% 0, 80% 0, 100% 50%, 80% 100%, 20% 100%, 0 50%);
-  background-color: #161213;
-  background-image: radial-gradient(200% 70% at center 20%, rgba(48,44,45,1) -30%, rgba(50,46,47,1) 49%, rgba(22,18,19,1) 50%, rgba(22,18,19,1) 150%);
+  clip-path: polygon(50% 0%, 100% 24%, 100% 75%, 50% 100%, 0% 75%, 0 25%);
+  
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
-  transition: background-position-y ease-in-out 250ms;
+}
+
+.carretera_partida {
+  display:inline-block;
+  color: #fff;
+  font-weight: 500;
+  font-size: 3.0em;
+  text-decoration: none;
+  text-transform: uppercase;
+  text-align: center;
+  
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /******************************************************************************/
