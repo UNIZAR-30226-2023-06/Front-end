@@ -3,16 +3,14 @@ import jwt_decode from "jwt-decode";
 
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 export default function Amigos_pendientes() {
-  {
-    /* --------------------------- variables --------------------------- */
-  }
+  /* --------------------------- variables --------------------------- */
 
   const [desplegado, setDesplegado] = useState(true);
   const styleSidebarOn =
@@ -33,9 +31,8 @@ export default function Amigos_pendientes() {
   const [imagen, set_imagen] = React.useState(null);
   const [nummensajes, set_nummensajes] = React.useState(null);
   const [elo, set_elo] = React.useState(null);
-  const [filtradoTrue, setFiltradoTrue] = React.useState(false);
+  const [setFiltradoTrue] = React.useState(false);
   const [cookies, setCookie] = useCookies(["token"]); // Agregamos removeCookie
-  const [removeCookie] = useCookies(["token"]); // Agregamos removeCookie
   const [open, setOpen] = useState(true);
   const [searchTerm, setSearchTerm] = React.useState("");
   const inputRef = useRef(null);
@@ -46,20 +43,16 @@ export default function Amigos_pendientes() {
     navigate(-1);
   };
 
+  /* --------------------------- obtener datos usuario  --------------------------- */
 
-
-  {
-    /* --------------------------- obtener datos usuario  --------------------------- */
-  }
   // Obtener la cookie de sesión del back-end
-  const sessionCookie = getCookie('session');
+  const sessionCookie = getCookie("session");
 
   // Si la cookie existe, realizar una petición PUT al endpoint correspondiente para obtener la lista de amigos
 
   const [Amigos, setAmigos] = useState([]);
-  {
-    /* --------------------------- calculamos el tamaño de la ventana --------------------------- */
-  }
+
+  /* --------------------------- calculamos el tamaño de la ventana --------------------------- */
 
   useEffect(() => {
     const handleResize = () => {
@@ -86,10 +79,7 @@ export default function Amigos_pendientes() {
 
   /* --------------------------- obtener datos usuario  --------------------------- */
   function GetResultados() {
-
-
     useEffect(() => {
-
       fetch(`${process.env.REACT_APP_URL_BACKEND}/get_friend_requests`, {
         method: "PUT",
         headers: {
@@ -105,15 +95,15 @@ export default function Amigos_pendientes() {
             for (let i = 0; i < nRequests; i++) {
               const imagen =
                 data.friend_requests[i].profile_picture === "default"
-                  ? "http://localhost:3000/fotos_perfil/personaje1.png"
-                  : `http://localhost:3000/fotos_perfil/personaje${data.friend_requests[i].profile_picture}.png`;
+                  ? "http://localhost:3000/fotos_perfil/skin1.png"
+                  : `http://localhost:3000/fotos_perfil/skin${data.friend_requests[i].profile_picture}.png`;
               const codigo = data.friend_requests[i].requester_id;
               const name = data.friend_requests[i].requester_name;
 
               newRequests.push({
                 nombre: name,
                 id: codigo,
-                foto: imagen
+                foto: imagen,
               });
             }
             setAmigos(newRequests);
@@ -143,55 +133,65 @@ export default function Amigos_pendientes() {
         .catch((error) => {
           console.error("Error:", error);
         });
-
-
     }, []);
   }
 
-
-// Función para obtener una cookie por su nombre
-function getCookie(name) {
-  const cookies = document.cookie.split(';');
-  for (let i = 0; i < cookies.length; i++) {
-    const cookie = cookies[i].trim();
-    if (cookie.startsWith(`${name}=`)) {
-      return cookie.substring(name.length + 1);
+  // Función para obtener una cookie por su nombre
+  function getCookie(name) {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith(`${name}=`)) {
+        return cookie.substring(name.length + 1);
+      }
     }
+    return null;
   }
-  return null;
-}
-
 
   // Un lista de resultados
   const resultados = Amigos.map((index) => (
     <a className="resultado_busqueda">
-      <img src={index.foto} className="icono_jugadores" alt="icono_jugadores"/>
+      <img src={index.foto} className="icono_jugadores" alt="icono_jugadores" />
       <code className="text-lg">
-      {index.nombre}#{index.id} te ha enviado una solicitud de amistad
+        {index.nombre}#{index.id} te ha enviado una solicitud de amistad
       </code>
       {/* Botón para dejar de seguir */}
-      <button type="button" id="search-button" className="boton-aceptar" onClick={() => aceptarInvitacion(index.id, index.nombre)}>Aceptar</button>
-      <button type="button" id="search-button" className="boton-rechazar" onClick={() => rechazarInvitacion(index.id, index.nombre)}>Rechazar</button>
+      <button
+        type="button"
+        id="search-button"
+        className="boton-aceptar"
+        onClick={() => aceptarInvitacion(index.id, index.nombre)}
+      >
+        Aceptar
+      </button>
+      <button
+        type="button"
+        id="search-button"
+        className="boton-rechazar"
+        onClick={() => rechazarInvitacion(index.id, index.nombre)}
+      >
+        Rechazar
+      </button>
     </a>
   ));
-  
+
   function aceptarInvitacion(id, nombre) {
     fetch(
-      `${process.env.REACT_APP_URL_BACKEND}/accept_friend_request?requester_id=${id}`, {
+      `${process.env.REACT_APP_URL_BACKEND}/accept_friend_request?requester_id=${id}`,
+      {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
           Authorization: `Bearer ${Token}`,
         },
-      })
+      }
+    )
       .then((res) => {
         res.json().then((data) => {
           // Si el código es correcto, mostrar un mensaje de éxito en el toast
           if (res.status === 200) {
             window.location.reload();
             toast.success(`${nombre} ha sido aceptado como amigo`);
-
-
           }
         });
       })
@@ -199,25 +199,24 @@ function getCookie(name) {
         console.error("Error:", error);
       });
   }
-  
 
   function rechazarInvitacion(id, nombre) {
     fetch(
-      `${process.env.REACT_APP_URL_BACKEND}/reject_friend_request?requester_id=${id}`, {
+      `${process.env.REACT_APP_URL_BACKEND}/reject_friend_request?requester_id=${id}`,
+      {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
           Authorization: `Bearer ${Token}`,
         },
-      })
+      }
+    )
       .then((res) => {
         res.json().then((data) => {
           // Si el código es correcto, mostrar un mensaje de éxito en el toast
           if (res.status === 200) {
             window.location.reload();
             toast.success(`${nombre} ha sido rechazado como amigo`);
-
-
           }
         });
       })
@@ -225,8 +224,6 @@ function getCookie(name) {
         console.error("Error:", error);
       });
   }
-  
-
 
   /* --------------------------- cookies  --------------------------- */
 
@@ -254,8 +251,8 @@ function getCookie(name) {
         // Actualizamos el estado de cosas
         const img =
           data.profile_picture === "default"
-            ? "http://localhost:3000/fotos_perfil/personaje1.png"
-            : `http://localhost:3000/fotos_perfil/personaje${imagen}.png`;
+            ? "http://localhost:3000/fotos_perfil/skin1.png"
+            : `http://localhost:3000/fotos_perfil/${imagen}.png`;
 
         set_dinero(data.coins);
         set_codigo(data.id);
@@ -293,55 +290,51 @@ function getCookie(name) {
       console.error("Error:", error);
     });
 
-
-    function filtrar(searchTerm) {
-      if (searchTerm.length === 0) {
-        window.location.reload();
-        return;
-      }
-  
-      if (!searchTerm.includes("#")) {
-        toast.error(`La busqueda tiene que ser del formato nombre#id`);
-        return;
-      }
-      // Hacer algo con el término de búsqueda, como enviarlo a un servidor o filtrar una lista de elementos
-      const amigoBuscado = Amigos.find((amigo) => {
-        const [nombre, id] = searchTerm.split("#");
-        let idEntero = parseInt(id);
-        return amigo.nombre === nombre && amigo.id === idEntero;
-      });
-  
-      if (amigoBuscado) {
-        toast.success(`El amigo fue encontrado`);
-  
-        const { nombre, id, foto } = amigoBuscado;
-        const newFiltrado = [];
-        newFiltrado.push({
-          nombre: nombre,
-          id: id,
-          foto: foto
-        });
-        console.log(newFiltrado);
-        setAmigos([]);
-        const newAmigos = [];
-  
-        newAmigos.push({
-          nombre: nombre,
-          id: id,
-          foto: foto
-        });
-        setAmigos(newAmigos);
-        console.log(Amigos);
-        setFiltradoTrue(true);
-  
-      } else {
-        toast.error(`No se ha encontrado el amigo`);
-  
-        console.log("Amigo no encontrado");
-      }
-  
+  function filtrar(searchTerm) {
+    if (searchTerm.length === 0) {
+      window.location.reload();
+      return;
     }
 
+    if (!searchTerm.includes("#")) {
+      toast.error(`La busqueda tiene que ser del formato nombre#id`);
+      return;
+    }
+    // Hacer algo con el término de búsqueda, como enviarlo a un servidor o filtrar una lista de elementos
+    const amigoBuscado = Amigos.find((amigo) => {
+      const [nombre, id] = searchTerm.split("#");
+      let idEntero = parseInt(id);
+      return amigo.nombre === nombre && amigo.id === idEntero;
+    });
+
+    if (amigoBuscado) {
+      toast.success(`El amigo fue encontrado`);
+
+      const { nombre, id, foto } = amigoBuscado;
+      const newFiltrado = [];
+      newFiltrado.push({
+        nombre: nombre,
+        id: id,
+        foto: foto,
+      });
+      console.log(newFiltrado);
+      setAmigos([]);
+      const newAmigos = [];
+
+      newAmigos.push({
+        nombre: nombre,
+        id: id,
+        foto: foto,
+      });
+      setAmigos(newAmigos);
+      console.log(Amigos);
+      setFiltradoTrue(true);
+    } else {
+      toast.error(`No se ha encontrado el amigo`);
+
+      console.log("Amigo no encontrado");
+    }
+  }
 
   return (
     /* --------------------------- fondo de las montañas --------------------------- */
@@ -351,14 +344,15 @@ function getCookie(name) {
         className={`over_SideBaar relative h-full ${
           // si la ventana es pequeña o desplegado falso que no se vea
           screenSize < 720 && !desplegado ? styleSidebarOff : styleSidebarOn
-          }`}
+        }`}
       >
         {/* --------------------------- cruz de cerrar menu --------------------------- */}
         <img
           src="http://localhost:3000/white_cross.png"
           alt="imagen para cerrar la sidebar"
-          className={`hover:cursor-pointer ${screenSize < 720 && desplegado ? styleCruzOn : styleCruzOff
-            }`}
+          className={`hover:cursor-pointer ${
+            screenSize < 720 && desplegado ? styleCruzOn : styleCruzOff
+          }`}
           onClick={() => {
             setDesplegado(false);
           }}
@@ -561,8 +555,9 @@ function getCookie(name) {
       <img
         src="http://localhost:3000/menu.png"
         alt="Example image"
-        className={`hover:cursor-pointer w-8 h-8 m-4 ${screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
-          }`}
+        className={`hover:cursor-pointer w-8 h-8 m-4 ${
+          screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
+        }`}
         onClick={() => {
           setDesplegado(true);
         }}
@@ -570,67 +565,85 @@ function getCookie(name) {
       {/* --------------------------- Página --------------------------- */}
       <div>
         <h1 className="m-14">
-      
-  <div className="bg-cyan-900/60 rounded-lg p-4 inline-flex flex-col items-center h-3/4">
-    <div className="flex items-center my-4">
+          <div className="bg-cyan-900/60 rounded-lg p-4 inline-flex flex-col items-center h-3/4">
+            <div className="flex items-center my-4">
+              <a href="/home">
+                <img
+                  src="http://localhost:3000/flechaMenu.png"
+                  className={`relative cursor-pointer left-0 top-90 w-10 p-1 border-cyan-900 flex-grow-0 mr-5 ${!open}`}
+                  onClick={() => setOpen(!open)}
+                />
+              </a>
+              <input
+                type="text"
+                id="search-box"
+                placeholder="usuario#1234"
+                className="w-96 border border-transparent border-b-black/25 bg-white focus:outline-none focus:border-b-black h-12 text-lg rounded-md mr-5"
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
 
-    <a href="/home">
-      <img
-        src="http://localhost:3000/flechaMenu.png"
-        className={`relative cursor-pointer left-0 top-90 w-10 p-1 border-cyan-900 flex-grow-0 mr-5 ${!open}`}
-        onClick={() => setOpen(!open)}
-      />
-    </a>
-    <input 
-      type="text"
-      id="search-box"
-      placeholder="usuario#1234"
-      className="w-96 border border-transparent border-b-black/25 bg-white focus:outline-none focus:border-b-black h-12 text-lg rounded-md mr-5" 
-      onChange={(e) => setSearchTerm(e.target.value)}  
-    />
+              <button
+                type="button"
+                id="search-button"
+                className="bg-white text-blue-500 font-bold py-2 px-4 rounded ml-auto"
+                onClick={() => filtrar(searchTerm)}
+              >
+                Buscar
+              </button>
+            </div>
 
-    <button type="button" id="search-button" className="bg-white text-blue-500 font-bold py-2 px-4 rounded ml-auto" onClick={() => filtrar(searchTerm)}>Buscar</button>
-    </div>
+            <div className="flex justify-center mt-4">
+              <a href="/AmigosT">
+                <button
+                  type="button"
+                  id="todos-button"
+                  className="text-white font-bold py-2 px-4 mr-20 mb-2"
+                  onClick={() => setOpen(!open)}
+                >
+                  Todos
+                </button>
+              </a>
+              <button
+                type="button"
+                id="pendientes-button"
+                className="text-black-500 font-bold py-2 px-4 ml-20 border-b border-black border-b-4 mb-2"
+              >
+                Pendientes
+              </button>
+              {nummensajes > 0 && (
+                <>
+                  {open && (
+                    <div
+                      className="absolute top-20 right-0 h-4 w-4 bg-red-800 text-white text-xs flex items-center justify-center rounded-full"
+                      style={{
+                        left: "30%",
+                        transform: "translate(3925%, 600%)",
+                      }}
+                    >
+                      {nummensajes}
+                    </div>
+                  )}
+                  {!open && (
+                    <div
+                      className="absolute top-20 right-0 h-4 w-4 bg-red-800 text-white text-xs flex items-center justify-center rounded-full"
+                      style={{
+                        left: "30%",
+                        transform: "translate(1050%, 1050%)",
+                      }}
+                    >
+                      {nummensajes}
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
 
-    <div className="flex justify-center mt-4">
-      <a href="/AmigosT">
-        <button type="button" id="todos-button" className="text-white font-bold py-2 px-4 mr-20 mb-2" onClick={() => setOpen(!open)}>Todos</button>
-      </a>
-      <button type="button" id="pendientes-button" className="text-black-500 font-bold py-2 px-4 ml-20 border-b border-black border-b-4 mb-2" >Pendientes</button>
-      {nummensajes > 0 && (
-                  <>
-                    {open && (
-                      <div
-                        className="absolute top-20 right-0 h-4 w-4 bg-red-800 text-white text-xs flex items-center justify-center rounded-full"
-                        style={{ left: "30%", transform: "translate(3925%, 600%)" }}
-                      >
-                        {nummensajes}
-                      </div>
-                    )}
-                    {!open && (
-                      <div
-                        className="absolute top-20 right-0 h-4 w-4 bg-red-800 text-white text-xs flex items-center justify-center rounded-full"
-                        style={{ left: "30%", transform: "translate(1050%, 1050%)" }}
-                      >
-                        {nummensajes}
-                      </div>
-                    )}
-                  </>
-                )}
-  
-</div>
-
-
-
-    {/* Lista de resultados */}
-    <ul className="opacity-95 bg-cyan-900 w-full rounded-xl shadow-xl mb-20 flex-col justify-center items-center p-4 overflow-y-scroll">
-    {GetResultados()}
-      {resultados}
-    </ul>
-  </div>
-  
-          
-          
+            {/* Lista de resultados */}
+            <ul className="opacity-95 bg-cyan-900 w-full rounded-xl shadow-xl mb-20 flex-col justify-center items-center p-4 overflow-y-scroll">
+              {GetResultados()}
+              {resultados}
+            </ul>
+          </div>
         </h1>
       </div>
     </div>

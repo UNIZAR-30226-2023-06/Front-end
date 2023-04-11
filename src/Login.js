@@ -6,7 +6,7 @@ import { useCookies } from "react-cookie";
 export default function Login() {
   const navigate = useNavigate();
 
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const [cookies, setCookie] = useCookies(["token"]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

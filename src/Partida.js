@@ -428,7 +428,7 @@ function Partida() {
                         console.log(data);
 
                         // TODO: Hacer que las imágenes se obtengan de la base de datos
-                        setImg_jugador_1("http://localhost:3000/fotos_perfil/personaje1.png");
+                        setImg_jugador_1("http://localhost:3000/fotos_perfil/skin1.png");
                     });
                 })
                 .catch((error) => {
@@ -462,7 +462,7 @@ function Partida() {
                         console.log(data);
 
                         // TODO: Hacer que las imágenes se obtengan de la base de datos
-                        setImg_jugador_2("http://localhost:3000/fotos_perfil/personaje2.png");
+                        setImg_jugador_2("http://localhost:3000/fotos_perfil/skin2.png");
                     });
                 })
                 .catch((error) => {
@@ -496,7 +496,7 @@ function Partida() {
                         console.log(data);
 
                         // TODO: Hacer que las imágenes se obtengan de la base de datos
-                        setImg_jugador_3("http://localhost:3000/fotos_perfil/personaje3.png");
+                        setImg_jugador_3("http://localhost:3000/fotos_perfil/skin3.png");
                     });
                 })
                 .catch((error) => {

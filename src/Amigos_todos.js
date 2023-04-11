@@ -3,7 +3,7 @@ import jwt_decode from "jwt-decode";
 
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useCookies } from "react-cookie";
@@ -11,10 +11,7 @@ import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Amigos_Todos() {
-
-  {
-    /* --------------------------- variables --------------------------- */
-  }
+  /* --------------------------- variables --------------------------- */
 
   const [desplegado, setDesplegado] = useState(true);
   const styleSidebarOn =
@@ -48,11 +45,11 @@ export default function Amigos_Todos() {
   const handleBack = () => {
     navigate(-1);
   };
-  {
-    /* --------------------------- obtener datos usuario  --------------------------- */
-  }
+
+  /* --------------------------- obtener datos usuario  --------------------------- */
+
   // Obtener la cookie de sesión del back-end
-  const sessionCookie = getCookie('session');
+  const sessionCookie = getCookie("session");
 
   // Si la cookie existe, realizar una petición PUT al endpoint correspondiente para obtener la lista de amigos
 
@@ -62,12 +59,7 @@ export default function Amigos_Todos() {
   const json_token = jwt_decode(Token);
   console.log(json_token);
 
-
-
-
-  {
-    /* --------------------------- calculamos el tamaño de la ventana --------------------------- */
-  }
+  /* --------------------------- calculamos el tamaño de la ventana --------------------------- */
 
   useEffect(() => {
     const handleResize = () => {
@@ -92,11 +84,8 @@ export default function Amigos_Todos() {
     return <Navigate to="/login" />;
   }
 
-
   /* --------------------------- obtener datos usuario  --------------------------- */
   function GetResultados() {
-
-
     useEffect(() => {
       if (!filtradoTrue) {
         fetch(
@@ -116,8 +105,8 @@ export default function Amigos_Todos() {
               // Actualizamos el estado de cosas
               const img =
                 data.profile_picture === "default"
-                  ? "http://localhost:3000/fotos_perfil/personaje1.png"
-                  : `http://localhost:3000/fotos_perfil/personaje${imagen}.png`;
+                  ? "http://localhost:3000/fotos_perfil/skin1.png"
+                  : `http://localhost:3000/fotos_perfil/${imagen}.png`;
 
               set_dinero(data.coins);
               set_codigo(data.id);
@@ -156,8 +145,6 @@ export default function Amigos_Todos() {
           console.error("Error:", error);
         });
 
-
-
       fetch(`${process.env.REACT_APP_URL_BACKEND}/get_friends`, {
         method: "PUT",
         headers: {
@@ -173,15 +160,15 @@ export default function Amigos_Todos() {
             for (let i = 0; i < data.number_of_friends; i++) {
               const imagen =
                 data.friends[i].profile_picture === "default"
-                  ? "http://localhost:3000/fotos_perfil/personaje1.png"
-                  : `http://localhost:3000/fotos_perfil/personaje${data.friends[i].profile_picture}.png`;
+                  ? "http://localhost:3000/fotos_perfil/skin1.png"
+                  : `http://localhost:3000/fotos_perfil/skin${data.friends[i].profile_picture}.png`;
               const codigo = data.friends[i].friend_id;
               const name = data.friends[i].friend_name;
 
               newAmigos.push({
                 nombre: name,
                 id: codigo,
-                foto: imagen
+                foto: imagen,
               });
             }
             setAmigos(newAmigos);
@@ -191,7 +178,6 @@ export default function Amigos_Todos() {
         .catch((error) => {
           console.error("Error:", error);
         });
-
 
       {
         /* --------------------------- obtener el numero de solicitudes de amistad --------------------------- */
@@ -214,21 +200,12 @@ export default function Amigos_Todos() {
         .catch((error) => {
           console.error("Error:", error);
         });
-
     }, []);
   }
 
-
-
-
-
-
-
-
-
   // Función para obtener una cookie por su nombre
   function getCookie(name) {
-    const cookies = document.cookie.split(';');
+    const cookies = document.cookie.split(";");
     for (let i = 0; i < cookies.length; i++) {
       const cookie = cookies[i].trim();
       if (cookie.startsWith(`${name}=`)) {
@@ -238,7 +215,6 @@ export default function Amigos_Todos() {
     return null;
   }
 
-
   // Un lista de resultados
   const resultados = Amigos.map((index) => (
     <a className="resultado_busqueda">
@@ -247,21 +223,28 @@ export default function Amigos_Todos() {
         {index.nombre}#{index.id}
       </code>
       {/* Botón para dejar de seguir */}
-      <button type="button" id="search-button" className="boton-dejar-de-seguir" onClick={() => dejarDeSeguir(index.id, index.nombre)}>Dejar de seguir</button>
+      <button
+        type="button"
+        id="search-button"
+        className="boton-dejar-de-seguir"
+        onClick={() => dejarDeSeguir(index.id, index.nombre)}
+      >
+        Dejar de seguir
+      </button>
     </a>
   ));
 
-
-
   function dejarDeSeguir(id, nombre) {
     fetch(
-      `${process.env.REACT_APP_URL_BACKEND}/delete_friend?friend_id=${id}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Bearer ${Token}`,
-      },
-    })
+      `${process.env.REACT_APP_URL_BACKEND}/delete_friend?friend_id=${id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${Token}`,
+        },
+      }
+    )
       .then((res) => {
         res.json().then((data) => {
           // Si el código es correcto, mostrar un mensaje de éxito en el toast
@@ -301,7 +284,7 @@ export default function Amigos_Todos() {
       newFiltrado.push({
         nombre: nombre,
         id: id,
-        foto: foto
+        foto: foto,
       });
       console.log(newFiltrado);
       setAmigos([]);
@@ -310,18 +293,16 @@ export default function Amigos_Todos() {
       newAmigos.push({
         nombre: nombre,
         id: id,
-        foto: foto
+        foto: foto,
       });
       setAmigos(newAmigos);
       console.log(Amigos);
       setFiltradoTrue(true);
-
     } else {
       toast.error(`No se ha encontrado el amigo`);
 
       console.log("Amigo no encontrado");
     }
-
   }
 
   return (
@@ -332,14 +313,15 @@ export default function Amigos_Todos() {
         className={`over_SideBaar relative h-full ${
           // si la ventana es pequeña o desplegado falso que no se vea
           screenSize < 720 && !desplegado ? styleSidebarOff : styleSidebarOn
-          }`}
+        }`}
       >
         {/* --------------------------- cruz de cerrar menu --------------------------- */}
         <img
           src="http://localhost:3000/white_cross.png"
           alt="imagen para cerrar la sidebar"
-          className={`hover:cursor-pointer ${screenSize < 720 && desplegado ? styleCruzOn : styleCruzOff
-            }`}
+          className={`hover:cursor-pointer ${
+            screenSize < 720 && desplegado ? styleCruzOn : styleCruzOff
+          }`}
           onClick={() => {
             setDesplegado(false);
           }}
@@ -542,8 +524,9 @@ export default function Amigos_Todos() {
       <img
         src="http://localhost:3000/menu.png"
         alt="Example image"
-        className={`hover:cursor-pointer w-8 h-8 m-4 ${screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
-          }`}
+        className={`hover:cursor-pointer w-8 h-8 m-4 ${
+          screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
+        }`}
         onClick={() => {
           setDesplegado(true);
         }}
@@ -551,11 +534,8 @@ export default function Amigos_Todos() {
       {/* --------------------------- Página --------------------------- */}
       <div>
         <h1 className="m-14">
-
-
           <div className="bg-cyan-900/60 rounded-lg p-4 inline-flex flex-col items-center h-4/5">
             <div className="flex items-center my-4">
-
               <a href="/home">
                 <img
                   src="http://localhost:3000/flechaMenu.png"
@@ -572,19 +552,42 @@ export default function Amigos_Todos() {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
 
-              <button type="button" id="search-button" className="bg-white text-blue-500 font-bold py-2 px-4 rounded ml-auto" onClick={() => filtrar(searchTerm)}>Buscar</button>
+              <button
+                type="button"
+                id="search-button"
+                className="bg-white text-blue-500 font-bold py-2 px-4 rounded ml-auto"
+                onClick={() => filtrar(searchTerm)}
+              >
+                Buscar
+              </button>
             </div>
 
             <div className="flex justify-center mt-4">
-              <button type="button" id="todos-button" className="text-black-500 font-bold py-2 px-4 mr-20 border-b border-black border-b-4 mb-2">Todos</button>
+              <button
+                type="button"
+                id="todos-button"
+                className="text-black-500 font-bold py-2 px-4 mr-20 border-b border-black border-b-4 mb-2"
+              >
+                Todos
+              </button>
               <a href="/AmigosP">
-                <button type="button" id="pendientes-button" className="text-white font-bold py-2 px-4 ml-20 mb-2" onClick={() => setOpen(!open)}>Pendientes</button>
+                <button
+                  type="button"
+                  id="pendientes-button"
+                  className="text-white font-bold py-2 px-4 ml-20 mb-2"
+                  onClick={() => setOpen(!open)}
+                >
+                  Pendientes
+                </button>
                 {nummensajes > 0 && (
                   <>
                     {open && (
                       <div
                         className="absolute top-20 right-0 h-4 w-4 bg-red-800 text-white text-xs flex items-center justify-center rounded-full"
-                        style={{ left: "30%", transform: "translate(3925%, 600%)" }}
+                        style={{
+                          left: "30%",
+                          transform: "translate(3925%, 600%)",
+                        }}
                       >
                         {nummensajes}
                       </div>
@@ -592,29 +595,25 @@ export default function Amigos_Todos() {
                     {!open && (
                       <div
                         className="absolute top-20 right-0 h-4 w-4 bg-red-800 text-white text-xs flex items-center justify-center rounded-full"
-                        style={{ left: "30%", transform: "translate(1050%, 1050%)" }}
+                        style={{
+                          left: "30%",
+                          transform: "translate(1050%, 1050%)",
+                        }}
                       >
                         {nummensajes}
                       </div>
                     )}
                   </>
                 )}
-
-
               </a>
-
             </div>
-
-
 
             {/* Lista de resultados */}
             <ul className="opacity-95 bg-cyan-900 w-full rounded-xl shadow-xl mb-20 flex-col justify-center items-center p-4 max-h-98 overflow-y-scroll">
               {GetResultados()}
               {resultados}
-
             </ul>
           </div>
-
         </h1>
       </div>
     </div>

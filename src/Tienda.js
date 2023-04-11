@@ -25,15 +25,15 @@ function Tienda() {
         React.useState([]);
 
     const fotos_perfil = [
-        "personaje1",
-        "personaje2",
-        "personaje3",
-        "personaje4",
-        "personaje5",
-        "personaje6",
-        "personaje7",
-        "personaje8",
-        "personaje9",
+        "skin1",
+        "skin2",
+        "skin3",
+        "skin4",
+        "skin5",
+        "skin6",
+        "skin7",
+        "skin8",
+        "skin9",
     ]
 
     // 2-- Creamos la estructura de las cookies
@@ -154,10 +154,10 @@ function Tienda() {
         <div className="slide_tienda">
             {
                 <Popup trigger={
-                    fotos_perfil_compradas.includes("personaje" + (i + 1)) ?
+                    fotos_perfil_compradas.includes("skin" + (i + 1)) ?
                         (
                             <div>
-                                <img src={"http://localhost:3000/fotos_perfil/personaje" + (i + 1) + ".png"} onDragStart={handleDragStart} role="presentation"
+                                <img src={"http://localhost:3000/fotos_perfil/skin" + (i + 1) + ".png"} onDragStart={handleDragStart} role="presentation"
                                     className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
                                     style={{
                                         position: 'relative',
@@ -178,7 +178,7 @@ function Tienda() {
                         )
                         :
                         (
-                            <img src={"http://localhost:3000/fotos_perfil/personaje" + (i + 1) + ".png"} onDragStart={handleDragStart} role="presentation"
+                            <img src={"http://localhost:3000/fotos_perfil/skin" + (i + 1) + ".png"} onDragStart={handleDragStart} role="presentation"
                                 className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle" />
                         )
                 } modal nested
@@ -200,7 +200,7 @@ function Tienda() {
                             </button>
 
                             {/* Imagen del objeto */}
-                            <img src={"http://localhost:3000/fotos_perfil/personaje" + (i + 1) + ".png"} onDragStart={handleDragStart} role="presentation"
+                            <img src={"http://localhost:3000/fotos_perfil/skin" + (i + 1) + ".png"} onDragStart={handleDragStart} role="presentation"
                                 className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle" />
 
                             {/* Texto de "¿Estás seguro?" en el centro */}
@@ -208,7 +208,7 @@ function Tienda() {
                                 <br />
                                 <br />
                                 <div>
-                                    {fotos_perfil_compradas.includes("personaje" + (i + 1)) ? (
+                                    {fotos_perfil_compradas.includes("skin" + (i + 1)) ? (
                                         <img src={"http://localhost:3000/green_check.png"} alt="Icono" className="icono_tienda" />
                                     ) : (
                                         <div>
@@ -226,7 +226,7 @@ function Tienda() {
                             <br /> <br />
                             <div className="flex justify-center">
 
-                                {fotos_perfil_compradas.includes("personaje" + (i + 1)) ? (
+                                {fotos_perfil_compradas.includes("skin" + (i + 1)) ? (
                                     // Texto verde de "compra realizada", en
                                     // tamaño de letra mediano y centrado
                                     <p className="compra_realizada_tienda" >
@@ -237,7 +237,7 @@ function Tienda() {
                                         {dinero >= precio_foto_perfil_int ? (
                                             <button className="boton_comprar_tienda"
                                                 onClick={() => {
-                                                    comprar(10, "personaje" + (i + 1));
+                                                    comprar(10, "skin" + (i + 1));
                                                     set_compra_realizada(true);
                                                 }}
                                             >

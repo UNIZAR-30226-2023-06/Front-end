@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import "./style.css";
@@ -69,6 +69,7 @@ export default function Registro() {
         <div className="flex justify-between items-center px-2 w-full">
           <a href="/login">
             <img
+              alt="flecha retroceder a página anterior"
               src="http://localhost:3000/flechaMenu.png"
               className={`relative cursor-pointer  
         right-3 top-90 w-7 p-1 border-cyan-900 ${!open}`}
