@@ -75,6 +75,16 @@ function Partida() {
           }
     );
 
+    const ficha_con_id = [
+        null,
+        "http://localhost:3000/casillas/ovejas.jpg",
+        "http://localhost:3000/casillas/trigo.jpg",
+        "http://localhost:3000/casillas/madera.jpg",
+        "http://localhost:3000/casillas/roca.jpg",
+        "http://localhost:3000/casillas/arcilla.jpg",
+        "http://localhost:3000/casillas/desierto.jpg"
+    ];
+
     const init_top_board = 470;
     const init_left_board = -100;
 
@@ -224,75 +234,110 @@ function Partida() {
         8, 7, 9, 8, 10, 9,
     ]
 
-    const [building, setBuilding] = useState([
+    // Asumo que [0] equivale al color y [1] al tipo de edificio
+    // tipo 0 = casa, tipo 1 = castillo
+    const [building, setBuilding] = useState(
         {
-            "35": [null, null],
-            "37": [null, null],
-            "39": [null, null],
-            "50": [null, null],
-            "52": [null, null],
-            "54": [null, null],
-            "56": [null, null],
-            "67": [null, null],
-            "69": [null, null],
-            "71": [null, null],
-            "73": [null, null],
-            "82": [null, null],
-            "84": [null, null],
-            "86": [null, null],
-            "88": [null, null],
-            "90": [null, null],
-            "99": [null, null],
-            "101": [null, null],
-            "103": [null, null],
-            "105": [null, null],
-            "107": [null, null],
-            "114": [null, null],
-            "116": [null, null],
-            "118": [null, null],
-            "120": [null, null],
-            "122": [null, null],
-            "124": [null, null],
-            "131": [null, null],
-            "133": [null, null],
-            "135": [null, null],
-            "137": [null, null],
-            "139": [null, null],
-            "141": [null, null],
-            "148": [null, null],
-            "150": [null, null],
-            "152": [null, null],
-            "154": [null, null],
-            "156": [null, null],
-            "165": [null, null],
-            "167": [null, null],
-            "169": [null, null],
-            "171": [null, null],
-            "173": [null, null],
-            "182": [null, null],
-            "184": [null, null],
-            "186": [null, null],
-            "188": [null, null],
-            "199": [null, null],
-            "201": [null, null],
-            "203": [null, null],
-            "205": [null, null],
-            "216": [null, null],
-            "218": [null, null],
-            "220": [null, null]
+            "35": [0, 0],
+            "37": [1, 0],
+            "39": [2, 0],
+
+            "50": [3, 0],
+            "52": [0, 0],
+            "54": [1, 0],
+            "56": [2, 0],
+
+            "67": [3, 0],
+            "69": [0, 0],
+            "71": [1, 0],
+            "73": [2, 0],
+
+            "82": [3, 0],
+            "84": [0, 0],
+            "86": [1, 0],
+            "88": [2, 0],
+            "90": [3, 0],
+
+            "99": [0, 0],
+            "101": [1, 0],
+            "103": [2, 0],
+            "105": [3, 0],
+            "107": [0, 0],
+
+            "114": [1, 0],
+            "116": [2, 0],
+            "118": [3, 0],
+            "120": [0, 0],
+            "122": [1, 0],
+            "124": [2, 0],
+
+            "131": [3, 0],
+            "133": [0, 0],
+            "135": [1, 0],
+            "137": [2, 0],
+            "139": [3, 0],
+            "141": [0, 0],
+
+            "148": [1, 0],
+            "150": [2, 0],
+            "152": [3, 0],
+            "154": [0, 0],
+            "156": [1, 0],
+
+            "165": [2, 0],
+            "167": [3, 0],
+            "169": [0, 0],
+            "171": [1, 0],
+            "173": [2, 0],
+
+            "182": [3, 0],
+            "184": [0, 0],
+            "186": [1, 0],
+            "188": [2, 0],
+
+            "199": [3, 0],
+            "201": [0, 0],
+            "203": [1, 0],
+            "205": [2, 0],
+
+            "216": [3, 0],
+            "218": [0, 0],
+            "220": [1, 0]
         }
-    ]);
+    );
 
-    const ficha_con_id = [
-        null,
-        "http://localhost:3000/casillas/ovejas.jpg",
-        "http://localhost:3000/casillas/trigo.jpg",
-        "http://localhost:3000/casillas/madera.jpg",
-        "http://localhost:3000/casillas/roca.jpg",
-        "http://localhost:3000/casillas/arcilla.jpg",
-        "http://localhost:3000/casillas/desierto.jpg"
-    ];
+    const top_variation_building = [
+        0, 1, 2,
+        -0.7, 0.3, 1.3, 2.3,
+        -1, 0, 1, 2,
+        -1.7, -0.7, 0.3, 1.3, 2.3,
+        -2, -1, 0, 1, 2,
+        -2.7, -1.7, -0.7, 0.3, 1.3, 2.3,
+        -3, -2, -1, 0, 1, 2,
+        -2.7, -1.7, -0.7, 0.3, 1.3,
+        -3, -2, -1, 0, 1,
+        -2.7, -1.7, -0.7, 0.3,
+        -3, -2, -1, 0,
+        -2.7, -1.7, -0.7
+    ]
 
+    const left_variation_building = [
+        0, 1, 2,
+        0, 1, 2, 3,
+        1, 2, 3, 4,
+        1, 2, 3, 4, 5,
+        2, 3, 4, 5, 6,
+        2, 3, 4, 5, 6, 7,
+        3, 4, 5, 6, 7, 8,
+        4, 5, 6, 7, 8,
+        5, 6, 7, 8, 9,
+        6, 7, 8, 9,
+        7, 8, 9, 10,
+        8, 9, 10
+    ]
+
+    const init_top_building_relative_vertical = 10;
+    const init_left_building_relative_vertical = -348;
 
     const img_salir = "http://localhost:3000/salir.png";
     const img_corona = "http://localhost:3000/corona.png";
@@ -654,6 +699,32 @@ function Partida() {
                                     
                                     backgroundImage: `url(
                                         ${"http://localhost:3000/carreteras/carretera_" + road["38"] + ".jpg"}
+                                    )`,
+                                }}
+                            />
+                        }
+                    </div>
+                )
+            })}
+
+            {/****************************************************************/}
+            {/*************************** POBLADOS ***************************/}
+            {/****************************************************************/}
+
+            {Object.entries(building).map(([key, value], index) => {
+                return (
+                    <div>
+                        {
+                            building[key][1] == 0 &&
+                            <button className="w-10 flex h-10 carretera_partida"
+                                style={{
+                                    position: "absolute",
+                                    top: ((init_top_board + init_top_building_relative_vertical) - top_variation_building[index] * top_variation_unit),
+                                    left: "50%",
+                                    transform: `translateX(${(init_left_board + init_left_building_relative_vertical) + left_variation_building[index] * left_variation_unit}px)`,
+                                    
+                                    backgroundImage: `url(
+                                        ${"http://localhost:3000/poblado/poblado_" + building[key][0] + ".png"}
                                     )`,
                                 }}
                             />

@@ -302,7 +302,6 @@ function Tienda() {
                     controlsStrategy="alternate"
                 />
             </div>
-
             
             {/* Titulo de "fotos de perfil" */}
             {/*<a className="titulo_fotos_fichas_tienda">Fichas</a>*/}
