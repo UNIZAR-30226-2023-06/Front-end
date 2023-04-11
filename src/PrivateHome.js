@@ -9,9 +9,7 @@ import { useEffect } from "react";
 import { useCookies } from "react-cookie";
 
 export default function PrivateHome() {
-  {
-    /* --------------------------- variables --------------------------- */
-  }
+  /* --------------------------- variables --------------------------- */
 
   const [desplegado, setDesplegado] = useState(true);
   const styleSidebarOn =
@@ -35,9 +33,7 @@ export default function PrivateHome() {
 
   const [cookies, setCookie] = useCookies(["token"]); // Agregamos removeCookie
 
-  {
-    /* --------------------------- calculamos el tamaño de la ventana --------------------------- */
-  }
+  /* --------------------------- calculamos el tamaño de la ventana --------------------------- */
 
   useEffect(() => {
     const handleResize = () => {
@@ -88,8 +84,8 @@ export default function PrivateHome() {
         // Actualizamos el estado de cosas
         const img =
           data.profile_picture === "default"
-            ? "http://localhost:3000/fotos_perfil/personaje1.png"
-            : `http://localhost:3000/fotos_perfil/personaje${imagen}.png`;
+            ? "http://localhost:3000/fotos_perfil/skin1.png"
+            : `http://localhost:3000/fotos_perfil/${imagen}.png`;
 
         set_dinero(data.coins);
         set_codigo(data.id);
@@ -103,9 +99,7 @@ export default function PrivateHome() {
       console.error("Error:", error);
     });
 
-  {
-    /* --------------------------- miramos si hay mensajes pendientes --------------------------- */
-  }
+  /* --------------------------- miramos si hay mensajes pendientes --------------------------- */
 
   fetch(`${process.env.REACT_APP_URL_BACKEND}/get_friend_requests`, {
     method: "PUT",
@@ -126,7 +120,6 @@ export default function PrivateHome() {
     .catch((error) => {
       console.error("Error:", error);
     });
-
 
   return (
     /* --------------------------- fondo de las montañas --------------------------- */
@@ -346,7 +339,7 @@ export default function PrivateHome() {
       {/* --------------------------- menu plegado --------------------------- */}
       <img
         src="http://localhost:3000/menu.png"
-        alt="Example image"
+        alt="menu desplegable, clicka aqui para desplegarlo"
         className={`hover:cursor-pointer w-8 h-8 m-4 ${
           screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
         }`}
