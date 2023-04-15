@@ -29,7 +29,7 @@ function Partida() {
     const [img_jugador_3, setImg_jugador_3] = useState(null);
 
     const [id_jugador_1, setId_jugador_1] = useState(5251);
-    const [id_jugador_2, setId_jugador_2] = useState(5251);
+    const [id_jugador_2, setId_jugador_2] = useState(5252);
     const [id_jugador_3, setId_jugador_3] = useState(1135);
 
     const [puntos_victoria_jugador_1, setPuntos_victoria_jugador_1] = useState(0);
@@ -44,10 +44,28 @@ function Partida() {
     const [tiene_bono_carreteras_jugador_2, setTiene_bono_carreteras_jugador_2] = useState(false);
     const [tiene_bono_carreteras_jugador_3, setTiene_bono_carreteras_jugador_3] = useState(false);
 
+    // Aquí va el id del jugador que tiene el turno
+    const [turno, setTurno] = useState(5251);
+
+    // Recordatorio de fases:
+    // 0: Obtención de recursos
+    // 1: Uso de cartas de desarrollo
+    // 2: Negociación
+    // 3: Construcción
+    const [fase, setFase] = useState(3);
+
+    const [tiempo, setTiempo] = useState(0);
+    const [tiempo_maximo, setTiempo_maximo] = useState(30);
+
+    const [color_jugador_1, setColor_jugador_1] = useState(0);
+    const [color_jugador_2, setColor_jugador_2] = useState(1);
+    const [color_jugador_3, setColor_jugador_3] = useState(2);
+    const [color_jugador_4, setColor_jugador_4] = useState(3);
+
     const jugadores = [
         { img: "http://localhost:3000/jugadores.png", nombre: "Ayelen#1234", puntos_victoria: 2, carreteras: false, caballeros: true },
         { img: "http://localhost:3000/jugadores.png", nombre: "Loreto#1234", puntos_victoria: 3, carreteras: true, caballeros: false },
-        { img: "http://localhost:3000/jugadores.png", nombre: null },
+        { img: "http://localhost:3000/jugadores.png", nombre: "null" },
         { img: null, nombre: null }
     ];
 
@@ -72,7 +90,7 @@ function Partida() {
             "183": [9, 5],
             "185": [11, 1],
             "187": [3, 1]
-          }
+        }
     );
 
     const ficha_con_id = [
@@ -98,14 +116,14 @@ function Partida() {
 
     const [road, setRoad] = useState(
         {
-            "34": 1,
+            "34": null,
             "35": 1,
             "36": 1,
             "37": 1,
             "38": 1,
             "39": 1,
 
-            "50": 1,
+            "50": null,
             "52": 1,
             "54": 1,
             "56": 1,
@@ -115,13 +133,13 @@ function Partida() {
             "68": 1,
             "69": 1,
             "70": 1,
-            "71": 1,
+            "71": null,
             "72": 1,
             "73": 1,
 
             "82": 1,
             "84": 1,
-            "86": 1,
+            "86": null,
             "88": 1,
             "90": 1,
 
@@ -129,7 +147,7 @@ function Partida() {
             "99": 1,
             "100": 1,
             "101": 1,
-            "102": 1,
+            "102": null,
             "103": 1,
             "104": 1,
             "105": 1,
@@ -138,7 +156,7 @@ function Partida() {
 
             "114": 1,
             "116": 1,
-            "118": 1,
+            "118": null,
             "120": 1,
             "122": 1,
             "124": 1,
@@ -151,13 +169,13 @@ function Partida() {
             "136": 1,
             "137": 1,
             "138": 1,
-            "139": 1,
+            "139": null,
             "140": 1,
 
             "148": 1,
             "150": 1,
-            "152": 1,
-            "154": 1,
+            "152": null,
+            "154": null,
             "156": 1,
 
             "165": 1,
@@ -165,19 +183,19 @@ function Partida() {
             "167": 1,
             "168": 1,
             "169": 1,
-            "170": 1,
+            "170": null,
             "171": 1,
             "172": 1,
 
             "182": 1,
             "184": 1,
-            "186": 1,
+            "186": null,
             "188": 1,
 
             "199": 1,
             "200": 1,
             "201": 1,
-            "202": 1,
+            "202": null,
             "203": 1,
             "204": 1
         }
@@ -239,69 +257,69 @@ function Partida() {
     const [building, setBuilding] = useState(
         {
             "35": [0, 0],
-            "37": [1, 0],
+            "37": [1, 1],
             "39": [2, 0],
 
             "50": [3, 0],
             "52": [0, 0],
-            "54": [1, 0],
+            "54": [1, 1],
             "56": [2, 0],
 
             "67": [3, 0],
             "69": [0, 0],
-            "71": [1, 0],
+            "71": [1, 1],
             "73": [2, 0],
 
             "82": [3, 0],
             "84": [0, 0],
             "86": [1, 0],
-            "88": [2, 0],
+            "88": [2, 1],
             "90": [3, 0],
 
             "99": [0, 0],
             "101": [1, 0],
-            "103": [2, 0],
+            "103": [2, 1],
             "105": [3, 0],
             "107": [0, 0],
 
             "114": [1, 0],
             "116": [2, 0],
             "118": [3, 0],
-            "120": [0, 0],
-            "122": [1, 0],
+            "120": null,
+            "122": [1, 1],
             "124": [2, 0],
 
             "131": [3, 0],
             "133": [0, 0],
             "135": [1, 0],
-            "137": [2, 0],
+            "137": [2, 1],
             "139": [3, 0],
             "141": [0, 0],
 
             "148": [1, 0],
-            "150": [2, 0],
-            "152": [3, 0],
-            "154": [0, 0],
+            "150": [2, 1],
+            "152": null,
+            "154": [0, 1],
             "156": [1, 0],
 
             "165": [2, 0],
-            "167": [3, 0],
-            "169": [0, 0],
+            "167": [3, 1],
+            "169": [0, 1],
             "171": [1, 0],
             "173": [2, 0],
 
-            "182": [3, 0],
+            "182": [3, 1],
             "184": [0, 0],
-            "186": [1, 0],
+            "186": [1, 1],
             "188": [2, 0],
 
             "199": [3, 0],
             "201": [0, 0],
-            "203": [1, 0],
+            "203": [1, 1],
             "205": [2, 0],
 
             "216": [3, 0],
-            "218": [0, 0],
+            "218": [0, 1],
             "220": [1, 0]
         }
     );
@@ -392,7 +410,7 @@ function Partida() {
             .then((res) => {
                 res.json().then((data) => {
                     // Actualizamos el estado de cosas
-                    
+
                     // Logs
                     console.log("JSON del jugador:");
                     console.log(data);
@@ -503,7 +521,25 @@ function Partida() {
                     console.error("Error:", error);
                 });
         }
-    }, []);
+    }, [Token, json_token.id, id_jugador_1, id_jugador_2, id_jugador_3, mostrar_img_jugador_1, mostrar_img_jugador_2, mostrar_img_jugador_3]);
+
+    ////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////// FETCH PERIODICO //////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+
+            ///////////////////////// CÓDIGO PERIODICO /////////////////////////
+
+            setTiempo((tiempo + 1) % tiempo_maximo);
+
+            ////////////////////////////////////////////////////////////////////
+            
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [tiempo, tiempo_maximo]);
 
     ////////////////////////////////////////////////////////////////////////////
     ///////////////////////////// RETURN PRINCIPAL /////////////////////////////
@@ -511,25 +547,25 @@ function Partida() {
 
     return (
         <div className="estilo">
-            <a className="menu_superior_partida">
+            <div className="menu_superior_partida">
                 {
                     mostrar_img_jugador_1 &&
-                    <a className="superior_jugador_1_partida">
+                    <div className="superior_jugador_1_partida">
                         <img src={img_jugador_1} className="icono_jugador_superior" alt="icono_jugadores" />
 
                         <img src={img_corona} className="icono_jugador_superior" alt="icono_jugadores" />
-                        
+
                         {
                             // Muestro los puntos de victoria del jugador 1
-                            <a className="puntos_victoria_jugador_1">
+                            <div className="puntos_victoria_jugador_1">
                                 {puntos_victoria_jugador_1}
-                            </a>
+                            </div>
                         }
 
                         {
                             tiene_bono_caballeros_jugador_1 ? (
                                 <img src={img_caballero_negro} className="icono_jugador_superior" alt="icono_jugadores" />
-                                ) : (
+                            ) : (
                                 <img src={img_caballero_gris} className="icono_jugador_superior" alt="icono_jugadores" />
                             )
                         }
@@ -541,26 +577,26 @@ function Partida() {
                                 <img src={img_camino_gris} className="icono_jugador_superior" alt="icono_jugadores" />
                             )
                         }
-                    </a>
+                    </div>
                 }
                 {
                     mostrar_img_jugador_2 &&
-                    <a className="superior_jugador_2_partida">
+                    <div className="superior_jugador_2_partida">
                         <img src={img_jugador_2} className="icono_jugador_superior" alt="icono_jugadores" />
 
                         <img src={img_corona} className="icono_jugador_superior" alt="icono_jugadores" />
 
                         {
                             // Muestro los puntos de victoria del jugador 1
-                            <a className="puntos_victoria_jugador_2">
+                            <div className="puntos_victoria_jugador_2">
                                 {puntos_victoria_jugador_2}
-                            </a>
+                            </div>
                         }
 
                         {
                             tiene_bono_caballeros_jugador_2 ? (
                                 <img src={img_caballero_negro} className="icono_jugador_superior" alt="icono_jugadores" />
-                                ) : (
+                            ) : (
                                 <img src={img_caballero_gris} className="icono_jugador_superior" alt="icono_jugadores" />
                             )
                         }
@@ -572,26 +608,26 @@ function Partida() {
                                 <img src={img_camino_gris} className="icono_jugador_superior" alt="icono_jugadores" />
                             )
                         }
-                    </a>
+                    </div>
                 }
                 {
                     mostrar_img_jugador_3 &&
-                    <a className="superior_jugador_3_partida">
+                    <div className="superior_jugador_3_partida">
                         <img src={img_jugador_3} className="icono_jugador_superior" alt="icono_jugadores" />
 
                         <img src={img_corona} className="icono_jugador_superior" alt="icono_jugadores" />
 
                         {
                             // Muestro los puntos de victoria del jugador 1
-                            <a className="puntos_victoria_jugador_3">
+                            <div className="puntos_victoria_jugador_3">
                                 {puntos_victoria_jugador_3}
-                            </a>
+                            </div>
                         }
 
                         {
                             tiene_bono_caballeros_jugador_3 ? (
                                 <img src={img_caballero_negro} className="icono_jugador_superior" alt="icono_jugadores" />
-                                ) : (
+                            ) : (
                                 <img src={img_caballero_gris} className="icono_jugador_superior" alt="icono_jugadores" />
                             )
                         }
@@ -603,40 +639,42 @@ function Partida() {
                                 <img src={img_camino_gris} className="icono_jugador_superior" alt="icono_jugadores" />
                             )
                         }
-                    </a>
+                    </div>
                 }
                 <
                     img src={img_salir} className="icono_salir" alt="salir"
-                    onClick={() => 
-                                window.location.href = "http://localhost:3000/home"
-                            }
+                    onClick={() =>
+                        window.location.href = "http://localhost:3000/home"
+                    }
                 />
-            </a>
+            </div>
 
-            <a className="contador_tiempo">
+            <div className="contador_tiempo_partida">
 
-            </a>
+            </div>
 
-            <a className="tiempo">
+            <div
+                className="tiempo_partida"
+                style={{
+                    width: `${tiempo / tiempo_maximo * 100}%`
+                }}
+            >
 
-            </a>
+            </div>
 
-            {/****************************************************************/}
             {/************************** HEXAGONOS ***************************/}
-            {/****************************************************************/}
 
             {Object.entries(board).map(([key, value], index) => {
                 return (
                     <button className="w-36 flex h-40 hexagono_partida"
                         style={{
                             position: "absolute",
-                            top: init_top_board - top_variation_board[index]*top_variation_unit,
+                            top: init_top_board - top_variation_board[index] * top_variation_unit,
                             left: "50%",
-                            transform: `translateX(${init_left_board + left_variation_board[index]*left_variation_unit}px)`,
+                            transform: `translateX(${init_left_board + left_variation_board[index] * left_variation_unit}px)`,
 
-                            backgroundImage: `url(${
-                                ficha_con_id[board[key][1]]
-                            })`,
+                            backgroundImage: `url(${ficha_con_id[board[key][1]]
+                                })`,
                         }}
                     >
                         {
@@ -646,23 +684,21 @@ function Partida() {
                 )
             })}
 
-            {/****************************************************************/}
             {/************************** CARRETERAS **************************/}
-            {/****************************************************************/}
 
             {Object.entries(road).map(([key, value], index) => {
                 return (
                     <div>
                         {
-                            road[key] != null &&
                             type_road[index] === 0 &&
-                            <button className="w-20 flex h-5 carretera_partida"
+                            (road[key] != null || (turno === id_jugador_1 && fase === 3)) &&
+                            <button className={`w-20 flex h-5 ${road[key] != null ? "carretera_partida" : (turno === id_jugador_1 && fase === 3 && "carretera_sin_comprar_partida")}`}
                                 style={{
                                     position: "absolute",
                                     top: ((init_top_board + init_top_road_relative_vertical) - top_variation_road[index] * top_variation_unit),
                                     left: "50%",
                                     transform: `translateX(${(init_left_board + init_left_road_relative_vertical) + left_variation_road[index] * left_variation_unit}px) rotate(90deg)`,
-                                    
+
                                     backgroundImage: `url(
                                         ${"http://localhost:3000/carreteras/carretera_" + road["38"] + ".jpg"}
                                     )`,
@@ -671,15 +707,15 @@ function Partida() {
                         }
 
                         {
-                            road[key] != null &&
                             type_road[index] === 1 &&
-                            <button className="w-20 flex h-5 carretera_partida"
+                            (road[key] != null || (turno === id_jugador_1 && fase === 3)) &&
+                            <button className={`w-20 flex h-5 ${road[key] != null ? "carretera_partida" : (turno === id_jugador_1 && fase === 3 && "carretera_sin_comprar_partida")}`}
                                 style={{
                                     position: "absolute",
                                     top: ((init_top_board + init_top_road_relative_ascend) - top_variation_road[index] * top_variation_unit),
                                     left: "50%",
                                     transform: `translateX(${(init_left_board + init_left_road_relative_ascend) + left_variation_road[index] * left_variation_unit}px) rotate(-30deg)`,
-                                    
+
                                     backgroundImage: `url(
                                         ${"http://localhost:3000/carreteras/carretera_" + road["38"] + ".jpg"}
                                     )`,
@@ -688,15 +724,15 @@ function Partida() {
                         }
 
                         {
-                            road[key] != null &&
                             type_road[index] === 2 &&
-                            <button className="w-20 flex h-5 carretera_partida"
+                            (road[key] != null || (turno === id_jugador_1 && fase === 3)) &&
+                            <button className={`w-20 flex h-5 ${road[key] != null ? "carretera_partida" : (turno === id_jugador_1 && fase === 3 && "carretera_sin_comprar_partida")}`}
                                 style={{
                                     position: "absolute",
                                     top: ((init_top_board + init_top_road_relative_descend) - top_variation_road[index] * top_variation_unit),
                                     left: "50%",
                                     transform: `translateX(${(init_left_board + init_left_road_relative_descend) + left_variation_road[index] * left_variation_unit}px) rotate(30deg)`,
-                                    
+
                                     backgroundImage: `url(
                                         ${"http://localhost:3000/carreteras/carretera_" + road["38"] + ".jpg"}
                                     )`,
@@ -707,24 +743,29 @@ function Partida() {
                 )
             })}
 
-            {/****************************************************************/}
             {/*************************** POBLADOS ***************************/}
-            {/****************************************************************/}
 
             {Object.entries(building).map(([key, value], index) => {
                 return (
                     <div>
                         {
-                            building[key][1] == 0 &&
-                            <button className="w-10 flex h-10 carretera_partida"
+                            (building[key] != null || (turno === id_jugador_1 && fase === 3)) &&
+                            <button
+                                className={`w-10 flex h-10 ${building[key] != null ? "construccion_partida" : (turno === id_jugador_1 && fase === 3 && "construccion_sin_comprar_partida")}`}
                                 style={{
                                     position: "absolute",
                                     top: ((init_top_board + init_top_building_relative_vertical) - top_variation_building[index] * top_variation_unit),
                                     left: "50%",
                                     transform: `translateX(${(init_left_board + init_left_building_relative_vertical) + left_variation_building[index] * left_variation_unit}px)`,
-                                    
+
                                     backgroundImage: `url(
-                                        ${"http://localhost:3000/poblado/poblado_" + building[key][0] + ".png"}
+                                        ${(
+                                            building[key] != null ?
+                                                `http://localhost:3000/${building[key][1] === 0 ? "poblado" : "ciudad"}/${building[key][1] === 0 ? "poblado" : "ciudad"}_` + building[key][0] + ".png"
+                                                :
+                                                `http://localhost:3000/poblado/poblado_${color_jugador_1}.png`
+                                        )
+                                        }
                                     )`,
                                 }}
                             />

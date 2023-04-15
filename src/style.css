@@ -461,7 +461,7 @@ h2 span:nth-of-type(7) {
   justify-content: flex-end;
 }
 
-.contador_tiempo {
+.contador_tiempo_partida {
   background-color: #172135;
 
   top: 100px;
@@ -472,12 +472,12 @@ h2 span:nth-of-type(7) {
   position: fixed;
 }
 
-.tiempo {
+.tiempo_partida {
   background-color: #6b0006;
 
   top: 100px;
 
-  width: 30%;
+  /* El width lo defino en el jsx porque varía según el tiempo trascurrido */
   height: 20px;
 
   position: fixed;
@@ -599,6 +599,58 @@ h2 span:nth-of-type(7) {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.carretera_sin_comprar_partida {
+  display:inline-block;
+  color: #fff;
+  font-weight: 500;
+  font-size: 3.0em;
+  text-decoration: none;
+  text-transform: uppercase;
+  text-align: center;
+  
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+}
+
+.carretera_sin_comprar_partida:hover {
+  opacity: 0.5;
+}
+
+.construccion_partida {
+  display:inline-block;
+  color: #fff;
+  font-weight: 500;
+  font-size: 3.0em;
+  text-decoration: none;
+  text-transform: uppercase;
+  text-align: center;
+  
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.construccion_sin_comprar_partida {
+  display:inline-block;
+  color: #fff;
+  font-weight: 500;
+  font-size: 3.0em;
+  text-decoration: none;
+  text-transform: uppercase;
+  text-align: center;
+  
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+}
+
+.construccion_sin_comprar_partida:hover {
+  opacity: 0.5;
 }
 
 /******************************************************************************/
