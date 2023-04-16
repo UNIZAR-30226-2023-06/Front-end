@@ -439,7 +439,22 @@ export default function Amigos_Todos() {
               Tienda
             </h1>
           </a>
+          {/* --------------------------- Instrucciones --------------------------- */}
+          <a href="http://localhost:3000/Instrucciones" className={styleLinks}>
+            <img
+              alt="profil"
+              src="http://localhost:3000/libro-abierto.png"
+              className={`object-cover h-7 w-7`}
+            />
 
+            <h1
+              href="http://localhost:3000/Instrucciones"
+              variant={Link}
+              className={`text-white origin-center content-center font-medium text-xl`}
+            >
+              Instrucciones
+            </h1>
+          </a>
           {/* --------------------------- logout --------------------------- */}
 
           <div
@@ -534,7 +549,7 @@ export default function Amigos_Todos() {
       {/* --------------------------- Página --------------------------- */}
       <div>
         <h1 className="m-14">
-          <div className="bg-cyan-900/60 rounded-lg p-4 inline-flex flex-col items-center h-4/5">
+          <div className="bg-cyan-900/60 rounded-lg p-4 inline-flex flex-col items-center h-4/5 "style={{minHeight: "640px", minWidth: "1290px"}}>
             <div className="flex items-center my-4">
               <a href="/home">
                 <img
