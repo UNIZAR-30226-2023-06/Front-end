@@ -1,5 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
+import { useEffect } from "react";
 import { useState } from 'react';
+
+import Tabs from "./components/Tabs";
 
 // 1-- Importamos useCookies y jwt_decode
 import { useCookies } from "react-cookie";
@@ -165,7 +168,28 @@ function Partida() {
     //////////////////////////////// FUNCIONES /////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    
+    function Tab(props) {
+        const isActive = props.active === props.label;
+        return (
+            <div
+                className={`tab ${isActive ? 'active' : ''}`}
+                onClick={() => props.onClick(props.label)}
+            >
+                {props.label}
+            </div>
+        );
+    }
+
+    function Tabs() {
+        const [activeTab, setActiveTab] = useState('tab1');
+        const handleClick = (tab) => setActiveTab(tab);
+        return (
+            <div className="tabs">
+                <Tab label="tab1" active={activeTab} onClick={handleClick} />
+                <Tab label="tab2" active={activeTab} onClick={handleClick} />
+            </div>
+        );
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     ///////////////////////////// FETCHS INICIALES /////////////////////////////
@@ -215,27 +239,27 @@ function Partida() {
                 }
             }
         )
-        .then((res) => {
-            res.json().then((data) => {
-                console.log("JSON de la partida:");
-                console.log(data);
+            .then((res) => {
+                res.json().then((data) => {
+                    console.log("JSON de la partida:");
+                    console.log(data);
 
-                setJugadores(data.players);
+                    setJugadores(data.players);
 
-                setBoard(data.game.tiles);
-                setRoad(data.game.edges);
-                setBuilding(data.game.nodes);
+                    setBoard(data.game.tiles);
+                    setRoad(data.game.edges);
+                    setBuilding(data.game.nodes);
 
-                setTiempo_maximo(data.max_tiempo_turno);
-                setTurno(data.turno);
-                setFase(data.fase);
+                    setTiempo_maximo(data.max_tiempo_turno);
+                    setTurno(data.turno);
+                    setFase(data.fase);
+                });
             });
-        });
-        
+
     }, [Token, json_token.id]);
 
     useEffect(() => {
-        
+
         ///////////////////////// FETCH DEL OPONENTE 1 /////////////////////////
 
         if (jugadores.length >= 2) {
@@ -358,7 +382,7 @@ function Partida() {
             setTiempo((tiempo + 1) % tiempo_maximo);
 
             ////////////////////////////////////////////////////////////////////
-            
+
         }, 1000);
 
         return () => clearInterval(interval);
@@ -370,120 +394,125 @@ function Partida() {
 
     return (
         <div className="estilo">
-            <div className="menu_superior_partida">
-                {
-                    jugadores.length >= 2 &&
-                    <div className="superior_jugador_1_partida">
-                        <img src={img_jugador_1} className="icono_jugador_superior" alt="icono_jugadores" />
 
-                        <img src={img_corona} className="icono_jugador_superior" alt="icono_jugadores" />
+            {/* Menu superior */}
+            <div className="parte_superior_partida">
+                <div className="menu_superior_partida">
+                    {
+                        jugadores.length >= 2 &&
+                        <div className="superior_jugador_1_partida">
+                            <img src={img_jugador_1} className="icono_jugador_superior" alt="icono_jugadores" />
 
-                        {
-                            // Muestro los puntos de victoria del jugador 1
-                            <div className="puntos_victoria_jugador_1">
-                                {jugadores[1].puntos_victoria}
-                            </div>
-                        }
+                            <img src={img_corona} className="icono_jugador_superior" alt="icono_jugadores" />
 
-                        {
-                            jugadores[1].tiene_bono_caballeros ? (
-                                <img src={img_caballero_negro} className="icono_jugador_superior" alt="icono_jugadores" />
-                            ) : (
-                                <img src={img_caballero_gris} className="icono_jugador_superior" alt="icono_jugadores" />
-                            )
-                        }
+                            {
+                                // Muestro los puntos de victoria del jugador 1
+                                <div className="puntos_victoria_jugador_1">
+                                    {jugadores[1].puntos_victoria}
+                                </div>
+                            }
 
-                        {
-                            jugadores[1].tiene_bono_carreteras ? (
-                                <img src={img_camino_negro} className="icono_jugador_superior" alt="icono_jugadores" />
-                            ) : (
-                                <img src={img_camino_gris} className="icono_jugador_superior" alt="icono_jugadores" />
-                            )
-                        }
-                    </div>
-                }
-                {
-                    jugadores.length >= 3 &&
-                    <div className="superior_jugador_2_partida">
-                        <img src={img_jugador_2} className="icono_jugador_superior" alt="icono_jugadores" />
+                            {
+                                jugadores[1].tiene_bono_caballeros ? (
+                                    <img src={img_caballero_negro} className="icono_jugador_superior" alt="icono_jugadores" />
+                                ) : (
+                                    <img src={img_caballero_gris} className="icono_jugador_superior" alt="icono_jugadores" />
+                                )
+                            }
 
-                        <img src={img_corona} className="icono_jugador_superior" alt="icono_jugadores" />
-
-                        {
-                            // Muestro los puntos de victoria del jugador 1
-                            <div className="puntos_victoria_jugador_2">
-                                {jugadores[2].puntos_victoria}
-                            </div>
-                        }
-
-                        {
-                            jugadores[2].tiene_bono_caballeros ? (
-                                <img src={img_caballero_negro} className="icono_jugador_superior" alt="icono_jugadores" />
-                            ) : (
-                                <img src={img_caballero_gris} className="icono_jugador_superior" alt="icono_jugadores" />
-                            )
-                        }
-
-                        {
-                            jugadores[2].tiene_bono_carreteras ? (
-                                <img src={img_camino_negro} className="icono_jugador_superior" alt="icono_jugadores" />
-                            ) : (
-                                <img src={img_camino_gris} className="icono_jugador_superior" alt="icono_jugadores" />
-                            )
-                        }
-                    </div>
-                }
-                {
-                    jugadores.length === 4 &&
-                    <div className="superior_jugador_3_partida">
-                        <img src={img_jugador_3} className="icono_jugador_superior" alt="icono_jugadores" />
-
-                        <img src={img_corona} className="icono_jugador_superior" alt="icono_jugadores" />
-
-                        {
-                            // Muestro los puntos de victoria del jugador 1
-                            <div className="puntos_victoria_jugador_3">
-                                {jugadores[3].puntos_victoria}
-                            </div>
-                        }
-
-                        {
-                            jugadores[3].tiene_bono_caballeros ? (
-                                <img src={img_caballero_negro} className="icono_jugador_superior" alt="icono_jugadores" />
-                            ) : (
-                                <img src={img_caballero_gris} className="icono_jugador_superior" alt="icono_jugadores" />
-                            )
-                        }
-
-                        {
-                            jugadores[3].tiene_bono_carreteras ? (
-                                <img src={img_camino_negro} className="icono_jugador_superior" alt="icono_jugadores" />
-                            ) : (
-                                <img src={img_camino_gris} className="icono_jugador_superior" alt="icono_jugadores" />
-                            )
-                        }
-                    </div>
-                }
-                <
-                    img src={img_salir} className="icono_salir" alt="salir"
-                    onClick={() =>
-                        window.location.href = "http://localhost:3000/home"
+                            {
+                                jugadores[1].tiene_bono_carreteras ? (
+                                    <img src={img_camino_negro} className="icono_jugador_superior" alt="icono_jugadores" />
+                                ) : (
+                                    <img src={img_camino_gris} className="icono_jugador_superior" alt="icono_jugadores" />
+                                )
+                            }
+                        </div>
                     }
-                />
+                    {
+                        jugadores.length >= 3 &&
+                        <div className="superior_jugador_2_partida">
+                            <img src={img_jugador_2} className="icono_jugador_superior" alt="icono_jugadores" />
+
+                            <img src={img_corona} className="icono_jugador_superior" alt="icono_jugadores" />
+
+                            {
+                                // Muestro los puntos de victoria del jugador 1
+                                <div className="puntos_victoria_jugador_2">
+                                    {jugadores[2].puntos_victoria}
+                                </div>
+                            }
+
+                            {
+                                jugadores[2].tiene_bono_caballeros ? (
+                                    <img src={img_caballero_negro} className="icono_jugador_superior" alt="icono_jugadores" />
+                                ) : (
+                                    <img src={img_caballero_gris} className="icono_jugador_superior" alt="icono_jugadores" />
+                                )
+                            }
+
+                            {
+                                jugadores[2].tiene_bono_carreteras ? (
+                                    <img src={img_camino_negro} className="icono_jugador_superior" alt="icono_jugadores" />
+                                ) : (
+                                    <img src={img_camino_gris} className="icono_jugador_superior" alt="icono_jugadores" />
+                                )
+                            }
+                        </div>
+                    }
+                    {
+                        jugadores.length === 4 &&
+                        <div className="superior_jugador_3_partida">
+                            <img src={img_jugador_3} className="icono_jugador_superior" alt="icono_jugadores" />
+
+                            <img src={img_corona} className="icono_jugador_superior" alt="icono_jugadores" />
+
+                            {
+                                // Muestro los puntos de victoria del jugador 1
+                                <div className="puntos_victoria_jugador_3">
+                                    {jugadores[3].puntos_victoria}
+                                </div>
+                            }
+
+                            {
+                                jugadores[3].tiene_bono_caballeros ? (
+                                    <img src={img_caballero_negro} className="icono_jugador_superior" alt="icono_jugadores" />
+                                ) : (
+                                    <img src={img_caballero_gris} className="icono_jugador_superior" alt="icono_jugadores" />
+                                )
+                            }
+
+                            {
+                                jugadores[3].tiene_bono_carreteras ? (
+                                    <img src={img_camino_negro} className="icono_jugador_superior" alt="icono_jugadores" />
+                                ) : (
+                                    <img src={img_camino_gris} className="icono_jugador_superior" alt="icono_jugadores" />
+                                )
+                            }
+                        </div>
+                    }
+                    <
+                        img src={img_salir} className="icono_salir" alt="salir"
+                        onClick={() =>
+                            window.location.href = "http://localhost:3000/home"
+                        }
+                    />
+                </div>
+
+                <div className="contador_tiempo_partida">
+
+                </div>
+
+                <div
+                    className="tiempo_partida"
+                    style={{
+                        width: `${tiempo / tiempo_maximo * 100}%`
+                    }}
+                >
+
+                </div>
             </div>
 
-            <div className="contador_tiempo_partida">
-
-            </div>
-
-            <div
-                className="tiempo_partida"
-                style={{
-                    width: `${tiempo / tiempo_maximo * 100}%`
-                }}
-            >
-
-            </div>
 
             {/************************** HEXAGONOS ***************************/}
 
@@ -596,6 +625,10 @@ function Partida() {
                     </div>
                 )
             })}
+
+            <img src={"http://localhost:3000/tabla-de-costes.png"} alt="tablero_instrucciones" />
+
+            
         </div>
     );
 }
