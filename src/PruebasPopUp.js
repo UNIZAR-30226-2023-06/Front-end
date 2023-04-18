@@ -1,6 +1,6 @@
 import React from "react";
 import jwt_decode from "jwt-decode";
-import PopUp from './pop-up-general';
+import PopUpOferta from './pop-up-oferta';
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { Navigate } from "react-router-dom";
@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useCookies } from "react-cookie";
 
-export default function PrivateHome() {
+export default function Prueba() {
   /* --------------------------- variables --------------------------- */
 
   const [desplegado, setDesplegado] = useState(true);
@@ -366,7 +366,8 @@ export default function PrivateHome() {
       />
       {/* --------------------------- Página --------------------------- */}
       <div>
-        <h1 className="m-14"> </h1>
+      <PopUpOferta></PopUpOferta>
+      <h1></h1>
       </div>
     </div>
   );

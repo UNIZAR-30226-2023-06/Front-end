@@ -1,6 +1,6 @@
 import React from "react";
 import jwt_decode from "jwt-decode";
-
+import PopUp from './pop-up-general';
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { Navigate } from "react-router-dom";
@@ -32,7 +32,11 @@ export default function Instrucciones() {
     const [elo, set_elo] = React.useState(null);
 
     const [cookies, setCookie] = useCookies(["token"]); // Agregamos removeCookie
+    const [showPopup, setShowPopup] = useState(false);
 
+    const handleOpenPopup = () => {
+        setShowPopup(true);
+    };
     /* --------------------------- calculamos el tamaño de la ventana --------------------------- */
 
     useEffect(() => {
@@ -255,7 +259,7 @@ export default function Instrucciones() {
                         </h1>
                     </a>
                     {/* --------------------------- Instrucciones --------------------------- */}
-                    <a href="http://localhost:3000/editarPerfil" className={styleLinks}>
+                    <a href="http://localhost:3000/Instrucciones" className={styleLinks}>
                         <img
                             alt="profil"
                             src="http://localhost:3000/libro-abierto.png"
@@ -263,7 +267,7 @@ export default function Instrucciones() {
                         />
 
                         <h1
-                            href="http://localhost:3000/editarPerfil"
+                            href="http://localhost:3000/Instrucciones"
                             variant={Link}
                             className={`text-white origin-center content-center font-medium text-xl`}
                         >
@@ -362,8 +366,12 @@ export default function Instrucciones() {
             />
             {/* --------------------------- Página --------------------------- */}
             <div >
+
+
                 <h1 className="m-14 ">
+
                     <div className="bg-cyan-900/60 rounded-lg p-4 flex flex-col items-center h-3/4 ml-20 overflow-y-scroll" style={{ maxHeight: "900px", maxWidth: "1290px" }}>
+
                         <div className="flex flex-col items-start mb-5" style={{ marginRight: "280px" }}>
                             <div className="flex items-center">
                                 <div className="w-6 h-6 bg-black text-white rounded-full flex justify-center items-center mr-5 flex-shrink-0 order-first">
@@ -393,7 +401,7 @@ export default function Instrucciones() {
                                 <div className="flex-grow">
                                     <p className="text-white">
                                         En Catán hay un desierto y cinco tipos diferentes de terreno:
-                                        Cada uno de ellos produce una materia prima diferente              
+                                        Cada uno de ellos produce una materia prima diferente
                                     </p>
                                 </div>
                             </div>
@@ -428,10 +436,10 @@ export default function Instrucciones() {
                                 </div>
                                 <div className="flex-grow">
                                     <p className="text-white">
-                                    Para conseguir más puntos de victoria tienes que construir
-                                    nuevas carreteras y poblados, y ampliar tus poblados a ciudades.
-                                    Una ciudad vale 2 puntos de victoria. Pero, para construir, necesitas
-                                    materias primas.      
+                                        Para conseguir más puntos de victoria tienes que construir
+                                        nuevas carreteras y poblados, y ampliar tus poblados a ciudades.
+                                        Una ciudad vale 2 puntos de victoria. Pero, para construir, necesitas
+                                        materias primas.
                                     </p>
                                 </div>
                             </div>
@@ -440,7 +448,7 @@ export default function Instrucciones() {
                                     alt="tabla de costes"
                                     src="http://localhost:3000/tabla-de-costes.png"
                                     className={`ml-2`}
-                                    style={{ width: "300px", height: "350px",marginTop:"20px", marginLeft: "445px" }}
+                                    style={{ width: "300px", height: "350px", marginTop: "20px", marginLeft: "445px" }}
                                 />
                             </div>
                         </div>
@@ -464,11 +472,11 @@ export default function Instrucciones() {
                                 </div>
                                 <div className="flex-grow">
                                     <p className="text-white">
-                                    Sólo consiguen materias primas los jugadores que tengan un poblado o una ciudad
-                                    adyacentes a estos terrenos. En la ilustración el poblado blanco (D) está adyacente a
-                                    un bosque y los poblados azul (B) y naranja (C) a una montaña. el resultado de la
-                                    tirada es un 3, el jugador rojo recibirá 1 madera y los jugadores azul y naranja
-                                    recibirán 1 mineral cada uno.        
+                                        Sólo consiguen materias primas los jugadores que tengan un poblado o una ciudad
+                                        adyacentes a estos terrenos. En la ilustración el poblado blanco (D) está adyacente a
+                                        un bosque y los poblados azul (B) y naranja (C) a una montaña. el resultado de la
+                                        tirada es un 3, el jugador rojo recibirá 1 madera y los jugadores azul y naranja
+                                        recibirán 1 mineral cada uno.
                                     </p>
                                 </div>
                             </div>
@@ -477,7 +485,7 @@ export default function Instrucciones() {
                                     alt="tablero ejemplo"
                                     src="http://localhost:3000/ejemplo.png"
                                     className={`ml-2`}
-                                    style={{ width: "500px", height: "350px",marginTop:"20px", marginLeft: "355px" }}
+                                    style={{ width: "500px", height: "350px", marginTop: "20px", marginLeft: "355px" }}
                                 />
                             </div>
                         </div>
@@ -534,10 +542,10 @@ export default function Instrucciones() {
                                 </div>
                                 <div className="flex-grow">
                                     <p className="text-white">
-                                    Puedes construir un poblado nuevo en una encrucijada
-                                    que esté libre, con la condición de que una de tus propias
-                                    carreteras lleve hasta ella y que el poblado más cercano esté,
-                                    como mínimo, a dos encrucijadas de distancia.     
+                                        Puedes construir un poblado nuevo en una encrucijada
+                                        que esté libre, con la condición de que una de tus propias
+                                        carreteras lleve hasta ella y que el poblado más cercano esté,
+                                        como mínimo, a dos encrucijadas de distancia.
                                     </p>
                                 </div>
                             </div>
@@ -546,7 +554,7 @@ export default function Instrucciones() {
                                     alt="camino ejemplo"
                                     src="http://localhost:3000/ejemplo-caminos.png"
                                     className={`ml-2`}
-                                    style={{ width: "500px", height: "200px",marginTop:"20px", marginLeft: "355px" }}
+                                    style={{ width: "500px", height: "200px", marginTop: "20px", marginLeft: "355px" }}
                                 />
                             </div>
                         </div>

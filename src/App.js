@@ -14,6 +14,7 @@ import Partida from "./Partida";
 import Tienda from "./Tienda";
 import EditaPerfil from "./EditarPerfil";
 import Instrucciones from "./Instrucciones";
+import Prueba from "./PruebasPopUp";
 export default function App() {
   return (
     <>
@@ -33,6 +34,8 @@ export default function App() {
           <Route exact path="/tienda" element={<Tienda/>} />
           <Route exact path="/editarPerfil" element={<EditaPerfil/>} />
           <Route exact path="/Instrucciones" element={<Instrucciones/>} />
+          <Route exact path="/PruebaPopUps" element={<Prueba />}/>
+
         </Routes>
       </Router>
     </>
