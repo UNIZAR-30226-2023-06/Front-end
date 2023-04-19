@@ -1,6 +1,6 @@
 import React from "react";
 import jwt_decode from "jwt-decode";
-import PopUpOferta from './pop-up-oferta';
+import PopupRecibirContraoferta from './pop-up-RecibirContraoferta';
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { Navigate } from "react-router-dom";
@@ -366,7 +366,7 @@ export default function Prueba() {
       />
       {/* --------------------------- Página --------------------------- */}
       <div>
-      <PopUpOferta></PopUpOferta>
+      <PopupRecibirContraoferta></PopupRecibirContraoferta>
       <h1></h1>
       </div>
     </div>
