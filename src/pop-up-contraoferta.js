@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const h = React.createElement;
 
 const PopUpContraoferta = (props) => {
   const [showPopup, setShowPopup] = useState(false);
+  const [shouldShowPopup, setShouldShowPopup] = useState(false);
 
   const handleClose = () => {
-    setShowPopup(false);
+    setShouldShowPopup(false);
+    props.onClose();
   };
 
   const handleOpen = () => {
+    setShouldShowPopup(true);
     setShowPopup(true);
   };
 
@@ -19,7 +21,18 @@ const PopUpContraoferta = (props) => {
     }
   };
 
+  useEffect(() => {
+    if (shouldShowPopup) {
+      setShowPopup(true);
+    } else {
+      setShowPopup(false);
+    }
+  }, [shouldShowPopup]);
+
   return (
+    <>
+    <button onClick={handleOpen}>Mostrar Popup</button>
+    {showPopup && (
     <div
       className="fixed z-50 top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center"
       onClick={handleBackgroundClick}
@@ -189,6 +202,8 @@ const PopUpContraoferta = (props) => {
         {props.children}
       </div>
     </div>
+          )}
+          </>
   );
 }
 

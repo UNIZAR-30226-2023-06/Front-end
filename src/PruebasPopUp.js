@@ -1,12 +1,14 @@
 import React from "react";
 import jwt_decode from "jwt-decode";
-import PopupRecibirContraoferta from './pop-up-RecibirContraoferta';
+import PopupCartas from "./pop-up-Cartas";
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { Navigate } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useCookies } from "react-cookie";
+import AliceCarousel from "react-alice-carousel";
+import "react-alice-carousel/lib/alice-carousel.css";
 
 export default function Prueba() {
   /* --------------------------- variables --------------------------- */
@@ -133,14 +135,15 @@ export default function Prueba() {
         className={`over_SideBaar relative h-full ${
           // si la ventana es pequeña o desplegado falso que no se vea
           screenSize < 720 && !desplegado ? styleSidebarOff : styleSidebarOn
-          }`}
+        }`}
       >
         {/* --------------------------- cruz de cerrar menu --------------------------- */}
         <img
           src="http://localhost:3000/white_cross.png"
           alt="imagen para cerrar la sidebar"
-          className={`hover:cursor-pointer ${screenSize < 720 && desplegado ? styleCruzOn : styleCruzOff
-            }`}
+          className={`hover:cursor-pointer ${
+            screenSize < 720 && desplegado ? styleCruzOn : styleCruzOff
+          }`}
           onClick={() => {
             setDesplegado(false);
           }}
@@ -358,16 +361,17 @@ export default function Prueba() {
       <img
         src="http://localhost:3000/menu.png"
         alt="Example image"
-        className={`hover:cursor-pointer w-8 h-8 m-4 ${screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
-          }`}
+        className={`hover:cursor-pointer w-8 h-8 m-4 ${
+          screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
+        }`}
         onClick={() => {
           setDesplegado(true);
         }}
       />
       {/* --------------------------- Página --------------------------- */}
       <div>
-      <PopupRecibirContraoferta></PopupRecibirContraoferta>
-      <h1></h1>
+        <PopupCartas onClose={() => setShowPopup(false)}>
+        </PopupCartas>
       </div>
     </div>
   );
