@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from 'react';
 
-import Tabs from "./components/Tabs";
+import Tabs from "./Components/TabComponent/Tabs";
 
 // 1-- Importamos useCookies y jwt_decode
 import { useCookies } from "react-cookie";
@@ -56,7 +56,7 @@ function Partida() {
         "http://localhost:3000/casillas/desierto.jpg"
     ];
 
-    const init_top_board = 470;
+    const init_top_board = 340;
     const init_left_board = -100;
 
     const top_variation_board = [
@@ -168,28 +168,7 @@ function Partida() {
     //////////////////////////////// FUNCIONES /////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    function Tab(props) {
-        const isActive = props.active === props.label;
-        return (
-            <div
-                className={`tab ${isActive ? 'active' : ''}`}
-                onClick={() => props.onClick(props.label)}
-            >
-                {props.label}
-            </div>
-        );
-    }
 
-    function Tabs() {
-        const [activeTab, setActiveTab] = useState('tab1');
-        const handleClick = (tab) => setActiveTab(tab);
-        return (
-            <div className="tabs">
-                <Tab label="tab1" active={activeTab} onClick={handleClick} />
-                <Tab label="tab2" active={activeTab} onClick={handleClick} />
-            </div>
-        );
-    }
 
     ////////////////////////////////////////////////////////////////////////////
     ///////////////////////////// FETCHS INICIALES /////////////////////////////
@@ -228,6 +207,9 @@ function Partida() {
 
         const url_partida = `${process.env.REACT_APP_URL_BACKEND}/create-test-lobby`;
 
+        console.log("URL de la partida:");
+        console.log(url_partida);
+
         fetch(
             url_partida,
             {
@@ -254,6 +236,9 @@ function Partida() {
                     setTurno(data.turno);
                     setFase(data.fase);
                 });
+            })
+            .catch((error) => {
+                console.error("Error:", error);
             });
 
     }, [Token, json_token.id]);
@@ -380,6 +365,8 @@ function Partida() {
             ///////////////////////// CÓDIGO PERIODICO /////////////////////////
 
             setTiempo((tiempo + 1) % tiempo_maximo);
+            // console.log("Tiempo: " + tiempo);
+            // console.log("Tiempo máximo: " + tiempo_maximo);
 
             ////////////////////////////////////////////////////////////////////
 
@@ -393,9 +380,16 @@ function Partida() {
     ////////////////////////////////////////////////////////////////////////////
 
     return (
-        <div className="estilo">
+        <div style={{
+            backgroundImage: `url(http://localhost:3000/fondo_mar.jpg)`,
+            backgroundSize: "cover",
 
-            {/* Menu superior */}
+            height: "100vh",
+            width: "100vw",
+        }}>
+
+            {/************************ MENÚ SUPERIOR *************************/}
+
             <div className="parte_superior_partida">
                 <div className="menu_superior_partida">
                     {
@@ -512,123 +506,147 @@ function Partida() {
 
                 </div>
             </div>
-
+            
+            {/************************* MENÚ LATERAL *************************/}
+            
+            <div style={{
+                position: "absolute",
+                top: "120px", height: "calc(100% - 120px)",
+                left: "0", width: "25%",
+                backgroundColor: "blue"
+            }}>
+                <Tabs />
+            </div>
 
             {/************************** HEXAGONOS ***************************/}
 
-            {Object.entries(board).map(([key], index) => {
-                return (
-                    <button className="w-36 flex h-40 hexagono_partida"
-                        style={{
-                            position: "absolute",
-                            top: init_top_board - top_variation_board[index] * top_variation_unit,
-                            left: "50%",
-                            transform: `translateX(${init_left_board + left_variation_board[index] * left_variation_unit}px)`,
+            <div style={{
+                position: "absolute",
+                top: "120px", height: "calc(100% - 120px)",
+                left: "25%", width: "75%",
+            }}>
 
-                            backgroundImage: `url(${ficha_con_id[board[key][1]]})`,
-                            color: `${(board[key][0] === 6 || board[key][0] === 8) ? "red" : "white"}`,
-                        }}
-                    >
-                        {
-                            board[key][0] !== 0 && board[key][0]
-                        }
-                    </button>
-                )
-            })}
+                {Object.entries(board).map(([key], index) => {
+                    return (
+                        <button className="w-36 flex h-40 hexagono_partida"
+                            style={{
+                                position: "absolute",
+                                top: init_top_board - top_variation_board[index] * top_variation_unit,
+                                left: "50%",
+                                transform: `translateX(${init_left_board + left_variation_board[index] * left_variation_unit}px)`,
 
-            {/************************** CARRETERAS **************************/}
+                                backgroundImage: `url(${ficha_con_id[board[key][1]]})`,
+                                color: `${(board[key][0] === 6 || board[key][0] === 8) ? "red" : "white"}`,
+                            }}
+                        >
+                            {
+                                board[key][0] !== 0 && board[key][0]
+                            }
+                        </button>
+                    )
+                })}
 
-            {Object.entries(road).map(([key, value], index) => {
-                return (
-                    <div>
-                        {
-                            type_road[index] === 0 &&
-                            (road[key] != null || (turno === mi_id && fase === 3)) &&
-                            <button className={`w-20 flex h-5 ${road[key] != null ? "carretera_partida" : (turno === mi_id && fase === 3 && "carretera_sin_comprar_partida")}`}
-                                style={{
-                                    position: "absolute",
-                                    top: ((init_top_board + init_top_road_relative_vertical) - top_variation_road[index] * top_variation_unit),
-                                    left: "50%",
-                                    transform: `translateX(${(init_left_board + init_left_road_relative_vertical) + left_variation_road[index] * left_variation_unit}px) rotate(90deg)`,
+                {/************************** CARRETERAS **************************/}
 
-                                    backgroundImage: `url(
-                                        ${"http://localhost:3000/carreteras/carretera_" + road["38"] + ".jpg"}
-                                    )`,
-                                }}
-                            />
-                        }
+                {Object.entries(road).map(([key, value], index) => {
+                    return (
+                        <div>
+                            {
+                                type_road[index] === 0 &&
+                                (road[key] != null || (turno === mi_id && fase === 3)) &&
+                                <button className={`w-20 flex h-5 ${road[key] != null ? "carretera_partida" : (turno === mi_id && fase === 3 && "carretera_sin_comprar_partida")}`}
+                                    style={{
+                                        position: "absolute",
+                                        top: ((init_top_board + init_top_road_relative_vertical) - top_variation_road[index] * top_variation_unit),
+                                        left: "50%",
+                                        transform: `translateX(${(init_left_board + init_left_road_relative_vertical) + left_variation_road[index] * left_variation_unit}px) rotate(90deg)`,
 
-                        {
-                            type_road[index] === 1 &&
-                            (road[key] != null || (turno === mi_id && fase === 3)) &&
-                            <button className={`w-20 flex h-5 ${road[key] != null ? "carretera_partida" : (turno === mi_id && fase === 3 && "carretera_sin_comprar_partida")}`}
-                                style={{
-                                    position: "absolute",
-                                    top: ((init_top_board + init_top_road_relative_ascend) - top_variation_road[index] * top_variation_unit),
-                                    left: "50%",
-                                    transform: `translateX(${(init_left_board + init_left_road_relative_ascend) + left_variation_road[index] * left_variation_unit}px) rotate(-30deg)`,
+                                        backgroundImage: `url(
+                            ${"http://localhost:3000/carreteras/carretera_" + road["38"] + ".jpg"}
+                        )`,
+                                    }}
+                                />
+                            }
 
-                                    backgroundImage: `url(
-                                        ${"http://localhost:3000/carreteras/carretera_" + road["38"] + ".jpg"}
-                                    )`,
-                                }}
-                            />
-                        }
+                            {
+                                type_road[index] === 1 &&
+                                (road[key] != null || (turno === mi_id && fase === 3)) &&
+                                <button className={`w-20 flex h-5 ${road[key] != null ? "carretera_partida" : (turno === mi_id && fase === 3 && "carretera_sin_comprar_partida")}`}
+                                    style={{
+                                        position: "absolute",
+                                        top: ((init_top_board + init_top_road_relative_ascend) - top_variation_road[index] * top_variation_unit),
+                                        left: "50%",
+                                        transform: `translateX(${(init_left_board + init_left_road_relative_ascend) + left_variation_road[index] * left_variation_unit}px) rotate(-30deg)`,
 
-                        {
-                            type_road[index] === 2 &&
-                            (road[key] != null || (turno === mi_id && fase === 3)) &&
-                            <button className={`w-20 flex h-5 ${road[key] != null ? "carretera_partida" : (turno === mi_id && fase === 3 && "carretera_sin_comprar_partida")}`}
-                                style={{
-                                    position: "absolute",
-                                    top: ((init_top_board + init_top_road_relative_descend) - top_variation_road[index] * top_variation_unit),
-                                    left: "50%",
-                                    transform: `translateX(${(init_left_board + init_left_road_relative_descend) + left_variation_road[index] * left_variation_unit}px) rotate(30deg)`,
+                                        backgroundImage: `url(
+                            ${"http://localhost:3000/carreteras/carretera_" + road["38"] + ".jpg"}
+                        )`,
+                                    }}
+                                />
+                            }
 
-                                    backgroundImage: `url(
-                                        ${"http://localhost:3000/carreteras/carretera_" + road["38"] + ".jpg"}
-                                    )`,
-                                }}
-                            />
-                        }
-                    </div>
-                )
-            })}
+                            {
+                                type_road[index] === 2 &&
+                                (road[key] != null || (turno === mi_id && fase === 3)) &&
+                                <button className={`w-20 flex h-5 ${road[key] != null ? "carretera_partida" : (turno === mi_id && fase === 3 && "carretera_sin_comprar_partida")}`}
+                                    style={{
+                                        position: "absolute",
+                                        top: ((init_top_board + init_top_road_relative_descend) - top_variation_road[index] * top_variation_unit),
+                                        left: "50%",
+                                        transform: `translateX(${(init_left_board + init_left_road_relative_descend) + left_variation_road[index] * left_variation_unit}px) rotate(30deg)`,
 
-            {/*************************** POBLADOS ***************************/}
+                                        backgroundImage: `url(
+                            ${"http://localhost:3000/carreteras/carretera_" + road["38"] + ".jpg"}
+                        )`,
+                                    }}
+                                />
+                            }
+                        </div>
+                    )
+                })}
 
-            {Object.entries(building).map(([key, value], index) => {
-                return (
-                    <div>
-                        {
-                            (building[key] != null || (turno === mi_id && fase === 3)) &&
-                            <button
-                                className={`w-10 flex h-10 ${building[key] != null ? "construccion_partida" : (turno === mi_id && fase === 3 && "construccion_sin_comprar_partida")}`}
-                                style={{
-                                    position: "absolute",
-                                    top: ((init_top_board + init_top_building_relative_vertical) - top_variation_building[index] * top_variation_unit),
-                                    left: "50%",
-                                    transform: `translateX(${(init_left_board + init_left_building_relative_vertical) + left_variation_building[index] * left_variation_unit}px)`,
+                {/*************************** POBLADOS ***************************/}
 
-                                    backgroundImage: `url(
-                                        ${(
-                                            building[key] != null ?
-                                                `http://localhost:3000/${building[key][1] === 0 ? "poblado" : "ciudad"}/${building[key][1] === 0 ? "poblado" : "ciudad"}_` + building[key][0] + ".png"
-                                                :
-                                                `http://localhost:3000/poblado/poblado_0.png`
-                                        )
-                                        }
-                                    )`,
-                                }}
-                            />
-                        }
-                    </div>
-                )
-            })}
+                {Object.entries(building).map(([key, value], index) => {
+                    return (
+                        <div>
+                            {
+                                (building[key] != null || (turno === mi_id && fase === 3)) &&
+                                <button
+                                    className={`w-10 flex h-10 ${building[key] != null ? "construccion_partida" : (turno === mi_id && fase === 3 && "construccion_sin_comprar_partida")}`}
+                                    style={{
+                                        position: "absolute",
+                                        top: ((init_top_board + init_top_building_relative_vertical) - top_variation_building[index] * top_variation_unit),
+                                        left: "50%",
+                                        transform: `translateX(${(init_left_board + init_left_building_relative_vertical) + left_variation_building[index] * left_variation_unit}px)`,
 
-            <img src={"http://localhost:3000/tabla-de-costes.png"} alt="tablero_instrucciones" />
+                                        backgroundImage: `url(
+                            ${(
+                                                building[key] != null ?
+                                                    `http://localhost:3000/${building[key][1] === 0 ? "poblado" : "ciudad"}/${building[key][1] === 0 ? "poblado" : "ciudad"}_` + building[key][0] + ".png"
+                                                    :
+                                                    `http://localhost:3000/poblado/poblado_0.png`
+                                            )
+                                            }
+                        )`,
+                                    }}
+                                />
+                            }
+                        </div>
+                    )
+                })}
 
-            
+            </div>
+
+            <img
+                src={"http://localhost:3000/tabla-de-costes.png"}
+                alt="tablero_instrucciones"
+                style={{
+                    transform: "scale(0.15)",
+                    position: "fixed", right: "-330px", bottom: "-380px"
+                }}
+            />
+
         </div>
     );
 }

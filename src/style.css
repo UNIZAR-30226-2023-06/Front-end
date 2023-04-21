@@ -21,7 +21,7 @@
   background-repeat: no-repeat;
 }
 
-.imagenCustomPrivateHome{
+.imagenCustomPrivateHome {
   width: 100vw;
   height: 100vh;
   background-image: url('imagenes/fondo1.svg');
@@ -114,7 +114,7 @@ h2 span:nth-of-type(7) {
 /* botones hexagonales */
 
 .btn_private_home {
-  display:inline-block;
+  display: inline-block;
   color: #fff;
   font-weight: 500;
   text-decoration: none;
@@ -123,21 +123,13 @@ h2 span:nth-of-type(7) {
   text-align: center;
   clip-path: polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%);
   background-color: #161213;
-  background-image: radial-gradient(200% 70% at center 20%, rgba(48,44,45,1) -30%, rgba(50,46,47,1) 49%, rgba(22,18,19,1) 50%, rgba(22,18,19,1) 150%);
+  background-image: radial-gradient(200% 70% at center 20%, rgba(48, 44, 45, 1) -30%, rgba(50, 46, 47, 1) 49%, rgba(22, 18, 19, 1) 50%, rgba(22, 18, 19, 1) 150%);
   background-repeat: no-repeat;
   transition: background-position-y ease-in-out 250ms;
 }
 
 .btn_private_home:hover {
   background-position-y: -50px;
-}
-/****/
-.estilo {
-  background-color: #5e89df;
-  min-height: 100vh;
-  display: flex;
-
-  height: 100%;
 }
 
 .icono_retroceso {
@@ -191,7 +183,7 @@ h2 span:nth-of-type(7) {
   position: absolute;
   top: 10%;
   left: 65%;
-  
+
   background-color: #1c2c4d;
   color: white;
 }
@@ -208,7 +200,7 @@ h2 span:nth-of-type(7) {
   position: absolute;
   top: 10%;
   left: 65%;
-  
+
   background-color: #1c2c4d;
   color: white;
 }
@@ -454,6 +446,59 @@ h2 span:nth-of-type(7) {
   top: 40px;
 }
 
+.Tabs_partida {
+  width: 100%;
+  height: 100%;
+  background: #053742;
+  color: #E8F0F2;
+
+  @media (max-width: 769px) {
+    padding: 2rem 0;
+  }
+}
+
+ul.nav_partida {
+  width: 100%;
+  margin: 0 auto 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 0px;
+  @media (max-width: 768px) {
+    width: 90%;
+  }
+}
+
+ul.nav_partida li {
+  width: 50%;
+  padding: 1rem;
+  list-style: none;
+  text-align: center;
+  cursor: pointer;
+}
+
+ul.nav_partida li:nth-child(2) {
+  border-radius: 0;
+}
+
+ul.nav_partida li:hover {
+  background: rgba(252, 252, 252, 0.15);
+}
+
+ul.nav_partida li.active {
+  background: #053742;
+}
+
+ul.nav_partida li.inactive {
+  background: #404d50;
+}
+
+.FirstTab_partida p,
+.SecondTab_partida p {
+  font-size: 2rem;
+  text-align: center;
+}
+
 .menu_superior_partida {
   background-color: #1c2c4d;
 
@@ -579,7 +624,7 @@ h2 span:nth-of-type(7) {
 }
 
 .hexagono_partida {
-  display:inline-block;
+  display: inline-block;
   color: #fff;
   font-weight: 500;
   font-size: 3.0em;
@@ -588,35 +633,35 @@ h2 span:nth-of-type(7) {
   padding: 15px 50px;
   text-align: center;
   clip-path: polygon(50% 0%, 100% 24%, 100% 75%, 50% 100%, 0% 75%, 0 25%);
-  
+
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 
 .carretera_partida {
-  display:inline-block;
+  display: inline-block;
   color: #fff;
   font-weight: 500;
   font-size: 3.0em;
   text-decoration: none;
   text-transform: uppercase;
   text-align: center;
-  
+
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 
 .carretera_sin_comprar_partida {
-  display:inline-block;
+  display: inline-block;
   color: #fff;
   font-weight: 500;
   font-size: 3.0em;
   text-decoration: none;
   text-transform: uppercase;
   text-align: center;
-  
+
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -628,28 +673,28 @@ h2 span:nth-of-type(7) {
 }
 
 .construccion_partida {
-  display:inline-block;
+  display: inline-block;
   color: #fff;
   font-weight: 500;
   font-size: 3.0em;
   text-decoration: none;
   text-transform: uppercase;
   text-align: center;
-  
+
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 
 .construccion_sin_comprar_partida {
-  display:inline-block;
+  display: inline-block;
   color: #fff;
   font-weight: 500;
   font-size: 3.0em;
   text-decoration: none;
   text-transform: uppercase;
   text-align: center;
-  
+
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -734,10 +779,10 @@ h2 span:nth-of-type(7) {
   position: absolute;
   top: 270px;
   left: 10%;
-  margin : 0;
+  margin: 0;
 }
 
-.titulo_fotos_fichas_tienda{
+.titulo_fotos_fichas_tienda {
   font-size: 30px;
   font-weight: bold;
   display: flex;
@@ -760,10 +805,10 @@ h2 span:nth-of-type(7) {
   position: absolute;
   top: 670px;
   left: 10%;
-  margin : 0;
+  margin: 0;
 }
 
-.titulo_fotos_tablero_tienda{
+.titulo_fotos_tablero_tienda {
   font-size: 30px;
   font-weight: bold;
   display: flex;
@@ -786,7 +831,7 @@ h2 span:nth-of-type(7) {
   position: absolute;
   top: 1070px;
   left: 10%;
-  margin : 0;
+  margin: 0;
 }
 
 .slide_tienda {
@@ -798,7 +843,7 @@ h2 span:nth-of-type(7) {
 
   text-align: center;
 
-  color:white;
+  color: white;
   font-size: 30px;
   font-weight: bold;
 }
@@ -807,7 +852,7 @@ h2 span:nth-of-type(7) {
   font-size: 12px;
 }
 
-.modal_tienda > .header {
+.modal_tienda>.header {
   width: 100%;
   border-bottom: 1px solid gray;
   font-size: 18px;
@@ -815,12 +860,12 @@ h2 span:nth-of-type(7) {
   padding: 20px;
 }
 
-.modal_tienda > .content {
+.modal_tienda>.content {
   width: 100%;
   padding: 10px 5px;
 }
 
-.modal_tienda > .close {
+.modal_tienda>.close {
   cursor: pointer;
   position: absolute;
   display: block;
@@ -877,11 +922,11 @@ h2 span:nth-of-type(7) {
 }
 
 /* PrivateHome */
-.sidebar_PrivateHome{
-  background-image: radial-gradient( rgba(22,18,19,1) 50%, rgba(22,18,19,1) 150%); 
+.sidebar_PrivateHome {
+  background-image: radial-gradient(rgba(22, 18, 19, 1) 50%, rgba(22, 18, 19, 1) 150%);
 }
 
-.over_SideBaar{
+.over_SideBaar {
   max-width: 650;
   max-height: 650;
   overflow-y: auto;
