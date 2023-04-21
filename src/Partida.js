@@ -364,7 +364,7 @@ function Partida() {
 
             ///////////////////////// CÓDIGO PERIODICO /////////////////////////
 
-            setTiempo((tiempo + 1) % tiempo_maximo);
+            setTiempo((tiempo + 1) % (tiempo_maximo + 1));
             // console.log("Tiempo: " + tiempo);
             // console.log("Tiempo máximo: " + tiempo_maximo);
 
