@@ -1,6 +1,6 @@
 import React from "react";
 import jwt_decode from "jwt-decode";
-import PopupCartas from "./pop-up-Cartas";
+import PopupTablaCostes from "./pop-up-TablaCostes";
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { Navigate } from "react-router-dom";
@@ -370,8 +370,8 @@ export default function Prueba() {
       />
       {/* --------------------------- Página --------------------------- */}
       <div>
-        <PopupCartas onClose={() => setShowPopup(false)}>
-        </PopupCartas>
+        <PopupTablaCostes onClose={() => setShowPopup(false)}>
+        </PopupTablaCostes>
       </div>
     </div>
   );
