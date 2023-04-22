@@ -74,23 +74,10 @@ function Sala_partida() {
     ];
 
     return (
-        <div className='estilo'>
-            <a className='jugador_1' style={{fontSize: tamano_texto_jugador_1}}>
-                {nombre_jugador_1}
-                {mostrar_img_jugador_1 && <img src={jugadores[0].img} className="icono_jugador" alt="icono_jugadores"/>}
-            </a>
-            <a className='jugador_2' style={{fontSize: tamano_texto_jugador_2}}>
-                {nombre_jugador_2}
-                {mostrar_img_jugador_2 && <img src={jugadores[1].img} className="icono_jugador" alt="icono_jugadores"/>}
-            </a>
-            <a className='jugador_3' style={{fontSize: tamano_texto_jugador_3}}>
-                {nombre_jugador_3}
-                {mostrar_img_jugador_3 && <img src={jugadores[2].img} className="icono_jugador" alt="icono_jugadores"/>}
-            </a>
-            <a className='jugador_4' style={{fontSize: tamano_texto_jugador_4}}>
-                {nombre_jugador_4}
-                {mostrar_img_jugador_4 && <img src={jugadores[3].img} className="icono_jugador" alt="icono_jugadores"/>}
-            </a>
+        <div style={{
+            backgroundColor: '#122465',
+        }}>
+            
         </div>
     );
 }

@@ -23,28 +23,42 @@ function Partida() {
     // 4-- Obtenemos la información del token
     const json_token = jwt_decode(Token);
 
-    const mi_id = useState(json_token.id);
+    const [mi_id] = useState(json_token.id);
+    const [mi_color, setMi_color] = useState("rojo");
+    const [mi_skin_construcciones, setMi_skin_construcciones] = useState(1);
 
     const [img_jugador_1, setImg_jugador_1] = useState(null);
     const [img_jugador_2, setImg_jugador_2] = useState(null);
     const [img_jugador_3, setImg_jugador_3] = useState(null);
 
     // Aquí va el id del jugador que tiene el turno
-    const [turno, setTurno] = useState(2880);
+    const [turno, setTurno] = useState(7365);
 
     // Recordatorio de fases:
     // 0: Obtención de recursos
     // 1: Uso de cartas de desarrollo
     // 2: Negociación
     // 3: Construcción
-    const [fase, setFase] = useState(3);
+    const [fase, setFase] = useState(0);
 
     const [tiempo, setTiempo] = useState(0);
     const [tiempo_maximo, setTiempo_maximo] = useState(30);
 
     const [jugadores, setJugadores] = useState([]);
+    const [max_jugadores, setMax_jugadores] = useState(0);
 
     const [board, setBoard] = useState({});
+
+    const [partida_empezada, setPartida_empezada] = useState(false);
+
+    const [aldeas_iniciales_colocadas, setAldeas_iniciales_colocadas] = useState(false);
+    const [puedo_colocar_aldea, setPuedo_colocar_aldea] = useState(false);
+    const [puedo_colocar_carretera, setPuedo_colocar_carretera] = useState(false);
+    const [aldea_que_puedo_construir, setAldea_que_puedo_construir] = useState(1);
+    const [ultima_aldea_construida, setUltima_aldea_construida] = useState(0);
+
+    const [img_dado_1, setImg_dado_1] = useState("http://localhost:3000/dados/dado_1.png");
+    const [img_dado_2, setImg_dado_2] = useState("http://localhost:3000/dados/dado_2.png");
 
     const ficha_con_id = [
         null,
@@ -66,6 +80,10 @@ function Partida() {
     const left_variation_board = [
         -4, -3, -2, -3, -2, -1, 0, -2, -1, 0, 1, 2, 0, 1, 2, 3, 2, 3, 4];
     const left_variation_unit = 80;
+
+    const [posicion_ladron, setPosicion_ladron] = useState(87);
+    const top_variation_ladron = 27;
+    const left_variation_ladron = 27;
 
     const [road, setRoad] = useState({});
 
@@ -168,7 +186,100 @@ function Partida() {
     //////////////////////////////// FUNCIONES /////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
+    function codigo_to_color(codigo) {
+        const identificador_color = codigo % 4
 
+        if (identificador_color == 0) {
+            return "amarillo";
+        }
+        else if (identificador_color == 1) {
+            return "azul";
+        }
+        else if (identificador_color == 2) {
+            return "blanco";
+        }
+        else {
+            return "rojo"
+        }
+    }
+
+    function color_to_codigo(color) {
+        switch (color) {
+            case "amarillo":
+                return 0;
+            case "azul":
+                return 1;
+            case "blanco":
+                return 2;
+            case "rojo":
+                return 3;
+            default:
+                return -1; // Si el color no es válido, devolvemos -1
+        }
+    }
+
+    function codigo_to_skin(codigo) {
+        return Math.floor(codigo / 4);
+    }
+
+    function construir_poblado(coordenada) {
+        if (aldeas_iniciales_colocadas) {
+            // Compruebo qué construccion hay en la coordenada
+            if (building[coordenada][1] == 0) {
+                // Compruebo si tengo los materiales para construir una ciudad
+                if (true) {
+                    return;
+                }
+            }
+            else {
+                // Compruebo si tengo los materiales para construir un poblado
+                if (true) {
+                    return;
+                }
+            }
+        }
+        else {
+            setUltima_aldea_construida(ultima_aldea_construida + 1);
+
+            setPuedo_colocar_aldea(false);
+            setPuedo_colocar_carretera(true);
+
+            // Cambio el conjunto de carreteras que puedo construir a los huecos
+            // alrededor de la aldea que acabo de construir
+
+            let construcciones = building;
+            construcciones[coordenada] = [mi_skin_construcciones * 4 + color_to_codigo(mi_color), 0];
+            setBuilding(construcciones);
+        }
+    }
+
+    function construir_carretera(coordenada) {
+        if (aldeas_iniciales_colocadas) {
+
+        }
+        else {
+            setPuedo_colocar_carretera(false)
+
+            let carreteras = road;
+            carreteras[coordenada] = mi_skin_construcciones * 4 + color_to_codigo(mi_color);
+            setRoad(carreteras);
+
+            // Aviso al backend de que ya he colocado lo mío
+        }
+    }
+
+    function tirar_dados() {
+        // Obtengo la tira de dados del backend
+        const numeroAleatorio = Math.floor(Math.random() * 6) + 1;
+        const nuevaImagen = `http://localhost:3000/dados/dado_${numeroAleatorio}.png`;
+
+        setImg_dado_1(nuevaImagen);
+
+        const numeroAleatorio2 = Math.floor(Math.random() * 6) + 1;
+        const nuevaImagen2 = `http://localhost:3000/dados/dado_${numeroAleatorio2}.png`;
+
+        setImg_dado_2(nuevaImagen2);
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     ///////////////////////////// FETCHS INICIALES /////////////////////////////
@@ -227,21 +338,22 @@ function Partida() {
                     console.log(data);
 
                     setJugadores(data.players);
+                    setMax_jugadores(data.max_Players);
 
                     setBoard(data.game.tiles);
                     setRoad(data.game.edges);
                     setBuilding(data.game.nodes);
 
                     setTiempo_maximo(data.max_tiempo_turno);
-                    setTurno(data.turno);
-                    setFase(data.fase);
+                    //setTurno(data.turno);
+                    //setFase(data.fase);
                 });
             })
             .catch((error) => {
                 console.error("Error:", error);
             });
 
-    }, [Token, json_token.id]);
+    }, [Token, json_token.id, mi_id]);
 
     useEffect(() => {
 
@@ -360,20 +472,56 @@ function Partida() {
     ////////////////////////////////////////////////////////////////////////////
 
     useEffect(() => {
+        if (tiempo === 0 && partida_empezada) {
+            setFase((fase + 1) % 4);
+        }
+    }, [tiempo]);
+
+    useEffect(() => {
+        if (fase === 0 && tiempo === 0 && partida_empezada) {
+            setTurno((turno + 1) % max_jugadores);
+            // TODO: los turnos van con ids, hay que hacer una llamada al
+            // backend para obtener el id del jugador que le toca
+
+            // TODO: Cuando pase un turno, hay que esperar la confirmación del
+            // backend para poder pasar al siguiente turno, así todos los
+            // jugadores se sincronizan
+
+            if (!aldeas_iniciales_colocadas && turno == mi_id) {
+                setAldea_que_puedo_construir(aldea_que_puedo_construir + 1);
+            }
+        }
+    }, [fase]);
+
+    useEffect(() => {
         const interval = setInterval(() => {
 
             ///////////////////////// CÓDIGO PERIODICO /////////////////////////
 
-            setTiempo((tiempo + 1) % (tiempo_maximo + 1));
-            // console.log("Tiempo: " + tiempo);
-            // console.log("Tiempo máximo: " + tiempo_maximo);
+            if (aldeas_iniciales_colocadas) {
+                setTiempo((tiempo + 1) % (tiempo_maximo + 1));
+
+                if (!partida_empezada && tiempo === 0) {
+                    setPartida_empezada(true);
+                }
+            }
+            else {
+                if (turno == mi_id) {
+                    if (ultima_aldea_construida < aldea_que_puedo_construir) {
+                        setPuedo_colocar_aldea(true);
+                    }
+                }
+                else {
+                    setPuedo_colocar_aldea(false);
+                }
+            }
 
             ////////////////////////////////////////////////////////////////////
 
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [tiempo, tiempo_maximo]);
+    }, [tiempo, turno, aldea_que_puedo_construir, ultima_aldea_construida, aldeas_iniciales_colocadas, partida_empezada]);
 
     ////////////////////////////////////////////////////////////////////////////
     ///////////////////////////// RETURN PRINCIPAL /////////////////////////////
@@ -506,9 +654,9 @@ function Partida() {
 
                 </div>
             </div>
-            
+
             {/************************* MENÚ LATERAL *************************/}
-            
+
             <div style={{
                 position: "absolute",
                 top: "120px", height: "calc(100% - 120px)",
@@ -517,6 +665,78 @@ function Partida() {
             }}>
                 <Tabs />
             </div>
+
+            {/************************** OTRAS COSAS *************************/}
+
+            <h1
+                style={{
+                    position: "absolute",
+                    left: "50%",
+                }}>
+                {"Max jugadores: " + max_jugadores}
+                {"---"}
+                {"Tiempo: " + tiempo}
+                {"---"}
+                {"Turno: " + turno}
+                {"---"}
+                {"Fase: " + fase}
+                {"---"}
+                {"Permiso para construir carreteras: " + puedo_colocar_carretera}
+                {"---"}
+                {"Permiso para construir aldeas: " + puedo_colocar_aldea}
+                {"---"}
+                {"Ultima aldea construida: " + ultima_aldea_construida}
+                {"---"}
+                {"Aldea que puedo construir: " + aldea_que_puedo_construir}
+            </h1>
+
+            <h1
+                style={{
+                    position: "absolute",
+                    left: "28%",
+                    top: "150px",
+
+                    fontSize: "50px",
+                    fontWeight: "bold"
+                }}>
+
+                {turno == mi_id && "¡Tu turno!"}
+            </h1>
+
+            <img
+                src={img_dado_1}
+                style={{
+                    position: "absolute",
+                    left: "28%",
+                    bottom: "50px",
+                    width: "80px",
+                    height: "80px",
+                }}
+            />
+            <img
+                src={img_dado_2}
+                style={{
+                    position: "absolute",
+                    left: "calc(28% + 100px)",
+                    bottom: "50px",
+                    width: "80px",
+                    height: "80px",
+                }}
+            />
+
+            <img
+                src={(turno == mi_id && aldeas_iniciales_colocadas) ? "http://localhost:3000/skips/skip_on.png" : "http://localhost:3000/skips/skip_off.png"}
+                style={{
+                    position: "absolute",
+                    right: "80px",
+                    top: "170px",
+                    width: "80px",
+                    height: "80px",
+                }}
+                onClick={() => {
+                    
+                }}
+            />
 
             {/************************** HEXAGONOS ***************************/}
 
@@ -528,21 +748,40 @@ function Partida() {
 
                 {Object.entries(board).map(([key], index) => {
                     return (
-                        <button className="w-36 flex h-40 hexagono_partida"
-                            style={{
-                                position: "absolute",
-                                top: init_top_board - top_variation_board[index] * top_variation_unit,
-                                left: "50%",
-                                transform: `translateX(${init_left_board + left_variation_board[index] * left_variation_unit}px)`,
-
-                                backgroundImage: `url(${ficha_con_id[board[key][1]]})`,
-                                color: `${(board[key][0] === 6 || board[key][0] === 8) ? "red" : "white"}`,
-                            }}
-                        >
+                        <div>
                             {
-                                board[key][0] !== 0 && board[key][0]
+                                <button className="w-36 flex h-40 hexagono_partida"
+                                    style={{
+                                        position: "absolute",
+                                        top: init_top_board - top_variation_board[index] * top_variation_unit,
+                                        left: "50%",
+                                        transform: `translateX(${init_left_board + left_variation_board[index] * left_variation_unit}px)`,
+
+                                        backgroundImage: `url(${ficha_con_id[board[key][1]]})`,
+                                        color: `${(board[key][0] === 6 || board[key][0] === 8) ? "red" : "white"}`,
+                                    }}
+                                >
+                                    {
+                                        board[key][0] !== 0 && board[key][0]
+                                    }
+                                </button>
                             }
-                        </button>
+                            {
+                                (key == posicion_ladron) &&
+                                <img
+                                    src={"http://localhost:3000/ladron.png"}
+                                    alt="ladron"
+                                    style={{
+                                        position: "absolute",
+                                        top: init_top_board + top_variation_ladron - top_variation_board[index] * top_variation_unit,
+                                        left: "50%",
+                                        transform: `translateX(${init_left_board + left_variation_ladron + left_variation_board[index] * left_variation_unit}px)`,
+                                        width: "100px",
+                                        height: "100px",
+                                    }}
+                                />
+                            }
+                        </div>
                     )
                 })}
 
@@ -553,51 +792,62 @@ function Partida() {
                         <div>
                             {
                                 type_road[index] === 0 &&
-                                (road[key] != null || (turno === mi_id && fase === 3)) &&
-                                <button className={`w-20 flex h-5 ${road[key] != null ? "carretera_partida" : (turno === mi_id && fase === 3 && "carretera_sin_comprar_partida")}`}
+                                (road[key] != null || puedo_colocar_carretera) &&
+                                <button
+                                    className={`w-20 flex h-5 ${road[key] != null ? "carretera_partida" : "carretera_sin_comprar_partida"}`}
                                     style={{
                                         position: "absolute",
                                         top: ((init_top_board + init_top_road_relative_vertical) - top_variation_road[index] * top_variation_unit),
                                         left: "50%",
                                         transform: `translateX(${(init_left_board + init_left_road_relative_vertical) + left_variation_road[index] * left_variation_unit}px) rotate(90deg)`,
 
-                                        backgroundImage: `url(
-                            ${"http://localhost:3000/carreteras/carretera_" + road["38"] + ".jpg"}
-                        )`,
+                                        backgroundImage: `url( ${"http://localhost:3000/carreteras/" + mi_color + "/carretera_" + 1 + ".png"} )`,
+                                    }}
+                                    onClick={() => {
+                                        construir_carretera(key);
                                     }}
                                 />
                             }
 
                             {
                                 type_road[index] === 1 &&
-                                (road[key] != null || (turno === mi_id && fase === 3)) &&
-                                <button className={`w-20 flex h-5 ${road[key] != null ? "carretera_partida" : (turno === mi_id && fase === 3 && "carretera_sin_comprar_partida")}`}
+                                (road[key] != null || puedo_colocar_carretera) &&
+                                <button
+                                    className={`w-20 flex h-5 ${road[key] != null ? "carretera_partida" : "carretera_sin_comprar_partida"}`}
                                     style={{
                                         position: "absolute",
                                         top: ((init_top_board + init_top_road_relative_ascend) - top_variation_road[index] * top_variation_unit),
                                         left: "50%",
                                         transform: `translateX(${(init_left_board + init_left_road_relative_ascend) + left_variation_road[index] * left_variation_unit}px) rotate(-30deg)`,
 
-                                        backgroundImage: `url(
-                            ${"http://localhost:3000/carreteras/carretera_" + road["38"] + ".jpg"}
-                        )`,
+                                        backgroundImage: `url( ${"http://localhost:3000/carreteras/" + mi_color + "/carretera_" + 1 + ".png"} )`,
+                                    }}
+                                    onClick={() => {
+                                        construir_carretera(key);
                                     }}
                                 />
                             }
 
                             {
                                 type_road[index] === 2 &&
-                                (road[key] != null || (turno === mi_id && fase === 3)) &&
-                                <button className={`w-20 flex h-5 ${road[key] != null ? "carretera_partida" : (turno === mi_id && fase === 3 && "carretera_sin_comprar_partida")}`}
+                                (road[key] != null || puedo_colocar_carretera) &&
+                                <button
+                                    className={`w-20 flex h-5 ${road[key] != null ? "carretera_partida" : "carretera_sin_comprar_partida"}`}
                                     style={{
                                         position: "absolute",
                                         top: ((init_top_board + init_top_road_relative_descend) - top_variation_road[index] * top_variation_unit),
                                         left: "50%",
                                         transform: `translateX(${(init_left_board + init_left_road_relative_descend) + left_variation_road[index] * left_variation_unit}px) rotate(30deg)`,
 
-                                        backgroundImage: `url(
-                            ${"http://localhost:3000/carreteras/carretera_" + road["38"] + ".jpg"}
-                        )`,
+                                        backgroundImage: `url( ${(
+                                            road[key] != null ?
+                                                `${"http://localhost:3000/carreteras/" + codigo_to_color(road[key]) + "/carretera_" + codigo_to_skin(road[key]) + ".png"}`
+                                                :
+                                                `${"http://localhost:3000/carreteras/" + mi_color + "/carretera_" + mi_skin_construcciones + ".png"}`
+                                        )} )`,
+                                    }}
+                                    onClick={() => {
+                                        construir_carretera(key);
                                     }}
                                 />
                             }
@@ -611,24 +861,24 @@ function Partida() {
                     return (
                         <div>
                             {
-                                (building[key] != null || (turno === mi_id && fase === 3)) &&
+                                (building[key][1] != null || puedo_colocar_aldea) &&
                                 <button
-                                    className={`w-10 flex h-10 ${building[key] != null ? "construccion_partida" : (turno === mi_id && fase === 3 && "construccion_sin_comprar_partida")}`}
+                                    className={`w-10 flex h-10 ${building[key][1] != null ? "construccion_partida" : "construccion_sin_comprar_partida"}`}
                                     style={{
                                         position: "absolute",
                                         top: ((init_top_board + init_top_building_relative_vertical) - top_variation_building[index] * top_variation_unit),
                                         left: "50%",
                                         transform: `translateX(${(init_left_board + init_left_building_relative_vertical) + left_variation_building[index] * left_variation_unit}px)`,
 
-                                        backgroundImage: `url(
-                            ${(
-                                                building[key] != null ?
-                                                    `http://localhost:3000/${building[key][1] === 0 ? "poblado" : "ciudad"}/${building[key][1] === 0 ? "poblado" : "ciudad"}_` + building[key][0] + ".png"
-                                                    :
-                                                    `http://localhost:3000/poblado/poblado_0.png`
-                                            )
-                                            }
-                        )`,
+                                        backgroundImage: `url( ${(
+                                            building[key][1] != null ?
+                                                `${"http://localhost:3000/" + (building[key][1] === 0 ? "poblado" : "ciudad") + "/" + codigo_to_color(building[key][0]) + "/" + (building[key][1] === 0 ? "poblado" : "ciudad") + "_" + codigo_to_skin(building[key][0]) + ".png"}`
+                                                :
+                                                `${"http://localhost:3000/poblado/" + mi_color + "/poblado_1.png"}`
+                                        )} )`,
+                                    }}
+                                    onClick={() => {
+                                        construir_poblado(key);
                                     }}
                                 />
                             }
