@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import React from "react";
 import Popup from "reactjs-popup";
 import jwt_decode from "jwt-decode";
@@ -486,3 +487,119 @@ export default function EditarPerfil() {
     </div>
   );
 }
+=======
+import React, { useEffect } from "react";
+import { useState } from "react";
+
+import AliceCarousel from "react-alice-carousel";
+import "react-alice-carousel/lib/alice-carousel.css";
+
+// 1-- Importamos useCookies y jwt_decode
+import { useCookies } from "react-cookie";
+import jwt_decode from "jwt-decode";
+import Popup from "reactjs-popup";
+
+function EditarPerfil() {
+  ////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////// CONSTANTES ////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
+
+  // 2-- Creamos la estructura de las cookies
+  const [cookies] = useCookies(["token"]);
+
+  // 3-- Obtenemos el token de las cookies
+  const Token = cookies.token;
+
+  // 4-- Obtenemos la información del token
+  const json_token = jwt_decode(Token);
+
+  const responsive = {
+    0: { items: 1 },
+    640: { items: 3 },
+    768: { items: 3 },
+    1024: { items: 4 },
+    1280: { items: 4 },
+    1536: { items: 6 },
+    1792: { items: 6 },
+  };
+
+  // las fotos
+  const fotos_perfil = [
+    "skin1",
+    "skin2",
+    "skin3",
+    "skin4",
+    "skin5",
+    "skin6",
+    "skin7",
+    "skin8",
+    "skin9",
+    "skin10",
+    "skin11",
+    "skin12",
+    "skin13",
+    "skin14",
+  ];
+
+  const handleDragStart = (e) => e.preventDefault();
+
+  ////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////// COMPONENTES ////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
+
+  const items_fotos_perfil = fotos_perfil.map((foto, i) => (
+    <div className="slide_tienda">
+      <img src={"http://localhost:3000/fotos_perfil/skin" + (i + 1) + ".png"} 
+      className="rounded-full bg-cyan-900"/>
+    </div>
+  ));
+
+  ////////////////////////////////////////////////////////////////////////////
+  /////////////////////// FETCHS INICIALES NECESARIOS ////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
+
+  ////////////////////////////////////////////////////////////////////////////
+  //////////////////////////// FUNCIÓN PRINCIPAL /////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
+
+  return (
+    <div>
+      <Popup
+        trigger={
+          /************ LO QUE VA AQUI ES LO QUE SACA LA POPUP ************/
+          <div>
+            <img
+              alt="profil"
+              src={"http://localhost:3000/fotos_perfil/skin1.png"}
+              className={`ml-10 object-cover rounded-full h-60 w-60 mt-9 bg-cyan-900`}
+            />
+          </div>
+        }
+        modal
+        nested
+        arrow={false}
+        contentStyle={{
+          width: "60%",
+          height: "45%",
+          border: "5px solid black",
+          borderRadius: "10px",
+        }}
+      >
+        {(close) => (
+          /************ LO QUE VA AQUI ES LO QUE HAY DENTRO DE LA POP UP ************/
+          <div className="justify-center mx-5 ml-8">
+            <AliceCarousel
+                    mouseTracking
+                    items={items_fotos_perfil}
+                    responsive={responsive}
+                    controlsStrategy="alternate"
+                />
+          </div>
+        )}
+      </Popup>
+    </div>
+  );
+}
+
+export default EditarPerfil;
+>>>>>>> Stashed changes
