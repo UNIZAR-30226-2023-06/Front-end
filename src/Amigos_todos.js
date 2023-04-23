@@ -106,7 +106,7 @@ export default function Amigos_Todos() {
               const img =
                 data.profile_picture === "default"
                   ? "http://localhost:3000/fotos_perfil/skin1.png"
-                  : `http://localhost:3000/fotos_perfil/${imagen}.png`;
+                  : `http://localhost:3000/fotos_perfil/${data.profile_picture}.png`;
 
               set_dinero(data.coins);
               set_codigo(data.id);

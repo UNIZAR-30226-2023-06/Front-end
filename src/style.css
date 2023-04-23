@@ -936,8 +936,10 @@ ul.nav_partida li.inactive {
 }
 
 .over_SideBaar {
-  max-width: 650;
-  max-height: 650;
+  max-width: 650px;
+  min-width: 300px;
+  max-height: 650px;
+  min-height: 100vh;
   overflow-y: auto;
   overflow-x: auto;
 }

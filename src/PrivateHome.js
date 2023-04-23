@@ -7,6 +7,7 @@ import { Navigate } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useCookies } from "react-cookie";
+import { useNavigate } from 'react-router-dom';
 
 export default function PrivateHome() {
   /* --------------------------- variables --------------------------- */
@@ -30,6 +31,7 @@ export default function PrivateHome() {
   const [imagen, set_imagen] = React.useState(null);
   const [nummensajes, set_nummensajes] = React.useState(null);
   const [elo, set_elo] = React.useState(null);
+  const navigate = useNavigate();
 
   const [cookies, setCookie] = useCookies(["token"]); // Agregamos removeCookie
 
@@ -54,50 +56,54 @@ export default function PrivateHome() {
   /* --------------------------- seguridad  --------------------------- */
 
   // en caso de que no estemos logueados ve a la página de login
-  if (cookies.token === "") {
-    return <Navigate to="/login" />;
-  }
+  useEffect(() => {
+    if (cookies.token === "") {
+      navigate("/login");
+    }
+  }, [cookies.token, navigate]);
 
   /* --------------------------- cookies  --------------------------- */
 
   // cargamos los datos de los usuarios y hacemos decode del token
   const Token = cookies.token;
   const json_token = jwt_decode(Token);
-  console.log(json_token);
+  // console.log(json_token);
 
   /* --------------------------- obtener datos usuario  --------------------------- */
 
-  fetch(
-    `${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(
-      json_token.id
-    )}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Bearer ${Token}`,
-      },
-    }
-  )
-    .then((res) => {
-      res.json().then((data) => {
-        // Actualizamos el estado de cosas
-        const img =
-          data.profile_picture === "default"
-            ? "http://localhost:3000/fotos_perfil/skin1.png"
-            : `http://localhost:3000/fotos_perfil/${imagen}.png`;
+  useEffect(() => {
+    fetch(
+      `${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(
+        json_token.id
+      )}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${Token}`,
+        },
+      }
+    )
+      .then((res) => {
+        res.json().then((data) => {
+          // Actualizamos el estado de cosas
+          const img =
+            data.profile_picture === "default"
+              ? "http://localhost:3000/fotos_perfil/skin1.png"
+              : `http://localhost:3000/fotos_perfil/${data.profile_picture}.png`;
 
-        set_dinero(data.coins);
-        set_codigo(data.id);
-        set_nombre(data.username);
-        set_imagen(img);
-        set_elo(data.elo);
-        // console.log(data);
+          set_dinero(data.coins);
+          set_codigo(data.id);
+          set_nombre(data.username);
+          set_imagen(img);
+          set_elo(data.elo);
+          console.log(img);
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
       });
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+  }, [json_token.id]);
 
   /* --------------------------- miramos si hay mensajes pendientes --------------------------- */
 
@@ -113,7 +119,7 @@ export default function PrivateHome() {
         throw new Error("Network response was not ok");
       }
       response.json().then((data) => {
-        console.log(data.number_of_requests);
+        //console.log(data.number_of_requests);
         set_nummensajes(data.number_of_requests);
       });
     })
