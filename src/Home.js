@@ -1,11 +1,13 @@
 import React from "react";
 import jwt_decode from "jwt-decode";
+
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { Navigate } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useCookies } from "react-cookie";
+import { useNavigate } from 'react-router-dom';
 
 export default function PrivateHome() {
   /* --------------------------- variables --------------------------- */
@@ -29,13 +31,10 @@ export default function PrivateHome() {
   const [imagen, set_imagen] = React.useState(null);
   const [nummensajes, set_nummensajes] = React.useState(null);
   const [elo, set_elo] = React.useState(null);
+  const navigate = useNavigate();
 
   const [cookies, setCookie] = useCookies(["token"]); // Agregamos removeCookie
-  const [showPopup, setShowPopup] = useState(false);
 
-  const handleOpenPopup = () => {
-    setShowPopup(true);
-  };
   /* --------------------------- calculamos el tamaño de la ventana --------------------------- */
 
   useEffect(() => {
@@ -57,50 +56,54 @@ export default function PrivateHome() {
   /* --------------------------- seguridad  --------------------------- */
 
   // en caso de que no estemos logueados ve a la página de login
-  if (cookies.token === "") {
-    return <Navigate to="/login" />;
-  }
+  useEffect(() => {
+    if (cookies.token === "") {
+      navigate("/login");
+    }
+  }, [cookies.token, navigate]);
 
   /* --------------------------- cookies  --------------------------- */
 
   // cargamos los datos de los usuarios y hacemos decode del token
   const Token = cookies.token;
   const json_token = jwt_decode(Token);
-  console.log(json_token);
+  // console.log(json_token);
 
   /* --------------------------- obtener datos usuario  --------------------------- */
 
-  fetch(
-    `${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(
-      json_token.id
-    )}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Bearer ${Token}`,
-      },
-    }
-  )
-    .then((res) => {
-      res.json().then((data) => {
-        // Actualizamos el estado de cosas
-        const img =
-          data.profile_picture === "default"
-            ? "http://localhost:3000/fotos_perfil/skin1.png"
-            : `http://localhost:3000/fotos_perfil/${imagen}.png`;
+  useEffect(() => {
+    fetch(
+      `${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(
+        json_token.id
+      )}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${Token}`,
+        },
+      }
+    )
+      .then((res) => {
+        res.json().then((data) => {
+          // Actualizamos el estado de cosas
+          const img =
+            data.profile_picture === "default"
+              ? "http://localhost:3000/fotos_perfil/skin1.png"
+              : `http://localhost:3000/fotos_perfil/${data.profile_picture}.png`;
 
-        set_dinero(data.coins);
-        set_codigo(data.id);
-        set_nombre(data.username);
-        set_imagen(img);
-        set_elo(data.elo);
-        // console.log(data);
+          set_dinero(data.coins);
+          set_codigo(data.id);
+          set_nombre(data.username);
+          set_imagen(img);
+          set_elo(data.elo);
+          console.log(img);
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
       });
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+  }, [json_token.id]);
 
   /* --------------------------- miramos si hay mensajes pendientes --------------------------- */
 
@@ -116,7 +119,7 @@ export default function PrivateHome() {
         throw new Error("Network response was not ok");
       }
       response.json().then((data) => {
-        console.log(data.number_of_requests);
+        //console.log(data.number_of_requests);
         set_nummensajes(data.number_of_requests);
       });
     })
@@ -132,14 +135,15 @@ export default function PrivateHome() {
         className={`over_SideBaar relative h-full ${
           // si la ventana es pequeña o desplegado falso que no se vea
           screenSize < 720 && !desplegado ? styleSidebarOff : styleSidebarOn
-          }`}
+        }`}
       >
         {/* --------------------------- cruz de cerrar menu --------------------------- */}
         <img
           src="http://localhost:3000/white_cross.png"
           alt="imagen para cerrar la sidebar"
-          className={`hover:cursor-pointer ${screenSize < 720 && desplegado ? styleCruzOn : styleCruzOff
-            }`}
+          className={`hover:cursor-pointer ${
+            screenSize < 720 && desplegado ? styleCruzOn : styleCruzOff
+          }`}
           onClick={() => {
             setDesplegado(false);
           }}
@@ -182,7 +186,7 @@ export default function PrivateHome() {
             />
           </h1>
         </div>
-        <ul className="flex flex-col w-full items-start py-6 px-4 gap-2 ">
+        <ul className="flex flex-col w-full items-start py-6 px-4 gap-2">
           {/* --------------------------- volver al home --------------------------- */}
           <a href="http://localhost:3000/home" className={styleLinks}>
             <img
@@ -343,7 +347,7 @@ export default function PrivateHome() {
               className={`w-48 p-2 mr-2 border border-transparent border-b-white focus:border focus:border-white bg-transparent text-white`}
               type="text"
               placeholder="Añadir amigo: 2345"
-            ></input>
+            />
             <button className="px-4 py-2 rounded-full bg-cyan-900 hover:bg-slate-900 text-white w-12 h-10">
               <img
                 src="http://localhost:3000/add-friend.png"
@@ -356,17 +360,16 @@ export default function PrivateHome() {
       {/* --------------------------- menu plegado --------------------------- */}
       <img
         src="http://localhost:3000/menu.png"
-        alt="Example image"
-        className={`hover:cursor-pointer w-8 h-8 m-4 ${screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
-          }`}
+        alt="menu desplegable, clicka aqui para desplegarlo"
+        className={`hover:cursor-pointer w-8 h-8 m-4 ${
+          screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
+        }`}
         onClick={() => {
           setDesplegado(true);
         }}
       />
-      {/* --------------------------- Página --------------------------- */}
-      <div>
-        <h1 className="m-14"> </h1>
-      </div>
-    </div>
+      {/* --------------------------- botones centrales ---------------------------*/}
+
+       </div>
   );
 }
