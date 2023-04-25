@@ -1,0 +1,35 @@
+import React from "react";
+
+// 1-- Importamos useCookies y jwt_decode
+import { useCookies } from "react-cookie";
+import jwt_decode from "jwt-decode";
+
+function Buscando_partida() {
+
+    ////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////// CONSTANTES ////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+    // 2-- Creamos la estructura de las cookies
+    const [cookies] = useCookies(["token"]);
+
+    // 3-- Obtenemos el token de las cookies
+    const Token = cookies.token;
+
+    // 4-- Obtenemos la información del token
+    const json_token = jwt_decode(Token);
+
+    ////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////// FUNCIONES /////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+    
+
+    return (
+        <div>
+            <h1>Buscando Partida</h1>
+        </div>
+    );
+}
+
+export default Buscando_partida;

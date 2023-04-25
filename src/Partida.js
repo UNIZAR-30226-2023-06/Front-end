@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useState } from 'react';
 
 import Tabs from "./Components/TabComponent/Tabs";
+import PopupTablaCostes from "./pop-up-TablaCostes";
 
 // 1-- Importamos useCookies y jwt_decode
 import { useCookies } from "react-cookie";
@@ -24,7 +25,7 @@ function Partida() {
     const json_token = jwt_decode(Token);
 
     const [mi_id] = useState(json_token.id);
-    const [mi_color, setMi_color] = useState("rojo");
+    const [mi_color, setMi_color] = useState("RED");
     const [mi_skin_construcciones, setMi_skin_construcciones] = useState(1);
 
     const [img_jugador_1, setImg_jugador_1] = useState(null);
@@ -190,28 +191,28 @@ function Partida() {
         const identificador_color = codigo % 4
 
         if (identificador_color == 0) {
-            return "amarillo";
+            return "YELLOW";
         }
         else if (identificador_color == 1) {
-            return "azul";
+            return "BLUE";
         }
         else if (identificador_color == 2) {
-            return "blanco";
+            return "WHITE";
         }
         else {
-            return "rojo"
+            return "RED"
         }
     }
 
     function color_to_codigo(color) {
         switch (color) {
-            case "amarillo":
+            case "YELLOW":
                 return 0;
-            case "azul":
+            case "BLUE":
                 return 1;
-            case "blanco":
+            case "WHITE":
                 return 2;
-            case "rojo":
+            case "RED":
                 return 3;
             default:
                 return -1; // Si el color no es válido, devolvemos -1
@@ -666,78 +667,6 @@ function Partida() {
                 <Tabs />
             </div>
 
-            {/************************** OTRAS COSAS *************************/}
-
-            <h1
-                style={{
-                    position: "absolute",
-                    left: "50%",
-                }}>
-                {"Max jugadores: " + max_jugadores}
-                {"---"}
-                {"Tiempo: " + tiempo}
-                {"---"}
-                {"Turno: " + turno}
-                {"---"}
-                {"Fase: " + fase}
-                {"---"}
-                {"Permiso para construir carreteras: " + puedo_colocar_carretera}
-                {"---"}
-                {"Permiso para construir aldeas: " + puedo_colocar_aldea}
-                {"---"}
-                {"Ultima aldea construida: " + ultima_aldea_construida}
-                {"---"}
-                {"Aldea que puedo construir: " + aldea_que_puedo_construir}
-            </h1>
-
-            <h1
-                style={{
-                    position: "absolute",
-                    left: "28%",
-                    top: "150px",
-
-                    fontSize: "50px",
-                    fontWeight: "bold"
-                }}>
-
-                {turno == mi_id && "¡Tu turno!"}
-            </h1>
-
-            <img
-                src={img_dado_1}
-                style={{
-                    position: "absolute",
-                    left: "28%",
-                    bottom: "50px",
-                    width: "80px",
-                    height: "80px",
-                }}
-            />
-            <img
-                src={img_dado_2}
-                style={{
-                    position: "absolute",
-                    left: "calc(28% + 100px)",
-                    bottom: "50px",
-                    width: "80px",
-                    height: "80px",
-                }}
-            />
-
-            <img
-                src={(turno == mi_id && aldeas_iniciales_colocadas) ? "http://localhost:3000/skips/skip_on.png" : "http://localhost:3000/skips/skip_off.png"}
-                style={{
-                    position: "absolute",
-                    right: "80px",
-                    top: "170px",
-                    width: "80px",
-                    height: "80px",
-                }}
-                onClick={() => {
-                    
-                }}
-            />
-
             {/************************** HEXAGONOS ***************************/}
 
             <div style={{
@@ -888,14 +817,80 @@ function Partida() {
 
             </div>
 
-            <img
-                src={"http://localhost:3000/tabla-de-costes.png"}
-                alt="tablero_instrucciones"
+            {/************************** OTRAS COSAS *************************/}
+
+            <h1
                 style={{
-                    transform: "scale(0.15)",
-                    position: "fixed", right: "-330px", bottom: "-380px"
+                    position: "absolute",
+                    left: "50%",
+                }}>
+                {"Max jugadores: " + max_jugadores}
+                {"---"}
+                {"Tiempo: " + tiempo}
+                {"---"}
+                {"Turno: " + turno}
+                {"---"}
+                {"Fase: " + fase}
+                {"---"}
+                {"Permiso para construir carreteras: " + puedo_colocar_carretera}
+                {"---"}
+                {"Permiso para construir aldeas: " + puedo_colocar_aldea}
+                {"---"}
+                {"Ultima aldea construida: " + ultima_aldea_construida}
+                {"---"}
+                {"Aldea que puedo construir: " + aldea_que_puedo_construir}
+            </h1>
+
+            <h1
+                style={{
+                    position: "absolute",
+                    left: "28%",
+                    top: "150px",
+
+                    fontSize: "50px",
+                    fontWeight: "bold"
+                }}>
+
+                {turno == mi_id && "¡Tu turno!"}
+            </h1>
+
+            <img
+                src={img_dado_1}
+                style={{
+                    position: "absolute",
+                    left: "28%",
+                    bottom: "50px",
+                    width: "80px",
+                    height: "80px",
                 }}
             />
+            <img
+                src={img_dado_2}
+                style={{
+                    position: "absolute",
+                    left: "calc(28% + 100px)",
+                    bottom: "50px",
+                    width: "80px",
+                    height: "80px",
+                }}
+            />
+
+            <button
+                style={{
+                    backgroundImage: `url(${(turno == mi_id && aldeas_iniciales_colocadas) ? "http://localhost:3000/skips/skip_on.png" : "http://localhost:3000/skips/skip_off.png"})`,
+                    backgroundSize: 'cover',
+                    position: "absolute",
+                    right: "80px",
+                    top: "170px",
+                    width: "80px",
+                    height: "80px",
+                }}
+                onClick={() => {
+
+                }}
+            />
+
+            <PopupTablaCostes />
 
         </div>
     );

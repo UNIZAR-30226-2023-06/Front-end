@@ -370,7 +370,7 @@ export default function PrivateHome() {
         <button
           className="w-80 flex h-20 btn_private_home"
           onClick={() => {
-            window.location.href = "http://localhost:3000/login";
+            window.location.href = "http://localhost:3000/Buscando_partida";
           }}
         >
           BUSCAR PARTIDA

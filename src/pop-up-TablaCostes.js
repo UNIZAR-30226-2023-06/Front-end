@@ -44,7 +44,10 @@ const PopupTablaCostes = (props) => {
         alt="Abrir Popup"
         className="cursor-pointer"
         onClick={handleOpen}
-        style={{ width: "200px", height: "200px" }}
+        style={{
+          transform: "scale(0.15)",
+          position: "fixed", right: "-330px", bottom: "-380px"
+        }}
       />
       {showPopup && (
         <div
