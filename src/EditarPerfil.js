@@ -6,7 +6,6 @@ import "react-alice-carousel/lib/alice-carousel.css";
 
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { Navigate } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useCookies } from "react-cookie";

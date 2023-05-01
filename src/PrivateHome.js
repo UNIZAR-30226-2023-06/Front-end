@@ -1,5 +1,6 @@
 import React from "react";
 import jwt_decode from "jwt-decode";
+import Popup from "reactjs-popup";
 
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
@@ -7,34 +8,140 @@ import { Navigate } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useCookies } from "react-cookie";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+
+const styleSidebarOn =
+  "transition-all duration-900 w-80 h-full opacity-95 p-5 pt-8 border border-solid border-cyan-900 sidebar_PrivateHome";
+const styleSidebarOff = "hidden transition-all duration-900";
+const styleMenuOn =
+  "transition-all duration-900 absolute top-0 left-0 w-10 h-10 object-cover";
+const styleMenuOff = "hidden transition-all duration-900";
+const styleCruzOn =
+  "hover:cursor-pointer transition-all duration-900 absolute top-0 right-0 w-8 h-8 mr-2 mt-2 object-cover";
+const styleCruzOff = "transition-all duration-900 hidden";
+const styleLinks = "gap-3 mt-2 ml-1 flex flex-grow relative ";
 
 export default function PrivateHome() {
   /* --------------------------- variables --------------------------- */
 
   const [desplegado, setDesplegado] = useState(true);
-  const styleSidebarOn =
-    "transition-all duration-900 w-80 h-full opacity-95 p-5 pt-8 border border-solid border-cyan-900 sidebar_PrivateHome";
-  const styleSidebarOff = "hidden transition-all duration-900";
-  const styleMenuOn =
-    "transition-all duration-900 absolute top-0 left-0 w-10 h-10 object-cover";
-  const styleMenuOff = "hidden transition-all duration-900";
-  const styleCruzOn =
-    "hover:cursor-pointer transition-all duration-900 absolute top-0 right-0 w-8 h-8 mr-2 mt-2 object-cover";
-  const styleCruzOff = "transition-all duration-900 hidden";
-  const styleLinks = "gap-3 mt-2 ml-1 flex flex-grow relative ";
+  // true = spinner | false = bboton de aceptar o rechazar partida
+  const [spinner_aceptar, set_spinner_aceptar] = useState(true);
+  const [buscandoPatida, set_buscandoPartida] = React.useState(false);
+  const [partidaEmpezada, set_partidaEmpezada] = React.useState(false);
+  const [meSaliYo, set_meSaliYo] = React.useState(false);
+
   const [screenSize, setScreenSize] = useState(window.innerWidth);
 
   const [dinero, set_dinero] = React.useState(null);
   const [nombre, set_nombre] = React.useState(null);
   const [codigo, set_codigo] = React.useState(null);
   const [imagen, set_imagen] = React.useState(null);
+  const [lobby, set_lobby] = React.useState(null);
   const [nummensajes, set_nummensajes] = React.useState(null);
   const [elo, set_elo] = React.useState(null);
   const navigate = useNavigate();
 
   const [cookies, setCookie] = useCookies(["token"]); // Agregamos removeCookie
 
+  // comprobamos hasta que entremos en un lobby
+  const {} = useQuery(
+    ["get-lobby-from-player"],
+    async () => {
+      const res = await fetch(
+        `${process.env.REACT_APP_URL_BACKEND}/get-lobby-from-player`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${Token}`,
+          },
+        }
+      );
+      const data = await res.json();
+      if (data.detail !== "Player not in any lobby") {
+        // si entramos aqui es porque ya se ha encontrado un lobby asi que dejamos de comprobarlo
+        set_buscandoPartida(false); // dejamos de consultar todo el tiempo al backend
+        set_spinner_aceptar(false); // queremos que se muestren los botones
+        set_lobby(data.id); // guardamos el lobby por si el usuario quiere rechazar la partida
+        set_partidaEmpezada(true); // empezamos a comprobar el estado del lobby por si alguien rechaza partida antes de que la aceptemos 
+        console.log("tenemos lobby");
+      } else {
+        console.log(spinner_aceptar);
+        console.log("estoy mirando si hay partida");
+        console.log(data.detail);
+        set_spinner_aceptar(true);
+      }
+      return data;
+    },
+    {
+      refetchInterval: 1000,
+      refetchUntil: (data) => data !== null,
+      enabled: buscandoPatida,
+    }
+  );
+
+  // ya tenemos lobby y le hemos dado ready a la partida, falta ver si nuestros compañeros
+  // le han dado a ready también
+  // si todos los jugadores le dan a ready entonces game_started = true
+  // si de repente el lobby desaparece es porq alguien a rechazado la partida y tenemos que volver
+  // a ponernos a la cola
+  const {} = useQuery(
+    //console.log("se esta ejecutando el segundo ")
+    ["get-lobby-from-player"],
+    async () => {
+      const res = await fetch(
+        `${process.env.REACT_APP_URL_BACKEND}/get-lobby-from-player`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${Token}`,
+          },
+        }
+      );
+      const data2 = await res.json();
+      console.log(data2);
+      if (data2.game_has_started) {
+        // el juego ha empezado asi que vamos al tablero!
+        window.location.href = "http://localhost:3000/partida";
+        set_partidaEmpezada(false);
+      } else if (data2.detail === "Player not in any lobby") {
+        // alguien ha rechazado la partida
+        // volvemos a la cola
+        console.log("la partida ha sido rechazada");
+        // queremos que se vuelva a poner el spinner
+        set_spinner_aceptar(true);
+        // y ponernos a la cola
+        // ademas dejamos de ver si la partida ha comenzado
+        set_partidaEmpezada(false);
+        if (meSaliYo) {
+          // yo he cancelado la partida después de darle a aceptar
+          toast.error("partida rechazada");
+        } else {
+          // otro jugador ha cancelado la partida por ello nos ponemos a la cola para buscar un lobby
+          toast.error("la partida ha sido rechazada por otro jugador");
+          unirsePartida();
+        }
+      }
+      return data2;
+    },
+    {
+      refetchInterval: 1000,
+      refetchUntil: (data) => data !== null,
+      enabled: partidaEmpezada,
+    }
+  );
+
+  /* --------------------------- canimacion spinner --------------------------- */
+  const Spinner = () => {
+    return (
+      <div className="flex justify-center items-center">
+        <div className="mt-8 animate-spin rounded-full h-24 w-24 border-t-8 border-b-4 border-gray-900"></div>
+      </div>
+    );
+  };
   /* --------------------------- calculamos el tamaño de la ventana --------------------------- */
 
   useEffect(() => {
@@ -105,27 +212,95 @@ export default function PrivateHome() {
       });
   }, [json_token.id]);
 
-  /* --------------------------- miramos si hay mensajes pendientes --------------------------- */
+  /* --------------------------- buscamos partida --------------------------- */
 
-  fetch(`${process.env.REACT_APP_URL_BACKEND}/get_friend_requests`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${Token}`,
-    },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      response.json().then((data) => {
-        //console.log(data.number_of_requests);
-        set_nummensajes(data.number_of_requests);
-      });
+  function cancelar_busqueda() {
+    set_buscandoPartida(false);
+    fetch(`${process.env.REACT_APP_URL_BACKEND}/leave-lobby`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Token}`,
+      },
     })
-    .catch((error) => {
-      console.error("Error:", error);
+      .then((res) => {
+        res.json().then((data) => {
+          console.log("ya no estas en cola para buscar partida");
+        });
+      })
+      .catch((error) => {
+        if (error.response.status === 409) {
+          console.log("Error 409: ya estas buscando una partida");
+        } else {
+          console.error("Error:", error);
+        }
+      });
+  }
+
+  function unirsePartida() {
+    // lo ponemos a falso aqui para porque se ejecuta siempre pero es para cuando un juador rechace la partida
+    set_meSaliYo(false);
+    // 1- LLAMAMOS A SEARCH LOBBY para unirnos a la cola de busqueda de partidas
+    fetch(`${process.env.REACT_APP_URL_BACKEND}/search-lobby`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Token}`,
+      },
+    }).catch((error) => {
+      if (error.response.status === 409) {
+        console.log("Error 409: ya estas buscando una partida");
+      } else {
+        console.error("Error:", error);
+      }
     });
+
+    // 2- LLAMAMOS A GET LOBBY FROM PLAYER CADA 1 SEGUNDO HASTA QUE NO NOS
+    //    DEVUELVA NULL
+    set_buscandoPartida(true);
+  }
+
+  // resumen: esta funcion ejecuta set-player-ready
+  function onAceptarPartida() {
+    fetch(`${process.env.REACT_APP_URL_BACKEND}/set-player-ready`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Token}`,
+      },
+    }).catch((error) => {
+      if (error.response.status === 409) {
+        console.log("Error 409: ya estas buscando una partida");
+      } else {
+        console.error("Error:", error);
+      }
+    });
+    // damos permiso para comprobar si la partida se puede empezar
+    console.log("vemos el estado de la partida");
+  }
+
+  function onRechazarPartida() {
+    // lo que tenemos que hacer es borrar el lobby para que los demas jugadores
+    // sepan que hemos rechazado la partida
+    fetch(
+      `${process.env.REACT_APP_URL_BACKEND}/delete-lobby?lobby_id=${lobby}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((response) => {
+        set_meSaliYo(true);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+
+    // cerramos la pop-up (se hace en la parte de la pop-up que aqui no se puede))
+    console.log("has llegado a tu destino ");
+  }
 
   return (
     /* --------------------------- fondo de las montañas --------------------------- */
@@ -373,14 +548,85 @@ export default function PrivateHome() {
       <div
         className={`flex justify-center items-center flex-col mx-auto my-auto w-96`}
       >
-        <button
-          className="w-80 flex h-20 btn_private_home"
-          onClick={() => {
-            window.location.href = "http://localhost:3000/Buscando_partida";
+        <Popup
+          trigger={
+            <button
+              className="w-80 flex h-20 btn_private_home"
+              onClick={() => unirsePartida()}
+            >
+              BUSCAR PARTIDA
+            </button>
+          }
+          modal
+          nested
+          onOpen={() => unirsePartida()}
+          onClose={() => cancelar_busqueda()}
+          arrow={false}
+          contentClassName="flex items-center justify-center"
+          contentStyle={{
+            width: "90%",
+            height: "auto",
+            maxWidth: "500px",
+            border: "5px solid black",
+            borderRadius: "10px",
+            overflow: "auto",
+            padding: "20px",
           }}
         >
-          BUSCAR PARTIDA
-        </button>
+          {(close) => (
+            <div className="w-full h-full max-w-lg p-6 bg-white rounded-lg">
+              <button
+                className="absolute top-0 right-0 p-2 focus:outline-none"
+                onClick={close}
+              >
+                <svg
+                  className={`w-6 h-6 text-gray-800 ${
+                    spinner_aceptar ? "" : "hidden"
+                  }`}
+                  fill="none"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+              <div className={`${spinner_aceptar ? "" : "hidden"}`}>
+                <h1 className="flex justify-center items-center mt-6 text-2xl">
+                  🔎 Buscando partida... 🔍
+                </h1>
+                <Spinner />
+              </div>
+              <div className={`${spinner_aceptar ? "hidden" : ""}`}>
+                <h1 className="flex justify-center items-center mt-6 text-2xl">
+                  ⚔ ¡Partida encontrada! ⚔
+                </h1>
+                <h1 className="flex justify-center items-center mt-2 text-xl">
+                  ¿Aceptas el desafio?
+                </h1>
+                <div className="flex flex-wrap justify-center mt-6">
+                  <button
+                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full mx-2 mt-2 md:mt-0 md:ml-2"
+                    onClick={() => {
+                      onRechazarPartida();
+                      close();
+                    }}
+                  >
+                    Rechazar partida
+                  </button>
+                  <button
+                    className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full mx-2 mt-2 md:mt-0 md:mr-2"
+                    onClick={onAceptarPartida}
+                  >
+                    Aceptar partida
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </Popup>
+
         <button
           className="mt-20 w-80 flex h-20 btn_private_home "
           onClick={() => {
