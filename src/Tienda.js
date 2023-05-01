@@ -34,6 +34,11 @@ function Tienda() {
         "skin7",
         "skin8",
         "skin9",
+        "skin10",
+        "skin11",
+        "skin12",
+        "skin13",
+        "skin14",
     ]
 
     // 2-- Creamos la estructura de las cookies

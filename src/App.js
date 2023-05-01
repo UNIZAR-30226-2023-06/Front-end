@@ -15,7 +15,7 @@ import Tienda from "./Tienda";
 import EditaPerfil from "./EditarPerfil";
 import Instrucciones from "./Instrucciones";
 import Prueba from "./PruebasPopUp";
-import Buscando_partida from "./Buscando_partida";
+import Creando_partida_privada from "./creando_partida_privada";
 
 export default function App() {
   return (
@@ -37,7 +37,7 @@ export default function App() {
           <Route exact path="/editarPerfil" element={<EditaPerfil/>} />
           <Route exact path="/Instrucciones" element={<Instrucciones/>} />
           <Route exact path="/PruebaPopUps" element={<Prueba />}/>
-          <Route exact path="/Buscando_partida" element={<Buscando_partida />}/>
+          <Route exact path="/Partida_privada" element={<Creando_partida_privada />}/>
 
         </Routes>
       </Router>

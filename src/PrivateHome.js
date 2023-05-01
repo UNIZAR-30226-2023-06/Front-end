@@ -65,7 +65,7 @@ export default function PrivateHome() {
         set_buscandoPartida(false); // dejamos de consultar todo el tiempo al backend
         set_spinner_aceptar(false); // queremos que se muestren los botones
         set_lobby(data.id); // guardamos el lobby por si el usuario quiere rechazar la partida
-        set_partidaEmpezada(true); // empezamos a comprobar el estado del lobby por si alguien rechaza partida antes de que la aceptemos 
+        set_partidaEmpezada(true); // empezamos a comprobar el estado del lobby por si alguien rechaza partida antes de que la aceptemos
         console.log("tenemos lobby");
       } else {
         console.log(spinner_aceptar);
@@ -627,18 +627,78 @@ export default function PrivateHome() {
           )}
         </Popup>
 
+        <div className="max-w-screen-md mx-auto">
+          <Popup
+            trigger={
+              <button className="mt-10 sm:mt-20 w-full sm:w-80 flex h-10 sm:h-20 btn_private_home">
+                UNIRSE CON CÓDIGO
+              </button>
+            }
+            modal
+            nested
+            arrow={false}
+            contentClassName="flex items-center justify-center"
+            contentStyle={{
+              width: "90%",
+              height: "auto",
+              maxWidth: "500px",
+              border: "5px solid black",
+              borderRadius: "10px",
+              overflow: "auto",
+              padding: "20px",
+            }}
+          >
+            {(close) => (
+              <div className="w-full h-full max-w-lg p-6 bg-white rounded-lg">
+                <button
+                  className="absolute top-0 right-0 p-2 focus:outline-none"
+                  onClick={close}
+                >
+                  <svg
+                    className={`w-6 h-6 text-gray-800 ${
+                      spinner_aceptar ? "" : "hidden"
+                    }`}
+                    fill="none"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    toast.error("esto de momento es postu que no hace nada :)");
+                    toast.success(`Código introducido: ${e.target.idPartidaPrivada.value}`);
+                    // comprobamos que la sala existe, y si es asi entonces vamos al lobby privado 
+                  }}
+                >
+                  <div className="flex flex-col">
+                    <input
+                      id="idPartidaPrivada"
+                      type="text"
+                      placeholder="introduzca aqui el código de la sala privada, ej: 2345"
+                      className="w-full border border-transparent border-b-black/25 bg-transparent focus:outline-none h-8 sm:h-10"
+                      required
+                    />
+                    <button
+                      type="submit"
+                      className="w-full py-2 mt-2 bg-cyan-900 text-white font-bold rounded-full hover:bg-slate-900 duration-300 text-sm sm:text-base"
+                    >
+                      ENTRAR EN SALA
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+          </Popup>
+        </div>
         <button
           className="mt-20 w-80 flex h-20 btn_private_home "
           onClick={() => {
-            window.location.href = "http://localhost:3000/login";
-          }}
-        >
-          UNIRSE CON CÓDIGO
-        </button>
-        <button
-          className="mt-20 w-80 flex h-20 btn_private_home "
-          onClick={() => {
-            window.location.href = "http://localhost:3000/login";
+            window.location.href = "http://localhost:3000/Partida_privada";
           }}
         >
           CREAR PARTIDA CON AMIGOS
