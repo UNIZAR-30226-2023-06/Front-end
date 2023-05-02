@@ -1,6 +1,6 @@
 import React from "react";
 import jwt_decode from "jwt-decode";
-import PopUpFaseTirada from "./pop-up-Fase-tirada";
+import PopUpCartasDesarrollo from "./pop-up-Cartas-desarrollo";
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { Navigate } from "react-router-dom";
@@ -370,8 +370,8 @@ export default function Prueba() {
       />
       {/* --------------------------- Página --------------------------- */}
       <div>
-        <PopUpFaseTirada onClose={() => setShowPopup(false)}>
-        </PopUpFaseTirada>
+        <PopUpCartasDesarrollo onClose={() => setShowPopup(false)}>
+        </PopUpCartasDesarrollo>
       </div>
     </div>
   );

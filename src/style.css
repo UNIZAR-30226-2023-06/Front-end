@@ -781,6 +781,19 @@ ul.nav_partida li.inactive {
   left: 50px;
 }
 
+.slider_cartas_recursos {
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  position: absolute;
+height: 200px;
+  text-decoration: none;
+  overflow: hidden;
+  top: 200px;
+  left: 520px;
+}
+
 .slider_fotos_perfil_tienda {
   width: 80%;
   height: 100%;
