@@ -268,7 +268,11 @@ export default function PrivateHome() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${Token}`,
       },
-    }).catch((error) => {
+    })
+    .then((response) => {
+      toast.success("Esperando confirmación del resto de jugadores");
+    })
+    .catch((error) => {
       if (error.response.status === 409) {
         console.log("Error 409: ya estas buscando una partida");
       } else {

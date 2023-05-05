@@ -35,6 +35,8 @@ function Partida() {
     // Aquí va el id del jugador que tiene el turno
     const [turno, setTurno] = useState(7365);
 
+    const [codigo_partida, setCodigo_partida] = useState(0);
+
     // Recordatorio de fases:
     // 0: Obtención de recursos
     // 1: Uso de cartas de desarrollo
@@ -183,6 +185,8 @@ function Partida() {
     const img_camino_negro = "http://localhost:3000/camino_negro.png";
     const img_camino_gris = "http://localhost:3000/camino_gris.png";
 
+
+
     ////////////////////////////////////////////////////////////////////////////
     //////////////////////////////// FUNCIONES /////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
@@ -322,41 +326,65 @@ function Partida() {
         console.log("URL de la partida:");
         console.log(url_partida);
 
-        fetch(
-            url_partida,
+        const res = fetch(
+            `${process.env.REACT_APP_URL_BACKEND}/get-lobby-from-player`,
             {
-                method: "POST",
+                method: "GET",
                 headers: {
-                    accept: "application/json",
                     "Content-Type": "application/x-www-form-urlencoded",
-                    "Authorization": `Bearer ${Token}`,
-                }
+                    Authorization: `Bearer ${Token}`,
+                },
             }
-        )
-            .then((res) => {
-                res.json().then((data) => {
-                    console.log("JSON de la partida:");
-                    console.log(data);
+        ).then((res) => {
+            res.json().then((data) => {
+                console.log("JSON inicial:");
+                console.log(data);
+                console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
-                    setJugadores(data.players);
-                    setMax_jugadores(data.max_Players);
+                // sacamos el id de la partida con el que vamos a estar trabajando 
+                setCodigo_partida(data.id);
+                setMax_jugadores(data.game.num_jugadores);
 
-                    setBoard(data.game.tiles);
-                    setRoad(data.game.edges);
-                    setBuilding(data.game.nodes);
+                const res_2 = fetch(
+                    `${process.env.REACT_APP_URL_BACKEND}/game_phases/get_game_state?lobby_id=${data.id}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            Authorization: `Bearer ${Token}`,
+                        },
+                    }
+                ).then((res_2) => {
+                    res_2.json().then((data) => {
+                        // sacamos el turno del jugador y en que fase nos encontram
+                        console.log("JSON de la partida:");
+                        console.log(data);
 
-                    setTiempo_maximo(data.max_tiempo_turno);
-                    //setTurno(data.turno);
-                    //setFase(data.fase);
+                        // setJugadores(data.game.jugadores);
+                        setJugadores([data.player_0, data.player_1, data.player_2, data.player_3]);
+                        console.log("valor de jugadores despues de insertar nuevos jugadores", jugadores);
+
+                        setBoard(data.board.tiles);
+                        setRoad(data.board.edges);
+                        setBuilding(data.board.nodes);
+
+                        setTiempo_maximo(data.max_tiempo_turno);
+
+                        setPosicion_ladron(data.thief_position);
+                    }).catch((error) => {
+                        console.error("Error:", error);
+                    });
                 });
-            })
-            .catch((error) => {
+            }).catch((error) => {
                 console.error("Error:", error);
             });
+        });
 
     }, [Token, json_token.id, mi_id]);
 
     useEffect(() => {
+
+        var num_jugadores_anadidos = 0;
 
         ///////////////////////// FETCH DEL OPONENTE 1 /////////////////////////
 
@@ -398,7 +426,7 @@ function Partida() {
 
         if (jugadores.length >= 3) {
             fetch(
-                `${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(
+                `${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt( 
                     jugadores[2].id
                 )}`,
                 {
@@ -677,7 +705,7 @@ function Partida() {
 
                 {Object.entries(board).map(([key], index) => {
                     return (
-                        <div>
+                        <div key={key}>
                             {
                                 <button className="w-36 flex h-40 hexagono_partida"
                                     style={{
@@ -718,7 +746,7 @@ function Partida() {
 
                 {Object.entries(road).map(([key, value], index) => {
                     return (
-                        <div>
+                        <div key={key}>
                             {
                                 type_road[index] === 0 &&
                                 (road[key] != null || puedo_colocar_carretera) &&
@@ -788,7 +816,7 @@ function Partida() {
 
                 {Object.entries(building).map(([key, value], index) => {
                     return (
-                        <div>
+                        <div key={key}>
                             {
                                 (building[key][1] != null || puedo_colocar_aldea) &&
                                 <button
@@ -839,6 +867,16 @@ function Partida() {
                 {"Ultima aldea construida: " + ultima_aldea_construida}
                 {"---"}
                 {"Aldea que puedo construir: " + aldea_que_puedo_construir}
+                {"---"}
+                {console.log("Jugadores: ")}
+                {console.log(jugadores)}
+                {/* {"Id de jugador 1: " + jugadores[0].id}
+                {"---"}
+                {"Id de jugador 2: " + jugadores[1].id}
+                {"---"}
+                {"Id de jugador 3: " + jugadores[2].id}
+                {"---"}
+                {"Id de jugador 4: " + jugadores[3].id} */}
             </h1>
 
             <h1
