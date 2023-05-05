@@ -1,9 +1,20 @@
 import React, { useState, useEffect } from "react";
+import jwt_decode from "jwt-decode";
 
+import { useCookies } from "react-cookie";
+import { Link } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const PopUpFaseCompra = (props) => {
   const [showPopup, setShowPopup] = useState(false);
   const [shouldShowPopup, setShouldShowPopup] = useState(false);
+  const [IdLobby, set_IdLobby] = React.useState(null);
+  const [Detalle, set_detalle] = React.useState(null);
 
+  const [cookies, setCookie] = useCookies(["token"]); // Agregamos removeCookie
+  const Token = cookies.token;
+  const json_token = jwt_decode(Token);
   const handleClose = () => {
     setShouldShowPopup(false);
     props.onClose();
@@ -27,6 +38,67 @@ const PopUpFaseCompra = (props) => {
       setShowPopup(false);
     }
   }, [shouldShowPopup]);
+
+  function handleClick() {
+    GetLobby();
+    ComprarCartaDesarrolllo();
+  }
+
+  function ComprarCartaDesarrolllo(){
+    fetch(
+      `${process.env.REACT_APP_URL_BACKEND}/game_phases/buy_development_card=${IdLobby}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${Token}`,
+        
+        },
+      }
+    )
+      .then((res) => {
+        res.json().then((data) => {
+          // Si el código es correcto, mostrar un mensaje de éxito en el toast
+          set_detalle(data.id);
+          if(Detalle === "No se pueden construir edificios en esta fase del turno"){
+            toast.error("No tienes los recursos suficientes")
+          }else if(Detalle === null){
+            toast.error("Fallo interno del servidor")
+
+          }else{
+            toast.success("Carta de desarrollo comprada");
+            console.log(Detalle);
+          }
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+
+  function GetLobby(){
+    fetch(
+      `${process.env.REACT_APP_URL_BACKEND}/get_lobby_from_player`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${Token}`,
+        
+        },
+      }
+    )
+      .then((res) => {
+        res.json().then((data) => {
+          // Si el código es correcto, mostrar un mensaje de éxito en el toast
+          set_IdLobby(data.id);
+          console.log("hola");
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
 
   return (
     <>
@@ -206,7 +278,7 @@ const PopUpFaseCompra = (props) => {
                         marginLeft: "20px",
                         width: "195px",
                       }}
-                      
+                      onClick={handleClick}
                     >
                       Comprar cartas de desarrollo
                     </button>
