@@ -536,7 +536,7 @@ ul.nav_partida li.inactive {
 }
 
 .superior_jugador_1_partida {
-  background-color: #e9d209;
+  /*background-color: #e9d209;*/
   border-radius: 30px;
 
   width: 20%;
@@ -560,7 +560,7 @@ ul.nav_partida li.inactive {
 }
 
 .superior_jugador_2_partida {
-  background-color: #29e959;
+  /* background-color: #29e959; */
   border-radius: 30px;
 
   width: 20%;
@@ -584,7 +584,7 @@ ul.nav_partida li.inactive {
 }
 
 .superior_jugador_3_partida {
-  background-color: #e92929;
+  /* background-color: #e92929; */
   border-radius: 30px;
 
   width: 20%;

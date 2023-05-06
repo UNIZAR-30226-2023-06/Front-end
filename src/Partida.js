@@ -26,8 +26,8 @@ function Partida() {
     const json_token = jwt_decode(Token);
 
     const [mi_id] = useState(json_token.id);
-    const [mi_color, setMi_color] = useState("RED");
-    const [mi_skin_construcciones, setMi_skin_construcciones] = useState(1);
+    const [mi_indice, setMi_indice] = useState(0);
+    const [mi_color, setMi_color] = useState("");
 
     const [imgs_oponentes, setImgs_oponentes] = useState([]);
     const [puntos_victoria_oponentes, setPuntos_victoria_oponentes] = useState([]);
@@ -55,7 +55,13 @@ function Partida() {
     const [board, setBoard] = useState({});
 
     const [partida_empezada, setPartida_empezada] = useState(false);
-    const [fase_actual, setFase_actual] = useState(0);
+    const [fase_actual, setFase_actual] = useState("");
+
+    const [skins_jugadores_poblados, setSkins_jugadores_poblados] = useState([]);
+    const [skins_jugadores_carreteras, setSkins_jugadores_carreteras] = useState([]);
+    const [skins_jugadores_ciudades, setSkins_jugadores_ciudades] = useState([]);
+    const [colores_jugadores, setColores_jugadores] = useState([]);
+    const [colores_oponentes, setColores_oponentes] = useState([]);
 
     const [aldeas_iniciales_colocadas, setAldeas_iniciales_colocadas] = useState(false);
     const [puedo_colocar_aldea, setPuedo_colocar_aldea] = useState(false);
@@ -65,6 +71,9 @@ function Partida() {
 
     const [img_dado_1, setImg_dado_1] = useState("http://localhost:3000/dados/dado_1.png");
     const [img_dado_2, setImg_dado_2] = useState("http://localhost:3000/dados/dado_2.png");
+
+    const [casas_legales, setCasas_legales] = useState([])
+    const [carretera_legales, setCarretera_legales] = useState([])
 
     const ficha_con_id = [
         null,
@@ -222,12 +231,10 @@ function Partida() {
 
                     // comprobamos si estamos en la fase 0 del juego ? casas vacias false : true 
                     setFase_actual(data.turn_phase);
-                    if (data.turn_phase === "INITIAL_TURN1" || data.turn_phase === "INITIAL_TURN2")
-                    {
+                    if (data.turn_phase === "INITIAL_TURN1" || data.turn_phase === "INITIAL_TURN2") {
                         setAldeas_iniciales_colocadas(false);
                     }
-                    else
-                    {
+                    else {
                         setAldeas_iniciales_colocadas(true);
                     }
 
@@ -239,6 +246,7 @@ function Partida() {
                     let nueva_lista_puntos_victoria_oponentes = [];
                     let nueva_lista_bono_caballeros_oponentes = [];
                     let nueva_lista_bono_carreteras_oponentes = [];
+                    let nuevos_colores_oponentes = [];
 
                     for (let i = 0; i < lista_oponentes.length; i++) {
                         const nueva_img_oponente = lista_oponentes[i].profile_pic === "default"
@@ -250,20 +258,87 @@ function Partida() {
                         nueva_lista_puntos_victoria_oponentes = [...nueva_lista_puntos_victoria_oponentes, lista_oponentes[i].victory_points];
                         nueva_lista_bono_caballeros_oponentes = [...nueva_lista_bono_caballeros_oponentes, lista_oponentes[i].has_knights_bonus];
                         nueva_lista_bono_carreteras_oponentes = [...nueva_lista_bono_carreteras_oponentes, lista_oponentes[i].has_longest_road_bonus];
+
+                        nuevos_colores_oponentes = [...nuevos_colores_oponentes, lista_oponentes[i].color];
                     }
 
                     setImgs_oponentes(nueva_lista_imgs_oponentes);
                     setPuntos_victoria_oponentes(nueva_lista_puntos_victoria_oponentes);
                     setBono_caballeros_oponentes(nueva_lista_bono_caballeros_oponentes);
                     setBono_carreteras_oponentes(nueva_lista_bono_carreteras_oponentes);
+                    setColores_oponentes(nuevos_colores_oponentes);
 
-                    // sacamos los puntos de victoria 
+                    let array_skins_jugadores_poblados = [null, null, null, null];
+                    let array_skins_jugadores_carreteras = [null, null, null, null];
+                    let array_skins_jugadores_ciudades = [null, null, null, null];
+                    let array_colores_jugadores = [];
+                    let nuevo_usuario_to_color = [null, null, null, null, null];
+
+                    // Obtenemos de todos los jugadores sus skins y sus colores
+                    for (let i = 0; i < jugadores.length; i++) {
+                        const url_skin_poblado = "http://localhost:3000/poblado/" + jugadores[i].color + "/" + jugadores[i].selected_pieces_skin + ".png";
+                        array_skins_jugadores_poblados[i] = url_skin_poblado;
+                        // array_colores_jugadores = [...array_colores_jugadores, jugadores[i].color];
+
+                        const url_skin_carretera = "http://localhost:3000/carreteras/" + jugadores[i].color + "/" + jugadores[i].selected_pieces_skin + ".png";
+                        array_skins_jugadores_carreteras[i] = url_skin_carretera;
+
+                        const url_skin_ciudad = "http://localhost:3000/ciudad/" + jugadores[i].color + "/" + jugadores[i].selected_pieces_skin + ".png";
+                        array_skins_jugadores_ciudades[i] = url_skin_ciudad;
+
+                        // Indico mi indice
+                        if (jugadores[i].id === mi_id) {
+                            setMi_indice(i);
+                            setMi_color(jugadores[i].color);
+                        }
+
+                        // Indico el color de cada jugador
+                        nuevo_usuario_to_color[color_to_codigo(jugadores[i].color)] = i;
+                    }
+
+                    setSkins_jugadores_poblados(array_skins_jugadores_poblados);
+                    setSkins_jugadores_carreteras(array_skins_jugadores_carreteras);
+                    setSkins_jugadores_ciudades(array_skins_jugadores_ciudades);
+                    setColores_jugadores(array_colores_jugadores);
+                    setUsuario_to_color(nuevo_usuario_to_color);
 
                 }).catch((error) => {
                     console.error("Error:", error);
-                });              
+                });
             });
-           return 1;
+            return 1;
+        },
+        {
+            refetchInterval: 1000,
+            // refetchUntil: (data) => data !== null,
+            // enabled: partidaEmpezada,
+        }
+    );
+
+    // Si es mi turno, obtengo del backend las casas y carreteras legales
+    useQuery(
+        //console.log("se esta ejecutando el segundo ")
+        ["get-legal-building-nodes"],
+        async () => {
+            const res = await fetch(
+                `${process.env.REACT_APP_URL_BACKEND}/get-legal-building-nodes?lobby_id=${codigo_partida}&&color=${mi_color}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        Authorization: `Bearer ${Token}`,
+                    },
+                }
+            ).then((res_2) => {
+                res_2.json().then((data) => {
+                    // console.log("Casas legales:", data);
+                    setCasas_legales(data);
+                    
+                }).catch((error) => {
+                    console.error("Error:", error);
+                });
+            });
+            return 1;
         },
         {
             refetchInterval: 1000,
@@ -277,46 +352,10 @@ function Partida() {
     //////////////////////////////// FUNCIONES /////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    function codigo_to_color(codigo) {
-        const identificador_color = codigo % 4
-
-        if (identificador_color == 0) {
-            return "YELLOW";
-        }
-        else if (identificador_color == 1) {
-            return "BLUE";
-        }
-        else if (identificador_color == 2) {
-            return "WHITE";
-        }
-        else {
-            return "RED"
-        }
-    }
-
-    function color_to_codigo(color) {
-        switch (color) {
-            case "YELLOW":
-                return 0;
-            case "BLUE":
-                return 1;
-            case "WHITE":
-                return 2;
-            case "RED":
-                return 3;
-            default:
-                return -1; // Si el color no es válido, devolvemos -1
-        }
-    }
-
-    function codigo_to_skin(codigo) {
-        return Math.floor(codigo / 4);
-    }
-
     function construir_poblado(coordenada) {
         if (aldeas_iniciales_colocadas) {
             // Compruebo qué construccion hay en la coordenada
-            if (building[coordenada][1] == 0) {
+            if (building[coordenada][1] === 0) {
                 // Compruebo si tengo los materiales para construir una ciudad
                 if (true) {
                     return;
@@ -355,10 +394,6 @@ function Partida() {
             }).catch((error) => {
                 console.error("Error:", error);
             });
-
-            //let construcciones = building;
-            //construcciones[coordenada] = [mi_skin_construcciones * 4 + color_to_codigo(mi_color), 0];
-            //setBuilding(construcciones);
         }
     }
 
@@ -369,11 +404,23 @@ function Partida() {
         else {
             setPuedo_colocar_carretera(false)
 
-            let carreteras = road;
-            carreteras[coordenada] = mi_skin_construcciones * 4 + color_to_codigo(mi_color);
-            setRoad(carreteras);
-
-            // Aviso al backend de que ya he colocado lo mío
+            // Aviso al backend de que ya he colocado la carretera
+            fetch(
+                `${process.env.REACT_APP_URL_BACKEND}/build-road?edge=${coordenada}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        Authorization: `Bearer ${Token}`,
+                    },
+                }
+            ).then((res) => {
+                res.json().then((data) => {
+                    console.log("Intento de colocar carretera:", data);
+                });
+            }).catch((error) => {
+                console.error("Error:", error);
+            });
         }
     }
 
@@ -388,6 +435,37 @@ function Partida() {
         const nuevaImagen2 = `http://localhost:3000/dados/dado_${numeroAleatorio2}.png`;
 
         setImg_dado_2(nuevaImagen2);
+    }
+
+    function color_to_hex(color) {
+        if (color === "YELLOW") {
+            return "#ffcf40";
+        }
+        else if (color === "BLUE") {
+            return "#006db0";
+        }
+        else if (color === "GREEN") {
+            return "#00a86b";
+        }
+        else {
+            return "#9d2933";
+        }
+    }
+    
+    const [usuario_to_color, setUsuario_to_color] = useState([null, null, null, null, null]);
+    function color_to_codigo(color) {
+        if (color === "RED") {
+            return 1;
+        }
+        else if (color === "BLUE") {
+            return 2;
+        }
+        else if (color === "GREEN") {
+            return 3;
+        }
+        else {
+            return 4;
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -530,7 +608,11 @@ function Partida() {
                 <div className="menu_superior_partida">
                     {
                         jugadores.length >= 2 &&
-                        <div className="superior_jugador_1_partida">
+                        <div className="superior_jugador_1_partida"
+                            style={{
+                                backgroundColor: color_to_hex(colores_oponentes[0]),
+                            }}
+                        >
                             <img src={imgs_oponentes[0]} className="icono_jugador_superior" alt="icono_jugadores" />
 
                             <img src={img_corona} className="icono_jugador_superior" alt="icono_jugadores" />
@@ -561,7 +643,10 @@ function Partida() {
                     }
                     {
                         jugadores.length >= 3 &&
-                        <div className="superior_jugador_2_partida">
+                        <div className="superior_jugador_2_partida"
+                            style={{
+                                backgroundColor: color_to_hex(colores_oponentes[1]),
+                            }}>
                             <img src={imgs_oponentes[1]} className="icono_jugador_superior" alt="icono_jugadores" />
 
                             <img src={img_corona} className="icono_jugador_superior" alt="icono_jugadores" />
@@ -592,7 +677,11 @@ function Partida() {
                     }
                     {
                         jugadores.length === 4 &&
-                        <div className="superior_jugador_3_partida">
+                        <div className="superior_jugador_3_partida"
+                            style={{
+                                backgroundColor: color_to_hex(colores_oponentes[2]),
+                            }}
+                        >
                             <img src={imgs_oponentes[2]} className="icono_jugador_superior" alt="icono_jugadores" />
 
                             <img src={img_corona} className="icono_jugador_superior" alt="icono_jugadores" />
@@ -717,7 +806,12 @@ function Partida() {
                                         left: "50%",
                                         transform: `translateX(${(init_left_board + init_left_road_relative_vertical) + left_variation_road[index] * left_variation_unit}px) rotate(90deg)`,
 
-                                        backgroundImage: `url( ${"http://localhost:3000/carreteras/" + mi_color + "/carretera_" + 1 + ".png"} )`,
+                                        backgroundImage: `url( ${(
+                                            road[key] != null ?
+                                                `${skins_jugadores_carreteras[usuario_to_color[road[key]]]}`
+                                                :
+                                                `${skins_jugadores_carreteras[mi_indice]}`
+                                        )} )`,
                                     }}
                                     onClick={() => {
                                         construir_carretera(key);
@@ -736,7 +830,12 @@ function Partida() {
                                         left: "50%",
                                         transform: `translateX(${(init_left_board + init_left_road_relative_ascend) + left_variation_road[index] * left_variation_unit}px) rotate(-30deg)`,
 
-                                        backgroundImage: `url( ${"http://localhost:3000/carreteras/" + mi_color + "/carretera_" + 1 + ".png"} )`,
+                                        backgroundImage: `url( ${(
+                                            road[key] != null ?
+                                                `${skins_jugadores_carreteras[usuario_to_color[road[key]]]}`
+                                                :
+                                                `${skins_jugadores_carreteras[mi_indice]}`
+                                        )} )`,
                                     }}
                                     onClick={() => {
                                         construir_carretera(key);
@@ -757,9 +856,9 @@ function Partida() {
 
                                         backgroundImage: `url( ${(
                                             road[key] != null ?
-                                                `${"http://localhost:3000/carreteras/" + codigo_to_color(road[key]) + "/carretera_" + codigo_to_skin(road[key]) + ".png"}`
+                                                `${skins_jugadores_carreteras[usuario_to_color[road[key]]]}`
                                                 :
-                                                `${"http://localhost:3000/carreteras/" + mi_color + "/carretera_" + mi_skin_construcciones + ".png"}`
+                                                `${skins_jugadores_carreteras[mi_indice]}`
                                         )} )`,
                                     }}
                                     onClick={() => {
@@ -774,10 +873,20 @@ function Partida() {
                 {/*************************** POBLADOS ***************************/}
 
                 {Object.entries(building).map(([key, value], index) => {
+                    var permiso_construccion = (puedo_colocar_aldea && Array.isArray(casas_legales) && casas_legales.includes(parseInt(key)));
+                    // console.log("-----------------------------------------------");
+                    // console.log("super condicion: ", key, permiso_construccion);
+                    // console.log("esta incluido en casas_legales: ", key, Array.isArray(casas_legales) && casas_legales.includes(parseInt(key)));
+                    // console.log("el tipo de la key es : ", typeof parseInt(key));
+                    // console.log("el tipo de lo que tiene el array: ", typeof casas_legales[0]);
+                    // console.log("es un array: ", Array.isArray(casas_legales));
+                    // console.log("es nulo", building[key][1] === null);
+                    // console.log("puedo construir: ", puedo_colocar_aldea);
+                    
                     return (
                         <div key={key}>
-                            {
-                                (building[key][1] != null || puedo_colocar_aldea) &&
+                            {   // miramos las que ya estan construidas y las que podemos construir
+                                (building[key][1] !== null || permiso_construccion) &&
                                 <button
                                     className={`w-10 flex h-10 ${building[key][1] != null ? "construccion_partida" : "construccion_sin_comprar_partida"}`}
                                     style={{
@@ -785,16 +894,19 @@ function Partida() {
                                         top: ((init_top_board + init_top_building_relative_vertical) - top_variation_building[index] * top_variation_unit),
                                         left: "50%",
                                         transform: `translateX(${(init_left_board + init_left_building_relative_vertical) + left_variation_building[index] * left_variation_unit}px)`,
-
+                                        // id | indiceColumna -> si id === 0[jugador ] -> id === 1 [tipo_construccion]
                                         backgroundImage: `url( ${(
-                                            building[key][1] != null ?
-                                                `${"http://localhost:3000/" + (building[key][1] === 0 ? "poblado" : "ciudad") + "/" + codigo_to_color(building[key][0]) + "/" + (building[key][1] === 0 ? "poblado" : "ciudad") + "_" + codigo_to_skin(building[key][0]) + ".png"}`
+                                            building[key][1] !== null ?
+                                                `${building[key][1] === 1 ? skins_jugadores_poblados[usuario_to_color[building[key][0]]] : "ciudad"}`
                                                 :
-                                                `${"http://localhost:3000/poblado/" + mi_color + "/poblado_1.png"}`
+                                                `${skins_jugadores_poblados[mi_indice]}`
                                         )} )`,
                                     }}
                                     onClick={() => {
                                         construir_poblado(key);
+                                        // console.log("casas legales: ",  casas_legales)
+                                        // console.log("key: ", key)
+                                        // console.log("casas_legales.includes(key): ", casas_legales.includes(131))
                                     }}
                                 />
                             }
