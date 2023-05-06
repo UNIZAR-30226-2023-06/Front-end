@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from 'react';
+import { useQuery } from "@tanstack/react-query";
 
 import Tabs from "./Components/TabComponent/Tabs";
 import PopupTablaCostes from "./pop-up-TablaCostes";
@@ -28,9 +29,10 @@ function Partida() {
     const [mi_color, setMi_color] = useState("RED");
     const [mi_skin_construcciones, setMi_skin_construcciones] = useState(1);
 
-    const [img_jugador_1, setImg_jugador_1] = useState(null);
-    const [img_jugador_2, setImg_jugador_2] = useState(null);
-    const [img_jugador_3, setImg_jugador_3] = useState(null);
+    const [imgs_oponentes, setImgs_oponentes] = useState([]);
+    const [puntos_victoria_oponentes, setPuntos_victoria_oponentes] = useState([]);
+    const [bono_caballeros_oponentes, setBono_caballeros_oponentes] = useState([]);
+    const [bono_carreteras_oponentes, setBono_carreteras_oponentes] = useState([]);
 
     // Aquí va el id del jugador que tiene el turno
     const [turno, setTurno] = useState(7365);
@@ -53,6 +55,7 @@ function Partida() {
     const [board, setBoard] = useState({});
 
     const [partida_empezada, setPartida_empezada] = useState(false);
+    const [fase_actual, setFase_actual] = useState(0);
 
     const [aldeas_iniciales_colocadas, setAldeas_iniciales_colocadas] = useState(false);
     const [puedo_colocar_aldea, setPuedo_colocar_aldea] = useState(false);
@@ -185,6 +188,89 @@ function Partida() {
     const img_camino_negro = "http://localhost:3000/camino_negro.png";
     const img_camino_gris = "http://localhost:3000/camino_gris.png";
 
+    // sacamos los datos para saber si hay actualizaciones 
+    useQuery(
+        //console.log("se esta ejecutando el segundo ")
+        ["get-state-game"],
+        async () => {
+            const res = await fetch(
+                `${process.env.REACT_APP_URL_BACKEND}/game_phases/get_game_state?lobby_id=${codigo_partida}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        Authorization: `Bearer ${Token}`,
+                    },
+                }
+            ).then((res_2) => {
+                res_2.json().then((data) => {
+                    // const data = await res.json();
+                    // sacamos el turno del jugador y en que fase nos encontram
+                    console.log("JSON de la partida:");
+                    console.log(data);
+
+                    setJugadores([data.player_0, data.player_1, data.player_2, data.player_3]);
+                    console.log("valor de jugadores despues de insertar nuevos jugadores", jugadores);
+
+                    setBoard(data.board.tiles);
+                    setRoad(data.board.edges);
+                    setBuilding(data.board.nodes);
+
+                    setTiempo_maximo(data.max_tiempo_turno);
+
+                    setPosicion_ladron(data.thief_position);
+
+                    // comprobamos si estamos en la fase 0 del juego ? casas vacias false : true 
+                    setFase_actual(data.turn_phase);
+                    if (data.turn_phase === "INITIAL_TURN1" || data.turn_phase === "INITIAL_TURN2")
+                    {
+                        setAldeas_iniciales_colocadas(false);
+                    }
+                    else
+                    {
+                        setAldeas_iniciales_colocadas(true);
+                    }
+
+                    // sacamos los datos de los distintos jugadores que hay en la partida
+                    // quitamos nuestro usuario de la lista 
+                    const lista_oponentes = jugadores.filter((jugador) => jugador.id != mi_id);
+
+                    let nueva_lista_imgs_oponentes = [];
+                    let nueva_lista_puntos_victoria_oponentes = [];
+                    let nueva_lista_bono_caballeros_oponentes = [];
+                    let nueva_lista_bono_carreteras_oponentes = [];
+
+                    for (let i = 0; i < lista_oponentes.length; i++) {
+                        const nueva_img_oponente = lista_oponentes[i].profile_pic === "default"
+                            ? "http://localhost:3000/fotos_perfil/skin1.png"
+                            : `http://localhost:3000/fotos_perfil/${lista_oponentes[i].profile_pic}.png`;
+
+                        nueva_lista_imgs_oponentes = [...nueva_lista_imgs_oponentes, nueva_img_oponente];
+
+                        nueva_lista_puntos_victoria_oponentes = [...nueva_lista_puntos_victoria_oponentes, lista_oponentes[i].victory_points];
+                        nueva_lista_bono_caballeros_oponentes = [...nueva_lista_bono_caballeros_oponentes, lista_oponentes[i].has_knights_bonus];
+                        nueva_lista_bono_carreteras_oponentes = [...nueva_lista_bono_carreteras_oponentes, lista_oponentes[i].has_longest_road_bonus];
+                    }
+
+                    setImgs_oponentes(nueva_lista_imgs_oponentes);
+                    setPuntos_victoria_oponentes(nueva_lista_puntos_victoria_oponentes);
+                    setBono_caballeros_oponentes(nueva_lista_bono_caballeros_oponentes);
+                    setBono_carreteras_oponentes(nueva_lista_bono_carreteras_oponentes);
+
+                    // sacamos los puntos de victoria 
+
+                }).catch((error) => {
+                    console.error("Error:", error);
+                });              
+            });
+           return 1;
+        },
+        {
+            refetchInterval: 1000,
+            // refetchUntil: (data) => data !== null,
+            // enabled: partidaEmpezada,
+        }
+    );
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -243,7 +329,7 @@ function Partida() {
                 }
             }
         }
-        else {
+        else {  // no estan colocadas las aldeas iniciales 
             setUltima_aldea_construida(ultima_aldea_construida + 1);
 
             setPuedo_colocar_aldea(false);
@@ -252,9 +338,27 @@ function Partida() {
             // Cambio el conjunto de carreteras que puedo construir a los huecos
             // alrededor de la aldea que acabo de construir
 
-            let construcciones = building;
-            construcciones[coordenada] = [mi_skin_construcciones * 4 + color_to_codigo(mi_color), 0];
-            setBuilding(construcciones);
+            // Aviso al backend de que ya he colocado lo mío
+            fetch(
+                `${process.env.REACT_APP_URL_BACKEND}/build-village?node=${coordenada}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        Authorization: `Bearer ${Token}`,
+                    },
+                }
+            ).then((res) => {
+                res.json().then((data) => {
+                    console.log("Intento de colocar aldea:", data);
+                });
+            }).catch((error) => {
+                console.error("Error:", error);
+            });
+
+            //let construcciones = building;
+            //construcciones[coordenada] = [mi_skin_construcciones * 4 + color_to_codigo(mi_color), 0];
+            //setBuilding(construcciones);
         }
     }
 
@@ -339,162 +443,17 @@ function Partida() {
             res.json().then((data) => {
                 console.log("JSON inicial:");
                 console.log(data);
-                console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
                 // sacamos el id de la partida con el que vamos a estar trabajando 
                 setCodigo_partida(data.id);
                 setMax_jugadores(data.game.num_jugadores);
 
-                const res_2 = fetch(
-                    `${process.env.REACT_APP_URL_BACKEND}/game_phases/get_game_state?lobby_id=${data.id}`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded",
-                            Authorization: `Bearer ${Token}`,
-                        },
-                    }
-                ).then((res_2) => {
-                    res_2.json().then((data) => {
-                        // sacamos el turno del jugador y en que fase nos encontram
-                        console.log("JSON de la partida:");
-                        console.log(data);
-
-                        // setJugadores(data.game.jugadores);
-                        setJugadores([data.player_0, data.player_1, data.player_2, data.player_3]);
-                        console.log("valor de jugadores despues de insertar nuevos jugadores", jugadores);
-
-                        setBoard(data.board.tiles);
-                        setRoad(data.board.edges);
-                        setBuilding(data.board.nodes);
-
-                        setTiempo_maximo(data.max_tiempo_turno);
-
-                        setPosicion_ladron(data.thief_position);
-                    }).catch((error) => {
-                        console.error("Error:", error);
-                    });
-                });
             }).catch((error) => {
                 console.error("Error:", error);
             });
         });
 
     }, [Token, json_token.id, mi_id]);
-
-    useEffect(() => {
-
-        var num_jugadores_anadidos = 0;
-
-        ///////////////////////// FETCH DEL OPONENTE 1 /////////////////////////
-
-        if (jugadores.length >= 2) {
-            fetch(
-                `${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(
-                    jugadores[1].id
-                )}`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                        Authorization: `Bearer ${Token}`,
-                    },
-                }
-            )
-                .then((res) => {
-                    res.json().then((data) => {
-                        // Actualizamos el estado de cosas
-                        setImg_jugador_1(data.profile_picture);
-
-                        // Logs
-                        console.log("Imagen recibida del jugador 1:");
-                        console.log(data.profile_picture);
-
-                        console.log("JSON del jugador 1:");
-                        console.log(data);
-
-                        // TODO: Hacer que las imágenes se obtengan de la base de datos
-                        setImg_jugador_1("http://localhost:3000/fotos_perfil/skin1.png");
-                    });
-                })
-                .catch((error) => {
-                    console.error("Error:", error);
-                });
-        }
-
-        ///////////////////////// FETCH DEL OPONENTE 2 /////////////////////////
-
-        if (jugadores.length >= 3) {
-            fetch(
-                `${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt( 
-                    jugadores[2].id
-                )}`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                        Authorization: `Bearer ${Token}`,
-                    },
-                }
-            )
-                .then((res) => {
-                    res.json().then((data) => {
-                        // Actualizamos el estado de cosas
-                        setImg_jugador_2(data.profile_picture);
-
-                        // Logs
-                        console.log("Imagen recibida del jugador 2:");
-                        console.log(data.profile_picture);
-
-                        console.log("JSON del jugador 2:");
-                        console.log(data);
-
-                        // TODO: Hacer que las imágenes se obtengan de la base de datos
-                        setImg_jugador_2("http://localhost:3000/fotos_perfil/skin2.png");
-                    });
-                })
-                .catch((error) => {
-                    console.error("Error:", error);
-                });
-        }
-
-        ///////////////////////// FETCH DEL OPONENTE 3 /////////////////////////
-
-        if (jugadores.length >= 4) {
-            fetch(
-                `${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(
-                    jugadores[3].id
-                )}`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                        Authorization: `Bearer ${Token}`,
-                    },
-                }
-            )
-                .then((res) => {
-                    res.json().then((data) => {
-                        // Actualizamos el estado de cosas
-                        setImg_jugador_3(data.profile_picture);
-
-                        // Logs
-                        console.log("Imagen recibida del jugador 3:");
-                        console.log(data.profile_picture);
-
-                        console.log("JSON del jugador 3:");
-                        console.log(data);
-
-                        // TODO: Hacer que las imágenes se obtengan de la base de datos
-                        setImg_jugador_3("http://localhost:3000/fotos_perfil/skin3.png");
-                    });
-                })
-                .catch((error) => {
-                    console.error("Error:", error);
-                });
-        }
-
-    }, [Token, json_token.id, jugadores]);
 
     ////////////////////////////////////////////////////////////////////////////
     ///////////////////////////// FETCH PERIODICO //////////////////////////////
@@ -572,19 +531,19 @@ function Partida() {
                     {
                         jugadores.length >= 2 &&
                         <div className="superior_jugador_1_partida">
-                            <img src={img_jugador_1} className="icono_jugador_superior" alt="icono_jugadores" />
+                            <img src={imgs_oponentes[0]} className="icono_jugador_superior" alt="icono_jugadores" />
 
                             <img src={img_corona} className="icono_jugador_superior" alt="icono_jugadores" />
 
                             {
                                 // Muestro los puntos de victoria del jugador 1
                                 <div className="puntos_victoria_jugador_1">
-                                    {jugadores[1].puntos_victoria}
+                                    {puntos_victoria_oponentes[0]}
                                 </div>
                             }
 
                             {
-                                jugadores[1].tiene_bono_caballeros ? (
+                                bono_caballeros_oponentes[0] ? (
                                     <img src={img_caballero_negro} className="icono_jugador_superior" alt="icono_jugadores" />
                                 ) : (
                                     <img src={img_caballero_gris} className="icono_jugador_superior" alt="icono_jugadores" />
@@ -592,7 +551,7 @@ function Partida() {
                             }
 
                             {
-                                jugadores[1].tiene_bono_carreteras ? (
+                                bono_carreteras_oponentes[0] ? (
                                     <img src={img_camino_negro} className="icono_jugador_superior" alt="icono_jugadores" />
                                 ) : (
                                     <img src={img_camino_gris} className="icono_jugador_superior" alt="icono_jugadores" />
@@ -603,19 +562,19 @@ function Partida() {
                     {
                         jugadores.length >= 3 &&
                         <div className="superior_jugador_2_partida">
-                            <img src={img_jugador_2} className="icono_jugador_superior" alt="icono_jugadores" />
+                            <img src={imgs_oponentes[1]} className="icono_jugador_superior" alt="icono_jugadores" />
 
                             <img src={img_corona} className="icono_jugador_superior" alt="icono_jugadores" />
 
                             {
                                 // Muestro los puntos de victoria del jugador 1
                                 <div className="puntos_victoria_jugador_2">
-                                    {jugadores[2].puntos_victoria}
+                                    {puntos_victoria_oponentes[1]}
                                 </div>
                             }
 
                             {
-                                jugadores[2].tiene_bono_caballeros ? (
+                                bono_caballeros_oponentes[1] ? (
                                     <img src={img_caballero_negro} className="icono_jugador_superior" alt="icono_jugadores" />
                                 ) : (
                                     <img src={img_caballero_gris} className="icono_jugador_superior" alt="icono_jugadores" />
@@ -623,7 +582,7 @@ function Partida() {
                             }
 
                             {
-                                jugadores[2].tiene_bono_carreteras ? (
+                                bono_carreteras_oponentes[1] ? (
                                     <img src={img_camino_negro} className="icono_jugador_superior" alt="icono_jugadores" />
                                 ) : (
                                     <img src={img_camino_gris} className="icono_jugador_superior" alt="icono_jugadores" />
@@ -634,19 +593,19 @@ function Partida() {
                     {
                         jugadores.length === 4 &&
                         <div className="superior_jugador_3_partida">
-                            <img src={img_jugador_3} className="icono_jugador_superior" alt="icono_jugadores" />
+                            <img src={imgs_oponentes[2]} className="icono_jugador_superior" alt="icono_jugadores" />
 
                             <img src={img_corona} className="icono_jugador_superior" alt="icono_jugadores" />
 
                             {
                                 // Muestro los puntos de victoria del jugador 1
                                 <div className="puntos_victoria_jugador_3">
-                                    {jugadores[3].puntos_victoria}
+                                    {puntos_victoria_oponentes[2]}
                                 </div>
                             }
 
                             {
-                                jugadores[3].tiene_bono_caballeros ? (
+                                bono_caballeros_oponentes[2] ? (
                                     <img src={img_caballero_negro} className="icono_jugador_superior" alt="icono_jugadores" />
                                 ) : (
                                     <img src={img_caballero_gris} className="icono_jugador_superior" alt="icono_jugadores" />
@@ -654,7 +613,7 @@ function Partida() {
                             }
 
                             {
-                                jugadores[3].tiene_bono_carreteras ? (
+                                bono_carreteras_oponentes[2] ? (
                                     <img src={img_camino_negro} className="icono_jugador_superior" alt="icono_jugadores" />
                                 ) : (
                                     <img src={img_camino_gris} className="icono_jugador_superior" alt="icono_jugadores" />
@@ -868,8 +827,8 @@ function Partida() {
                 {"---"}
                 {"Aldea que puedo construir: " + aldea_que_puedo_construir}
                 {"---"}
-                {console.log("Jugadores: ")}
-                {console.log(jugadores)}
+                {/* {console.log("Jugadores: ")}
+                {console.log(jugadores)} */}
                 {/* {"Id de jugador 1: " + jugadores[0].id}
                 {"---"}
                 {"Id de jugador 2: " + jugadores[1].id}
