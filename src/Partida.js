@@ -34,8 +34,10 @@ function Partida() {
     const [bono_caballeros_oponentes, setBono_caballeros_oponentes] = useState([]);
     const [bono_carreteras_oponentes, setBono_carreteras_oponentes] = useState([]);
 
+    const [estado_jugador, setEstado_jugador] = useState(null);
+
     // Aquí va el id del jugador que tiene el turno
-    const [turno, setTurno] = useState(7365);
+    const [turno, setTurno] = useState(0);
 
     const [codigo_partida, setCodigo_partida] = useState(0);
 
@@ -44,8 +46,6 @@ function Partida() {
     // 1: Uso de cartas de desarrollo
     // 2: Negociación
     // 3: Construcción
-    const [fase, setFase] = useState(0);
-
     const [tiempo, setTiempo] = useState(0);
     const [tiempo_maximo, setTiempo_maximo] = useState(30);
 
@@ -110,11 +110,11 @@ function Partida() {
         2, 2, 2, 2, 2,
         0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
         2, 2, 2, 2, 2, 2,
-        0, 1, 0, 1, 0, 1, 0, 1, 0, 1,
+        1, 0, 1, 0, 1, 0, 1, 0, 1, 0,
         2, 2, 2, 2, 2,
-        0, 1, 0, 1, 0, 1, 0, 1,
+        1, 0, 1, 0, 1, 0, 1, 0,
         2, 2, 2, 2,
-        0, 1, 0, 1, 0, 1,
+        1, 0, 1, 0, 1, 0,
     ]
 
     const init_top_road_relative_vertical = 70;
@@ -132,11 +132,11 @@ function Partida() {
         -1, 0, 1, 2, 3,
         -2, -2, -1, -1, 0, 0, 1, 1, 2, 2,
         -2, -1, 0, 1, 2, 3,
-        -2, -3, -1, -2, 0, -1, 1, 0, 2, 1,
+        -3, -2, -2, -1, -1, 0, 0, 1, 1, 2,
         -2, -1, 0, 1, 2,
-        -2, -3, -1, -2, 0, -1, 1, 0,
+        -3, -2, -2, -1, -1, 0, 0, 1,
         -2, -1, 0, 1,
-        -2, -3, -1, -2, 0, -1,
+        -3, -2, -2, -1, -1, 0,
     ]
 
     const left_variation_road = [
@@ -146,11 +146,11 @@ function Partida() {
         1, 2, 3, 4, 5,
         2, 2, 3, 3, 4, 4, 5, 5, 6, 6,
         2, 3, 4, 5, 6, 7,
-        4, 3, 5, 4, 6, 5, 7, 6, 8, 7,
+        3, 4, 4, 5, 5, 6, 6, 7, 7, 8,
         4, 5, 6, 7, 8,
-        6, 5, 7, 6, 8, 7, 9, 8,
+        5, 6, 6, 7, 7, 8, 8, 9,
         6, 7, 8, 9,
-        8, 7, 9, 8, 10, 9,
+        7, 8, 8, 9, 9, 10,
     ]
 
     // Asumo que [0] equivale al color y [1] al tipo de edificio
@@ -199,7 +199,6 @@ function Partida() {
 
     // sacamos los datos para saber si hay actualizaciones 
     useQuery(
-        //console.log("se esta ejecutando el segundo ")
         ["get-state-game"],
         async () => {
             const res = await fetch(
@@ -213,19 +212,41 @@ function Partida() {
                 }
             ).then((res_2) => {
                 res_2.json().then((data) => {
-                    // const data = await res.json();
-                    // sacamos el turno del jugador y en que fase nos encontram
-                    console.log("JSON de la partida:");
-                    console.log(data);
+                    console.log("JSON de la partida:", data);
 
-                    setJugadores([data.player_0, data.player_1, data.player_2, data.player_3]);
-                    console.log("valor de jugadores despues de insertar nuevos jugadores", jugadores);
+                    const nuevos_jugadores = [data.player_0, data.player_1, data.player_2, data.player_3];
+                    setJugadores(nuevos_jugadores);
+
+                    // De todos los jugadores saco el que tiene mi mismo id 
+                    const yo = nuevos_jugadores.filter((jugador) => jugador.id === mi_id);
+                    setEstado_jugador(yo[0]);
 
                     setBoard(data.board.tiles);
                     setRoad(data.board.edges);
                     setBuilding(data.board.nodes);
 
-                    setTiempo_maximo(data.max_tiempo_turno);
+                    setTiempo_maximo(data.turn_time);
+                    detectar_cambio_fase(data.turn_phase, data.player_turn);
+                    setTurno(data.player_turn);
+
+                    // Si el turno coincide con mi id y tengo ambos permisos a
+                    // false, activo el permiso de construir aldeas
+                    if (data.player_turn === mi_id && !puedo_colocar_aldea && !puedo_colocar_carretera && (data.turn_phase === "INITIAL_TURN1" || data.turn_phase === "INITIAL_TURN2")) {
+                        setPuedo_colocar_aldea(true);
+                    }
+
+                    // Si no es mi turno, desactivo los permisos de construir
+                    // aldeas y carreteras
+                    if (data.player_turn !== mi_id) {
+                        setPuedo_colocar_aldea(false);
+                        setPuedo_colocar_carretera(false);
+                    }
+
+                    // Si la fase ya no es "INITIAL_TURN2" o "INITIAL_TURN2", pongo
+                    // el booleano de aldeas_iniciales_colocadas a true
+                    if (data.turn_phase !== "INITIAL_TURN1" && data.turn_phase !== "INITIAL_TURN2") {
+                        setAldeas_iniciales_colocadas(true);
+                    }
 
                     setPosicion_ladron(data.thief_position);
 
@@ -315,9 +336,8 @@ function Partida() {
         }
     );
 
-    // Si es mi turno, obtengo del backend las casas y carreteras legales
+    // Si es mi turno, obtengo del backend las carreteras legales y las casas
     useQuery(
-        //console.log("se esta ejecutando el segundo ")
         ["get-legal-building-nodes"],
         async () => {
             const res = await fetch(
@@ -331,13 +351,31 @@ function Partida() {
                 }
             ).then((res_2) => {
                 res_2.json().then((data) => {
-                    // console.log("Casas legales:", data);
                     setCasas_legales(data);
-                    
+
                 }).catch((error) => {
                     console.error("Error:", error);
                 });
             });
+
+            const res_2 = await fetch(
+                `${process.env.REACT_APP_URL_BACKEND}/get-legal-building-edges?lobby_id=${codigo_partida}&&color=${mi_color}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        Authorization: `Bearer ${Token}`,
+                    },
+                }
+            ).then((res_2) => {
+                res_2.json().then((data) => {
+                    setCarretera_legales(data);
+
+                }).catch((error) => {
+                    console.error("Error:", error);
+                });
+            });
+
             return 1;
         },
         {
@@ -351,6 +389,61 @@ function Partida() {
     ////////////////////////////////////////////////////////////////////////////
     //////////////////////////////// FUNCIONES /////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
+
+    // funcion que detecta si se ha cambiado de fase, compara la fase actual con
+    // la que se le pasa por parametro y hace las operaciones que correspondan
+    // si la fase actual es distinta a la que se le pasa por parametro
+    function detectar_cambio_fase(fase, nuevo_turno) {
+        if (fase_actual !== fase) {
+            setFase_actual(fase);
+
+            // Si la fase es "RESOURCE_PRODUCTION" y es mi turno, tiro los dados
+            if (fase === "RESOURCE_PRODUCTION") {
+                // Si es mi turno, tiro los dados, si no, espero a que el
+                // backend me diga qué ha salido
+                if (nuevo_turno === mi_id) {
+                    // Si el turno nuevo y el turno viejo son distintos, tiro los dados
+                    if (turno !== nuevo_turno) {
+                        tirar_dados();
+                    }
+                }
+                else {
+                    // TODO: Esperar a que el backend me diga qué ha salido
+                }
+            }
+            else if (fase === "TRADING") {
+                // TODO: hacer que se muestre el popup de trading
+            }
+            else if (fase === "BUILDING") {
+                // Doy permiso para construir carreteras y aldeas
+                setPuedo_colocar_aldea(true);
+                setPuedo_colocar_carretera(true);
+
+                // TODO: implementar lo de mejorar aldeas a ciudades
+            }
+        }
+    }
+
+    function avanzar_fase() {
+        // Hago la llamada al backend para que avance la fase
+        fetch(
+            `${process.env.REACT_APP_URL_BACKEND}/game_phases/advance_phase?lobby_id=${codigo_partida}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    Authorization: `Bearer ${Token}`,
+                },
+            }
+        ).then((res) => {
+            res.json().then((data) => {
+
+            }).catch((error) => {
+                console.error("Error:", error);
+            });
+        }
+        );
+    }
 
     function construir_poblado(coordenada) {
         if (aldeas_iniciales_colocadas) {
@@ -421,6 +514,8 @@ function Partida() {
             }).catch((error) => {
                 console.error("Error:", error);
             });
+
+            avanzar_fase();
         }
     }
 
@@ -451,7 +546,7 @@ function Partida() {
             return "#9d2933";
         }
     }
-    
+
     const [usuario_to_color, setUsuario_to_color] = useState([null, null, null, null, null]);
     function color_to_codigo(color) {
         if (color === "RED") {
@@ -476,37 +571,31 @@ function Partida() {
 
         ////////////////////////// FETCH DEL USUARIO ///////////////////////////
 
-        fetch(
-            `${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(
-                json_token.id
-            )}`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    Authorization: `Bearer ${Token}`,
-                },
-            }
-        )
-            .then((res) => {
-                res.json().then((data) => {
-                    // Actualizamos el estado de cosas
-
-                    // Logs
-                    console.log("JSON del jugador:");
-                    console.log(data);
-                });
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-            });
+        // fetch(
+        //     `${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(
+        //         json_token.id
+        //     )}`,
+        //     {
+        //         method: "GET",
+        //         headers: {
+        //             "Content-Type": "application/x-www-form-urlencoded",
+        //             Authorization: `Bearer ${Token}`,
+        //         },
+        //     }
+        // )
+        //     .then((res) => {
+        //         res.json().then((data) => {
+        //             // Actualizamos el estado de cosas
+        //
+        //         });
+        //     })
+        //     .catch((error) => {
+        //         console.error("Error:", error);
+        //     });
 
         ///////////////////////// FETCH DE LA PARTIDA //////////////////////////
 
         const url_partida = `${process.env.REACT_APP_URL_BACKEND}/create-test-lobby`;
-
-        console.log("URL de la partida:");
-        console.log(url_partida);
 
         const res = fetch(
             `${process.env.REACT_APP_URL_BACKEND}/get-lobby-from-player`,
@@ -519,9 +608,6 @@ function Partida() {
             }
         ).then((res) => {
             res.json().then((data) => {
-                console.log("JSON inicial:");
-                console.log(data);
-
                 // sacamos el id de la partida con el que vamos a estar trabajando 
                 setCodigo_partida(data.id);
                 setMax_jugadores(data.game.num_jugadores);
@@ -538,43 +624,36 @@ function Partida() {
     ////////////////////////////////////////////////////////////////////////////
 
     useEffect(() => {
-        if (tiempo === 0 && partida_empezada) {
-            setFase((fase + 1) % 4);
-        }
-    }, [tiempo]);
-
-    useEffect(() => {
-        if (fase === 0 && tiempo === 0 && partida_empezada) {
-            setTurno((turno + 1) % max_jugadores);
-            // TODO: los turnos van con ids, hay que hacer una llamada al
-            // backend para obtener el id del jugador que le toca
-
-            // TODO: Cuando pase un turno, hay que esperar la confirmación del
-            // backend para poder pasar al siguiente turno, así todos los
-            // jugadores se sincronizan
-
-            if (!aldeas_iniciales_colocadas && turno == mi_id) {
-                setAldea_que_puedo_construir(aldea_que_puedo_construir + 1);
-            }
-        }
-    }, [fase]);
-
-    useEffect(() => {
         const interval = setInterval(() => {
 
             ///////////////////////// CÓDIGO PERIODICO /////////////////////////
 
             if (aldeas_iniciales_colocadas) {
-                setTiempo((tiempo + 1) % (tiempo_maximo + 1));
 
-                if (!partida_empezada && tiempo === 0) {
-                    setPartida_empezada(true);
+                // Si no es mi turno, pongo el tiempo a 0, si no, lo actualizo
+                if (turno !== mi_id) {
+                    setTiempo(0);
+                }
+                else {
+                    const nuevo_tiempo = (tiempo + 1) % (tiempo_maximo + 1);
+                    setTiempo(nuevo_tiempo);
+
+                    if (nuevo_tiempo === 0) {
+                        // Log
+                        console.log("Se ha acabado el tiempo del turno");
+
+                        // Aviso al backend de que avance la fase
+                        avanzar_fase();
+                    }
                 }
             }
             else {
                 if (turno == mi_id) {
                     if (ultima_aldea_construida < aldea_que_puedo_construir) {
                         setPuedo_colocar_aldea(true);
+
+                        // Log
+                        console.log("Puedo colocar aldea");
                     }
                 }
                 else {
@@ -740,8 +819,9 @@ function Partida() {
                 left: "0", width: "25%",
                 backgroundColor: "blue"
             }}>
-                <Tabs />
+                <Tabs jugador_datos={estado_jugador} />
             </div>
+
 
             {/************************** HEXAGONOS ***************************/}
 
@@ -793,11 +873,13 @@ function Partida() {
                 {/************************** CARRETERAS **************************/}
 
                 {Object.entries(road).map(([key, value], index) => {
+                    var permiso_construccion = (puedo_colocar_carretera && Array.isArray(carretera_legales) && carretera_legales.includes(parseInt(key)));
+
                     return (
                         <div key={key}>
                             {
                                 type_road[index] === 0 &&
-                                (road[key] != null || puedo_colocar_carretera) &&
+                                (road[key] != null || permiso_construccion) &&
                                 <button
                                     className={`w-20 flex h-5 ${road[key] != null ? "carretera_partida" : "carretera_sin_comprar_partida"}`}
                                     style={{
@@ -821,7 +903,7 @@ function Partida() {
 
                             {
                                 type_road[index] === 1 &&
-                                (road[key] != null || puedo_colocar_carretera) &&
+                                (road[key] != null || permiso_construccion) &&
                                 <button
                                     className={`w-20 flex h-5 ${road[key] != null ? "carretera_partida" : "carretera_sin_comprar_partida"}`}
                                     style={{
@@ -845,7 +927,7 @@ function Partida() {
 
                             {
                                 type_road[index] === 2 &&
-                                (road[key] != null || puedo_colocar_carretera) &&
+                                (road[key] != null || permiso_construccion) &&
                                 <button
                                     className={`w-20 flex h-5 ${road[key] != null ? "carretera_partida" : "carretera_sin_comprar_partida"}`}
                                     style={{
@@ -874,15 +956,7 @@ function Partida() {
 
                 {Object.entries(building).map(([key, value], index) => {
                     var permiso_construccion = (puedo_colocar_aldea && Array.isArray(casas_legales) && casas_legales.includes(parseInt(key)));
-                    // console.log("-----------------------------------------------");
-                    // console.log("super condicion: ", key, permiso_construccion);
-                    // console.log("esta incluido en casas_legales: ", key, Array.isArray(casas_legales) && casas_legales.includes(parseInt(key)));
-                    // console.log("el tipo de la key es : ", typeof parseInt(key));
-                    // console.log("el tipo de lo que tiene el array: ", typeof casas_legales[0]);
-                    // console.log("es un array: ", Array.isArray(casas_legales));
-                    // console.log("es nulo", building[key][1] === null);
-                    // console.log("puedo construir: ", puedo_colocar_aldea);
-                    
+
                     return (
                         <div key={key}>
                             {   // miramos las que ya estan construidas y las que podemos construir
@@ -904,9 +978,6 @@ function Partida() {
                                     }}
                                     onClick={() => {
                                         construir_poblado(key);
-                                        // console.log("casas legales: ",  casas_legales)
-                                        // console.log("key: ", key)
-                                        // console.log("casas_legales.includes(key): ", casas_legales.includes(131))
                                     }}
                                 />
                             }
@@ -929,7 +1000,7 @@ function Partida() {
                 {"---"}
                 {"Turno: " + turno}
                 {"---"}
-                {"Fase: " + fase}
+                {"Fase: " + fase_actual}
                 {"---"}
                 {"Permiso para construir carreteras: " + puedo_colocar_carretera}
                 {"---"}
@@ -939,15 +1010,6 @@ function Partida() {
                 {"---"}
                 {"Aldea que puedo construir: " + aldea_que_puedo_construir}
                 {"---"}
-                {/* {console.log("Jugadores: ")}
-                {console.log(jugadores)} */}
-                {/* {"Id de jugador 1: " + jugadores[0].id}
-                {"---"}
-                {"Id de jugador 2: " + jugadores[1].id}
-                {"---"}
-                {"Id de jugador 3: " + jugadores[2].id}
-                {"---"}
-                {"Id de jugador 4: " + jugadores[3].id} */}
             </h1>
 
             <h1
@@ -995,7 +1057,8 @@ function Partida() {
                     height: "80px",
                 }}
                 onClick={() => {
-
+                    setTiempo(1);
+                    avanzar_fase();
                 }}
             />
 

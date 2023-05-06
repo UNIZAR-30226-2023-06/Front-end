@@ -1,26 +1,19 @@
 import React from "react";
-const SecondTab = () => {
+const SecondTab = ( params ) => {
   /****************************************************************************/
   /******************************** CONSTANTES ********************************/
   /****************************************************************************/
-
-  const [madera, setMadera] = React.useState(0);
-  const [arcilla, setArcilla] = React.useState(0);
-  const [trigo, setTrigo] = React.useState(0);
-  const [roca, setRoca] = React.useState(0);
-  const [ovejas, setOvejas] = React.useState(0);
 
   const [poblados, setPoblados] = React.useState(0);
   const [ciudades, setCiudades] = React.useState(0);
   const [carreteras, setCarreteras] = React.useState(0);
 
-  const [caballeros, setCaballeros] = React.useState(0);
-  const [puntosVictoria, setPuntosVictoria] = React.useState(0);
-
   /****************************************************************************/
   /***************************** RETURN PRINCIPAL *****************************/
   /****************************************************************************/
 
+  console.log("Este es tablero del tab2: ", params.jugador_datos);
+  
   return (
     <div className="SecondTab_partida">
 
@@ -60,7 +53,7 @@ const SecondTab = () => {
               marginRight: "20px",
             }}
           />
-          {madera}
+          {params.jugador_datos == null ? 0 : params.jugador_datos.hand.wood}
         </div>
 
         <div style={{
@@ -79,7 +72,7 @@ const SecondTab = () => {
               marginRight: "20px",
             }}
           />
-          {arcilla}
+          {params.jugador_datos == null ? 0 : params.jugador_datos.hand.clay}
         </div>
       </div>
 
@@ -106,7 +99,7 @@ const SecondTab = () => {
               marginRight: "20px",
             }}
           />
-          {ovejas}
+          {params.jugador_datos == null ? 0 : params.jugador_datos.hand.sheep}
         </div>
 
         <div style={{
@@ -125,7 +118,7 @@ const SecondTab = () => {
               marginRight: "20px",
             }}
           />
-          {trigo}
+          {params.jugador_datos == null ? 0 : params.jugador_datos.hand.wheat}
         </div>
       </div>
 
@@ -149,7 +142,7 @@ const SecondTab = () => {
             marginRight: "20px",
           }}
         />
-        {roca}
+        {params.jugador_datos == null ? 0 : params.jugador_datos.hand.rock}
       </div>
 
       <br /><br />
@@ -260,7 +253,7 @@ const SecondTab = () => {
                 marginRight: "20px",
               }}
             />
-            {caballeros}
+            {params.jugador_datos == null ? 0 : params.jugador_datos.used_knights}
           </div>
 
         </div>
@@ -307,7 +300,7 @@ const SecondTab = () => {
                 marginRight: "20px",
               }}
             />
-            {puntosVictoria}
+            {params.jugador_datos == null ? 0 : params.jugador_datos.victory_points}
           </div>
         </div>
       </div>
@@ -315,4 +308,5 @@ const SecondTab = () => {
     </div>
   );
 };
+
 export default SecondTab;

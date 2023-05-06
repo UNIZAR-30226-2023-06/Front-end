@@ -4,7 +4,7 @@ import { useState } from "react";
 import FirstTab from "../AllTabs/FirstTab";
 import SecondTab from "../AllTabs/SecondTab";
 
-const Tabs = () => {
+const Tabs = ( params ) => {
   const [activeTab, setActiveTab] = useState("tab1");
 
   const handleTab1 = () => {
@@ -16,6 +16,8 @@ const Tabs = () => {
     setActiveTab("tab2");
   };
 
+  // console.log("Este es tablero del tab: ", params.partida);
+  
   return (
     <div className="Tabs_partida">
 
@@ -37,9 +39,9 @@ const Tabs = () => {
         </li>
 
       </ul>
-
+      
       <div className="outlet">
-        {activeTab === "tab1" ? <FirstTab /> : <SecondTab />}
+        {activeTab === "tab1" ? <FirstTab /> : <SecondTab jugador_datos={params.jugador_datos} />}
       </div>
 
     </div>
