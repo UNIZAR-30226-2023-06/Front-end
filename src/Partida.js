@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useQuery } from "@tanstack/react-query";
 
 import Tabs from "./Components/TabComponent/Tabs";
+import PopUpFaseTirada from "./pop-up-Fase-tirada";
 import PopupTablaCostes from "./pop-up-TablaCostes";
 
 // 1-- Importamos useCookies y jwt_decode
@@ -74,6 +75,7 @@ function Partida() {
 
     const [casas_legales, setCasas_legales] = useState([])
     const [carretera_legales, setCarretera_legales] = useState([])
+    const [showPopup, setShowPopup] = useState(false);
 
     const ficha_con_id = [
         null,
@@ -385,7 +387,9 @@ function Partida() {
         }
     );
 
-
+    const handlePopupClose = () => {
+        setShowPopup(false);
+      };
     ////////////////////////////////////////////////////////////////////////////
     //////////////////////////////// FUNCIONES /////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
@@ -401,12 +405,15 @@ function Partida() {
             if (fase === "RESOURCE_PRODUCTION") {
                 // Si es mi turno, tiro los dados, si no, espero a que el
                 // backend me diga qué ha salido
-                if (nuevo_turno === mi_id) {
-                    // Si el turno nuevo y el turno viejo son distintos, tiro los dados
-                    if (turno !== nuevo_turno) {
-                        tirar_dados();
+                if (fase === "RESOURCE_PRODUCTION") {
+                    if (nuevo_turno === mi_id) {
+                        console.log("mi turno");
+                        handlePopupClose();
                     }
-                }
+                    else {
+                      // código para cuando no es tu turno
+                    }
+                  }
                 else {
                     // TODO: Esperar a que el backend me diga qué ha salido
                 }
@@ -1061,6 +1068,10 @@ function Partida() {
                     avanzar_fase();
                 }}
             />
+
+
+<PopUpFaseTirada onClose={handlePopupClose}>
+</PopUpFaseTirada>
 
             <PopupTablaCostes />
 

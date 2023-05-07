@@ -42,11 +42,18 @@ const PopUpFaseTirada = (props) => {
 
   return (
     <>
-      <button onClick={handleOpen}>Mostrar Popup</button>
-      {showPopup && (
+      <img
+        src="http://localhost:3000/tabla-de-costes.png"
+        alt="Abrir Popup"
+        className="cursor-pointer"
+        onClick={handleOpen}
+        style={{
+          transform: "scale(0.15)",
+          position: "fixed", right: "-500px", bottom: "-380px"
+        }}
+      />      {showPopup && (
         <div
           className="fixed z-50 inset-0 bg-black bg-opacity-0 flex items-center justify-center"
-          onClick={handleBackgroundClick}
         >
           <div
             className="relative bg-black rounded-lg p-4 bg-opacity-70 inline-flex flex-col items-center h-4/5 "
@@ -58,19 +65,20 @@ const PopUpFaseTirada = (props) => {
             >
               FASE DE TIRADA
             </h1>{" "}
-
             <div style={containerStyle}>
-
               <img
                 src="http://localhost:3000/dados.png"
                 alt="Imagen 1"
                 style={{ height: "200px", width: "200px", marginTop: "70px" }}
               />
               <div class="mt-20">
-              <button onClick={handleClose} class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-4 px-6 border border-gray-400 rounded shadow ml-2" style={{ fontSize: "30px", marginLeft: "20px" }}>
-  Tirar Dados
-</button>
-
+                <button
+                  onClick={handleClose}
+                  class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-4 px-6 border border-gray-400 rounded shadow ml-2"
+                  style={{ fontSize: "30px", marginLeft: "20px" }}
+                >
+                  Tirar Dados
+                </button>
               </div>
             </div>
             {props.children}

@@ -1,6 +1,6 @@
 import React from "react";
 import jwt_decode from "jwt-decode";
-import PopUpFaseCompra from "./pop-up-FaseCompra";
+import PopUpFaseTirada from "./pop-up-Fase-tirada";
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { Navigate } from "react-router-dom";
@@ -370,8 +370,8 @@ export default function Prueba() {
       />
       {/* --------------------------- Página --------------------------- */}
       <div>
-        <PopUpFaseCompra onClose={() => setShowPopup(false)}>
-        </PopUpFaseCompra>
+        <PopUpFaseTirada onClose={() => setShowPopup(false)}>
+        </PopUpFaseTirada>
       </div>
     </div>
   );
