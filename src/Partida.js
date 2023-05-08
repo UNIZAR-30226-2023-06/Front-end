@@ -409,6 +409,7 @@ function Partida() {
                     if (nuevo_turno === mi_id) {
                         console.log("mi turno");
                         handlePopupClose();
+                        console.log(codigo_partida);
                     }
                     else {
                       // código para cuando no es tu turno
@@ -1070,8 +1071,8 @@ function Partida() {
             />
 
 
-<PopUpFaseTirada onClose={handlePopupClose}>
-</PopUpFaseTirada>
+            <PopUpFaseTirada >
+            </PopUpFaseTirada>
 
             <PopupTablaCostes />
 
