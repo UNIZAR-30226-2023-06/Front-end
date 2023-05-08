@@ -1071,7 +1071,7 @@ function Partida() {
             />
 
 
-            <PopUpFaseTirada >
+            <PopUpFaseTirada token={Token} lobby={codigo_partida}>
             </PopUpFaseTirada>
 
             <PopupTablaCostes />

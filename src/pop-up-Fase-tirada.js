@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
+
 const PopUpFaseTirada = (props) => {
   const [showPopup, setShowPopup] = useState(true);
   const [shouldShowPopup, setShouldShowPopup] = useState(false);
   const [showDiceImage, setShowDiceImage] = useState(true);
-  const [showExitButton, setShowExitButton] = useState(true); 
+  const [showExitButton, setShowExitButton] = useState(true);
+  const [dado1, setDado1] = useState(null);
+  const [dado2, setDado2] = useState(null);
 
   const handleClose = () => {
     setShouldShowPopup(false);
@@ -35,7 +38,8 @@ const PopUpFaseTirada = (props) => {
   const handleRollDice = () => {
     setShowDiceImage(false);
     setShowExitButton(false);
-    // Aquí podrías agregar el código para tirar los dados y mostrar el resultado
+    console.log(props.lobby);
+    ObtenerDados();
   };
 
   const imageStyle = {
@@ -50,6 +54,51 @@ const PopUpFaseTirada = (props) => {
     alignItems: "center", // agregar esta propiedad para centrar los elementos horizontalmente
     marginTop: "20px",
   };
+
+  function ObtenerDados() {
+    fetch(
+      `${process.env.REACT_APP_URL_BACKEND}/game_phases/resource_production?lobby_id=${props.lobby}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${props.token}`,
+        },
+      }
+    )
+      .then((res) => {
+        res.json().then((data) => {
+          console.log(data);
+          setDado1(data.die1-1);
+          setDado2(data.die2-1);
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+
+  // Callback de setDado1
+  const handleSetDado1 = (newDado1) => {
+    setDado1(newDado1);
+    console.log(`Nuevo valor de dado1: ${newDado1}`);
+  };
+
+  // Callback de setDado2
+  const handleSetDado2 = (newDado2) => {
+    setDado2(newDado2);
+    console.log(`Nuevo valor de dado2: ${newDado2}`);
+  };
+
+  // Efecto que se activa cada vez que cambia dado1
+  useEffect(() => {
+    console.log(`Nuevo valor de dado1: ${dado1}`);
+  }, [dado1]);
+
+  // Efecto que se activa cada vez que cambia dado2
+  useEffect(() => {
+    console.log(`Nuevo valor de dado2: ${dado2}`);
+  }, [dado2]);
 
   return (
     <>
@@ -94,10 +143,10 @@ const PopUpFaseTirada = (props) => {
                       marginTop: "20px",
                     }}
                   >
-                    <img src={Dados[4]} alt="Imagen 1" />
+                    <img src={Dados[dado1]} alt="Imagen 1" />
                   </div>
                   <div style={{ width: "35%", marginTop: "20px" }}>
-                    <img src={Dados[4]} alt="Imagen 2" />
+                    <img src={Dados[dado2]} alt="Imagen 2" />
                   </div>
                 </div>
               )}
