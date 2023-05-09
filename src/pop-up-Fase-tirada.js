@@ -10,7 +10,7 @@ const PopUpFaseTirada = (props) => {
 
   const handleClose = () => {
     setShouldShowPopup(false);
-    props.onClose();
+    // props.onClose();
   };
 
   const handleOpen = () => {
@@ -28,12 +28,12 @@ const PopUpFaseTirada = (props) => {
   ];
 
   useEffect(() => {
-    if (shouldShowPopup) {
+    if (props.show) {
       setShowPopup(true);
     } else {
       setShowPopup(false);
     }
-  }, [shouldShowPopup]);
+  }, [props.show]);
 
   const handleRollDice = () => {
     setShowDiceImage(false);

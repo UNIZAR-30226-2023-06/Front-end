@@ -431,12 +431,12 @@ function Partida() {
   // la que se le pasa por parametro y hace las operaciones que correspondan
   // si la fase actual es distinta a la que se le pasa por parametro
   function detectar_cambio_fase(fase, nuevo_turno) {
-    if (fase_actual !== fase) {
+    if (fase_actual !== fase || nuevo_turno === mi_id) {
       setFase_actual(fase);
 
-      console.log("aaaaaaaaaaaaaaaaaaaaaaa");
+      console.log("------ se nos notifica que hemos cambiado de fase a ", fase, "---------");
       // Si la fase es "RESOURCE_PRODUCTION" y es mi turno, tiro los dados
-      console.log("estas en la fase", fase);
+ 
 
       if (fase === "RESOURCE_PRODUCTION") {
         // Si es mi turno, tiro los dados, si no, espero a que el
@@ -449,7 +449,7 @@ function Partida() {
         console.log("mi id: ", mi_id);
         if (nuevo_turno === mi_id) {
           console.log(
-            "------------------------------------------------------------------------------"
+            "----------------ahora se deberia de mostrar la pop up--------------------------------"
           );
 
           //handlePopupClose();
@@ -587,18 +587,18 @@ function Partida() {
     }
   }
 
-  function tirar_dados() {
-    // Obtengo la tira de dados del backend
-    const numeroAleatorio = Math.floor(Math.random() * 6) + 1;
-    const nuevaImagen = `http://localhost:3000/dados/dado_${numeroAleatorio}.png`;
+//   function tirar_dados() {
+//     // Obtengo la tira de dados del backend
+//     const numeroAleatorio = Math.floor(Math.random() * 6) + 1;
+//     const nuevaImagen = `http://localhost:3000/dados/dado_${numeroAleatorio}.png`;
 
-    setImg_dado_1(nuevaImagen);
+//     setImg_dado_1(nuevaImagen);
 
-    const numeroAleatorio2 = Math.floor(Math.random() * 6) + 1;
-    const nuevaImagen2 = `http://localhost:3000/dados/dado_${numeroAleatorio2}.png`;
+//     const numeroAleatorio2 = Math.floor(Math.random() * 6) + 1;
+//     const nuevaImagen2 = `http://localhost:3000/dados/dado_${numeroAleatorio2}.png`;
 
-    setImg_dado_2(nuevaImagen2);
-  }
+//     setImg_dado_2(nuevaImagen2);
+//   }
 
   function color_to_hex(color) {
     if (color === "YELLOW") {
@@ -1281,7 +1281,7 @@ function Partida() {
       <PopupTablaCostes />
       {/* </PopUpFaseTirada>*/}
       {turno === mi_id && fase_actual === "RESOURCE_PRODUCTION" && (
-        <PopUpFaseTirada show={ShowPopupFaseTirada} />
+        <PopUpFaseTirada show={ShowPopupFaseTirada} token={Token} lobby={codigo_partida}/>
       )}
     </div>
   );
