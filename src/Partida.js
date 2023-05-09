@@ -501,6 +501,24 @@ function Partida() {
     function construir_carretera(coordenada) {
         if (aldeas_iniciales_colocadas) {
 
+            // Aviso al backend de que ya he colocado la carretera
+            fetch(
+                `${process.env.REACT_APP_URL_BACKEND}/build-road?edge=${coordenada}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        Authorization: `Bearer ${Token}`,
+                    },
+                }
+            ).then((res) => {
+                res.json().then((data) => {
+                    console.log("Intento de colocar carretera:", data);
+                });
+            }).catch((error) => {
+                console.error("Error:", error);
+            });
+
         }
         else {
             setPuedo_colocar_carretera(false)

@@ -12,7 +12,7 @@ const SecondTab = ( params ) => {
   /***************************** RETURN PRINCIPAL *****************************/
   /****************************************************************************/
 
-  console.log("Este es tablero del tab2: ", params.jugador_datos);
+  // console.log("Este es tablero del tab2: ", params.jugador_datos);
   
   return (
     <div className="SecondTab_partida">
