@@ -102,18 +102,6 @@ const PopUpFaseTirada = (props) => {
 
   return (
     <>
-      <img
-        src="http://localhost:3000/tabla-de-costes.png"
-        alt="Abrir Popup"
-        className="cursor-pointer"
-        onClick={handleOpen}
-        style={{
-          transform: "scale(0.15)",
-          position: "fixed",
-          right: "-500px",
-          bottom: "-380px",
-        }}
-      />{" "}
       {showPopup && (
         <div className="fixed z-50 inset-0 bg-black bg-opacity-0 flex items-center justify-center">
           <div
