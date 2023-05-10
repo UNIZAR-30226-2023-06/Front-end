@@ -81,12 +81,13 @@ function Partida() {
   const [aldea_que_puedo_construir, setAldea_que_puedo_construir] = useState(1);
   const [ultima_aldea_construida, setUltima_aldea_construida] = useState(0);
 
-  // {  const [img_dado_1, setImg_dado_1] = useState(
-  //     "http://localhost:3000/dados/dado_1.png"
-  //   );
-  //   const [img_dado_2, setImg_dado_2] = useState(
-  //     "http://localhost:3000/dados/dado_2.png"
-  //   );}
+  const [img_dado_1, setImg_dado_1] = useState(
+    "http://localhost:3000/dados/dado_1.png"
+  );
+  
+  const [img_dado_2, setImg_dado_2] = useState(
+    "http://localhost:3000/dados/dado_2.png"
+  );
 
   const [casas_legales, setCasas_legales] = useState([]);
   const [carretera_legales, setCarretera_legales] = useState([]);
@@ -1019,8 +1020,8 @@ function Partida() {
 
                     backgroundImage: `url(${ficha_con_id[board[key][1]]})`,
                     color: `${board[key][0] === 6 || board[key][0] === 8
-                        ? "red"
-                        : "white"
+                      ? "red"
+                      : "white"
                       }`,
                   }}
                   onClick={() => {
@@ -1103,8 +1104,8 @@ function Partida() {
                 (road[key] != null || permiso_construccion) && (
                   <button
                     className={`w-20 flex h-5 ${road[key] != null
-                        ? "carretera_partida"
-                        : "carretera_sin_comprar_partida"
+                      ? "carretera_partida"
+                      : "carretera_sin_comprar_partida"
                       }`}
                     style={{
                       position: "absolute",
@@ -1119,11 +1120,11 @@ function Partida() {
                         }px) rotate(90deg)`,
 
                       backgroundImage: `url( ${road[key] != null
-                          ? `${skins_jugadores_carreteras[
-                          usuario_to_color[road[key]]
-                          ]
-                          }`
-                          : `${skins_jugadores_carreteras[mi_indice]}`
+                        ? `${skins_jugadores_carreteras[
+                        usuario_to_color[road[key]]
+                        ]
+                        }`
+                        : `${skins_jugadores_carreteras[mi_indice]}`
                         } )`,
                     }}
                     onClick={() => {
@@ -1136,8 +1137,8 @@ function Partida() {
                 (road[key] != null || permiso_construccion) && (
                   <button
                     className={`w-20 flex h-5 ${road[key] != null
-                        ? "carretera_partida"
-                        : "carretera_sin_comprar_partida"
+                      ? "carretera_partida"
+                      : "carretera_sin_comprar_partida"
                       }`}
                     style={{
                       position: "absolute",
@@ -1152,11 +1153,11 @@ function Partida() {
                         }px) rotate(-30deg)`,
 
                       backgroundImage: `url( ${road[key] != null
-                          ? `${skins_jugadores_carreteras[
-                          usuario_to_color[road[key]]
-                          ]
-                          }`
-                          : `${skins_jugadores_carreteras[mi_indice]}`
+                        ? `${skins_jugadores_carreteras[
+                        usuario_to_color[road[key]]
+                        ]
+                        }`
+                        : `${skins_jugadores_carreteras[mi_indice]}`
                         } )`,
                     }}
                     onClick={() => {
@@ -1169,8 +1170,8 @@ function Partida() {
                 (road[key] != null || permiso_construccion) && (
                   <button
                     className={`w-20 flex h-5 ${road[key] != null
-                        ? "carretera_partida"
-                        : "carretera_sin_comprar_partida"
+                      ? "carretera_partida"
+                      : "carretera_sin_comprar_partida"
                       }`}
                     style={{
                       position: "absolute",
@@ -1185,11 +1186,11 @@ function Partida() {
                         }px) rotate(30deg)`,
 
                       backgroundImage: `url( ${road[key] != null
-                          ? `${skins_jugadores_carreteras[
-                          usuario_to_color[road[key]]
-                          ]
-                          }`
-                          : `${skins_jugadores_carreteras[mi_indice]}`
+                        ? `${skins_jugadores_carreteras[
+                        usuario_to_color[road[key]]
+                        ]
+                        }`
+                        : `${skins_jugadores_carreteras[mi_indice]}`
                         } )`,
                     }}
                     onClick={() => {
@@ -1216,8 +1217,8 @@ function Partida() {
                 (building[key][1] !== null || permiso_construccion) && (
                   <button
                     className={`w-10 flex h-10 ${building[key][1] != null
-                        ? "construccion_partida"
-                        : "construccion_sin_comprar_partida"
+                      ? "construccion_partida"
+                      : "construccion_sin_comprar_partida"
                       }`}
                     style={{
                       position: "absolute",
@@ -1232,13 +1233,13 @@ function Partida() {
                         }px)`,
                       // id | indiceColumna -> si id === 0[jugador ] -> id === 1 [tipo_construccion]
                       backgroundImage: `url( ${building[key][1] !== null
-                          ? `${building[key][1] === 1
-                            ? skins_jugadores_poblados[
-                            usuario_to_color[building[key][0]]
-                            ]
-                            : "ciudad"
-                          }`
-                          : `${skins_jugadores_poblados[mi_indice]}`
+                        ? `${building[key][1] === 1
+                          ? skins_jugadores_poblados[
+                          usuario_to_color[building[key][0]]
+                          ]
+                          : "ciudad"
+                        }`
+                        : `${skins_jugadores_poblados[mi_indice]}`
                         } )`,
                     }}
                     onClick={() => {
@@ -1309,8 +1310,8 @@ function Partida() {
         <button
           style={{
             backgroundImage: `url(${turno == mi_id && aldeas_iniciales_colocadas
-                ? "http://localhost:3000/4x1/4x1_on.png"
-                : "http://localhost:3000/4x1/4x1_off.png"
+              ? "http://localhost:3000/4x1/4x1_on.png"
+              : "http://localhost:3000/4x1/4x1_off.png"
               })`,
             backgroundSize: "cover",
             width: "170px",
@@ -1326,8 +1327,7 @@ function Partida() {
               // Log
               console.log("Estoy realizando un intercambio 4x1");
             }
-            else
-            {
+            else {
               global_info.realizando_intercambio = false;
               global_info.tipo_intercambio = "";
               global_info.fase_intercambio = 0;
@@ -1362,8 +1362,8 @@ function Partida() {
       <button
         style={{
           backgroundImage: `url(${turno == mi_id && aldeas_iniciales_colocadas
-              ? "http://localhost:3000/skips/skip_on.png"
-              : "http://localhost:3000/skips/skip_off.png"
+            ? "http://localhost:3000/skips/skip_on.png"
+            : "http://localhost:3000/skips/skip_off.png"
             })`,
           backgroundSize: "cover",
           position: "absolute",
