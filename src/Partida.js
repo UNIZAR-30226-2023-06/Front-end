@@ -27,52 +27,52 @@ function Partida() {
 
   const [mi_id] = useState(json_token.id);
   const [mi_indice, setMi_indice] = useState(0);
-  
+
   const [imgs_oponentes, setImgs_oponentes] = useState([]);
   const [puntos_victoria_oponentes, setPuntos_victoria_oponentes] = useState(
     []
-    );
-    const [bono_caballeros_oponentes, setBono_caballeros_oponentes] = useState(
-      []
-      );
-      const [bono_carreteras_oponentes, setBono_carreteras_oponentes] = useState(
-        []
-        );
-        
-        const [estado_jugador, setEstado_jugador] = useState(null);
-        
-        // Aquí va el id del jugador que tiene el turno
-        const [turno, setTurno] = useState(0);
+  );
+  const [bono_caballeros_oponentes, setBono_caballeros_oponentes] = useState(
+    []
+  );
+  const [bono_carreteras_oponentes, setBono_carreteras_oponentes] = useState(
+    []
+  );
 
-        const [codigo_partida, setCodigo_partida] = useState(0);
+  const [estado_jugador, setEstado_jugador] = useState(null);
 
-        // Recordatorio de fases:
-        // 0: Obtención de recursos
-        // 1: Uso de cartas de desarrollo
-        // 2: Negociación
-        // 3: Construcción
-        const [tiempo, setTiempo] = useState(0);
-        const [tiempo_maximo, setTiempo_maximo] = useState(30);
+  // Aquí va el id del jugador que tiene el turno
+  const [turno, setTurno] = useState(0);
+
+  const [codigo_partida, setCodigo_partida] = useState(0);
+
+  // Recordatorio de fases:
+  // 0: Obtención de recursos
+  // 1: Uso de cartas de desarrollo
+  // 2: Negociación
+  // 3: Construcción
+  const [tiempo, setTiempo] = useState(0);
+  const [tiempo_maximo, setTiempo_maximo] = useState(30);
   // pop up de la fase de tirada
   const [ShowPopupFaseTirada, setShowPopupFaseTirada] = useState(false);
-  
+
   const [jugadores, setJugadores] = useState([]);
   const [max_jugadores, setMax_jugadores] = useState(0);
-  
+
   const [board, setBoard] = useState({});
-  
+
   const [partida_empezada, setPartida_empezada] = useState(false);
   const [fase_actual, setFase_actual] = useState("");
-  
+
   const [skins_jugadores_poblados, setSkins_jugadores_poblados] = useState([]);
   const [skins_jugadores_carreteras, setSkins_jugadores_carreteras] = useState([]);
   const [skins_jugadores_ciudades, setSkins_jugadores_ciudades] = useState([]);
-  
+
   const [colores_oponentes, setColores_oponentes] = useState([]);
   const [mi_color, setMi_color] = useState("");
-  
+
   const [aldeas_iniciales_colocadas, setAldeas_iniciales_colocadas] =
-  useState(false);
+    useState(false);
   const [puedo_colocar_aldea, setPuedo_colocar_aldea] = useState(false);
   const [puedo_colocar_carretera, setPuedo_colocar_carretera] = useState(false);
   const [aldea_que_puedo_construir, setAldea_que_puedo_construir] = useState(1);
@@ -434,10 +434,6 @@ function Partida() {
     if (fase_actual !== fase || nuevo_turno === mi_id) {
       setFase_actual(fase);
 
-      console.log("------ se nos notifica que hemos cambiado de fase a ", fase, "---------");
-      // Si la fase es "RESOURCE_PRODUCTION" y es mi turno, tiro los dados
-
-
       if (fase === "RESOURCE_PRODUCTION") {
         // Si es mi turno, tiro los dados, si no, espero a que el
         // backend me diga qué ha salido
@@ -469,35 +465,6 @@ function Partida() {
     }
   }
 
-  function construir_poblado(coordenada) {
-
-    // Aviso al backend de que ya he colocado lo mío
-    fetch(
-      `${process.env.REACT_APP_URL_BACKEND}/build-village?node=${coordenada}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          Authorization: `Bearer ${Token}`,
-        },
-      }
-    ).then((res) => {
-      res.json().then((data) => {
-        console.log("Intento de colocar aldea:", data);
-      });
-    }).catch((error) => {
-      console.error("Error:", error);
-    });
-
-    if (!aldeas_iniciales_colocadas) {
-      setUltima_aldea_construida(ultima_aldea_construida + 1);
-
-      setPuedo_colocar_aldea(false);
-      setPuedo_colocar_carretera(true);
-    }
-
-  }
-
   function avanzar_fase() {
     // Hago la llamada al backend para que avance la fase
     fetch(
@@ -519,29 +486,109 @@ function Partida() {
     });
   }
 
-  function construir_carretera(coordenada) {
-    // Aviso al backend de que ya he colocado la carretera
-    fetch(
-      `${process.env.REACT_APP_URL_BACKEND}/build-road?edge=${coordenada}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          Authorization: `Bearer ${Token}`,
-        },
-      }
-    ).then((res) => {
-      res.json().then((data) => {
-        console.log("Intento de colocar carretera:", data);
-      });
-    }).catch((error) => {
-      console.error("Error:", error);
-    });
+  function construir_poblado(coordenada) {
 
     if (!aldeas_iniciales_colocadas) {
+      // Aviso al backend de que ya he colocado lo mío
+      fetch(
+        `${process.env.REACT_APP_URL_BACKEND}/build-village?node=${coordenada}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${Token}`,
+          },
+        }
+      ).then((res) => {
+        res.json().then((data) => {
+          console.log("Intento de colocar aldea:", data);
+        });
+      }).catch((error) => {
+        console.error("Error:", error);
+      });
+
+      setUltima_aldea_construida(ultima_aldea_construida + 1);
+
+      setPuedo_colocar_aldea(false);
+      setPuedo_colocar_carretera(true);
+    }
+
+    else {
+      // Aviso al backend de que compro y coloco una aldea con una petición get
+
+      // Ejemplo de url:
+      // http://localhost:8000/game_phases/buy_and_build_village?lobby_id=45&coord=45
+
+      fetch(
+        `${process.env.REACT_APP_URL_BACKEND}/game_phases/buy_and_build_village?lobby_id=${codigo_partida}&coord=${coordenada}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${Token}`,
+          },
+        }
+      ).then((res) => {
+        res.json().then((data) => {
+          console.log("Intento de colocar aldea:", data);
+        });
+      }).catch((error) => {
+        console.error("Error:", error);
+      });
+    }
+
+  }
+
+  function construir_carretera(coordenada) {
+    if (!aldeas_iniciales_colocadas)
+    {
+      fetch(
+        `${process.env.REACT_APP_URL_BACKEND}/build-road?edge=${coordenada}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${Token}`,
+          },
+        }
+      ).then((res) => {
+        res.json().then((data) => {
+          console.log("Intento de colocar carretera:", data);
+        });
+      }).catch((error) => {
+        console.error("Error:", error);
+      });
+
       setPuedo_colocar_carretera(false)
 
       avanzar_fase();
+    }
+
+    else
+    {
+      // Aviso al backend de que compro y coloco una carretera con una petición get
+
+      // Ejemplo de url:
+      // http://localhost:8000/game_phases/buy_and_build_road?lobby_id=45&coord=45
+
+      fetch(
+        `${process.env.REACT_APP_URL_BACKEND}/game_phases/buy_and_build_road?lobby_id=${codigo_partida}&coord=${coordenada}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${Token}`,
+          },
+        }
+      ).then((res) => {
+        res.json().then((data) => {
+          console.log("Intento de colocar carretera:", data);
+        });
+      }
+      ).catch((error) => {
+        console.error("Error:", error);
+      }
+      );
     }
   }
 
@@ -1190,22 +1237,7 @@ function Partida() {
           left: "50%",
         }}
       >
-        {"Max jugadores: " + max_jugadores}
-        {"---"}
-        {"Tiempo: " + tiempo}
-        {"---"}
-        {"Turno: " + turno}
-        {"---"}
         {"Fase: " + fase_actual}
-        {"---"}
-        {"Permiso para construir carreteras: " + puedo_colocar_carretera}
-        {"---"}
-        {"Permiso para construir aldeas: " + puedo_colocar_aldea}
-        {"---"}
-        {"Ultima aldea construida: " + ultima_aldea_construida}
-        {"---"}
-        {"Aldea que puedo construir: " + aldea_que_puedo_construir}
-        {"---"}
       </h1>
 
       <h1
