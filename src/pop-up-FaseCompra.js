@@ -54,6 +54,7 @@ const PopUpFaseCompra = (props) => {
     )
       .then((res) => {
         res.json().then((data) => {
+          console.log("----Informacion del usuario----");
           console.log(data);
           setWheat(data.hand.wheat);
           setWood(data.hand.wood);
@@ -73,7 +74,6 @@ const PopUpFaseCompra = (props) => {
   };
 
   function ComprarCartaDesarrolllo() {
-    console.log(props.lobby);
     fetch(
       `${process.env.REACT_APP_URL_BACKEND}/game_phases/buy_development_card?lobby_id=${props.lobby}`,
       {
@@ -87,7 +87,7 @@ const PopUpFaseCompra = (props) => {
       .then((res) => {
         res.json().then((data) => {
           // Si el código es correcto, mostrar un mensaje de éxito en el toast
-          set_detalle(data.id);
+          console.log(data);
           if (
             Detalle ===
             "No se pueden construir edificios en esta fase del turno"

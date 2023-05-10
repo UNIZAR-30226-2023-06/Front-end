@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 
 const PopUpFaseTirada = (props) => {
   const [showPopup, setShowPopup] = useState(true);
-  const [shouldShowPopup, setShouldShowPopup] = useState(false);
   const [showDiceImage, setShowDiceImage] = useState(true);
   const [showExitButton, setShowExitButton] = useState(true);
   const [dado1, setDado1] = useState(null);
@@ -14,14 +13,12 @@ const PopUpFaseTirada = (props) => {
   const [piedra, setPiedra] = useState(0);
 
   const handleClose = () => {
-    setShouldShowPopup(false);
-    // props.onClose();
+    setShowPopup(false);
   };
 
-  const handleOpen = () => {
-    setShouldShowPopup(true);
-    setShowPopup(true);
-  };
+  // const handleOpen = () => {
+  //   setShowPopup(true);
+  // };
 
   const Dados = [
     "http://localhost:3000/dados/dado_1.png",
