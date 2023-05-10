@@ -2,10 +2,16 @@ import React, { useState, useEffect } from "react";
 
 const PopUpFaseTirada = (props) => {
   const [showPopup, setShowPopup] = useState(true);
+  const [shouldShowPopup, setShouldShowPopup] = useState(false);
   const [showDiceImage, setShowDiceImage] = useState(true);
   const [showExitButton, setShowExitButton] = useState(true);
   const [dado1, setDado1] = useState(null);
   const [dado2, setDado2] = useState(null);
+  const [oveja, setOveja] = useState(0);
+  const [madera] = useState(0);
+  const [trigo, setTrigo] = useState(0);
+  const [arcilla, setArcilla] = useState(0);
+  const [piedra, setPiedra] = useState(0);
 
   const handleClose = () => {
     setShowPopup(false);
@@ -66,8 +72,8 @@ const PopUpFaseTirada = (props) => {
       .then((res) => {
         res.json().then((data) => {
           console.log(data);
-          setDado1(data.die1-1);
-          setDado2(data.die2-1);
+          setDado1(data.die1 - 1);
+          setDado2(data.die2 - 1);
         });
       })
       .catch((error) => {
@@ -145,13 +151,150 @@ const PopUpFaseTirada = (props) => {
                     Tirar Dados
                   </button>
                 ) : (
-                  <button
-                    onClick={handleClose}
-                    class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-4 px-6 border border-gray-400 rounded shadow ml-2"
-                    style={{ fontSize: "30px", marginLeft: "20px" }}
-                  >
-                    Salir
-                  </button>
+                  // (
+                  //   <button
+                  //     onClick={handleClose}
+                  //     class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-4 px-6 border border-gray-400 rounded shadow ml-2"
+                  //     style={{ fontSize: "30px", marginLeft: "20px" }}
+                  //   >
+                  //     Salir
+                  //   </button>
+                  // )
+                  <>
+                    <h1
+                      className="text-4xl"
+                      style={{
+                        color: "white",
+                        fontWeight: "700",
+                        marginTop: "50px",
+                      }}
+                    >
+                      RECURSOS RECIBIDOS
+                    </h1>
+                    <div className="flex flex-row">
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          marginTop: "20px",
+                        }}
+                      >
+                        <img
+                          src="http://localhost:3000/oveja.png"
+                          alt="Imagen 1"
+                          style={{ height: "50px", width: "50px" }}
+                        />
+                        <h1
+                          className="text-3xl mt-2"
+                          style={{
+                            color: "white",
+                            fontWeight: "700",
+                            marginLeft: "20px",
+                            marginRight: "20px",
+                          }}
+                        >
+                          X2
+                        </h1>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          marginTop: "20px",
+                        }}
+                      >
+                        <img
+                          src="http://localhost:3000/troncos.png"
+                          alt="Imagen 1"
+                          style={{ height: "50px", width: "50px" }}
+                        />
+                        <h1
+                          className="text-3xl mt-2"
+                          style={{
+                            color: "white",
+                            fontWeight: "700",
+                            marginLeft: "20px",
+                            marginRight: "20px",
+                          }}
+                        >
+                          X2
+                        </h1>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          marginTop: "20px",
+                        }}
+                      >
+                        <img
+                          src="http://localhost:3000/cebada.png"
+                          alt="Imagen 1"
+                          style={{ height: "50px", width: "50px" }}
+                        />
+                        <h1
+                          className="text-3xl mt-2"
+                          style={{
+                            color: "white",
+                            fontWeight: "700",
+                            marginLeft: "20px",
+                          }}
+                        >
+                          X2
+                        </h1>
+                      </div>
+                    </div>
+                    <div className="flex flex-row justify-center">
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          marginTop: "20px",
+                        }}
+                      >
+                        <img
+                          src="http://localhost:3000/arcilla.png"
+                          alt="Imagen 1"
+                          style={{ height: "50px", width: "50px" }}
+                        />
+                        <h1
+                          className="text-3xl mt-2"
+                          style={{
+                            color: "white",
+                            fontWeight: "700",
+                            marginLeft: "20px",
+                            marginRight: "20px",
+                          }}
+                        >
+                          X2
+                        </h1>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          marginTop: "20px",
+                        }}
+                      >
+                        <img
+                          src="http://localhost:3000/piedras.png"
+                          alt="Imagen 1"
+                          style={{ height: "50px", width: "50px" }}
+                        />
+                        <h1
+                          className="text-3xl mt-2"
+                          style={{
+                            color: "white",
+                            fontWeight: "700",
+                            marginLeft: "20px",
+                            marginRight: "20px",
+                          }}
+                        >
+                          X2
+                        </h1>
+                      </div>
+                    </div>
+                  </>
                 )}
               </div>
             </div>
