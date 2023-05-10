@@ -27,54 +27,52 @@ function Partida() {
 
   const [mi_id] = useState(json_token.id);
   const [mi_indice, setMi_indice] = useState(0);
-  const [mi_color, setMi_color] = useState("");
-
+  
   const [imgs_oponentes, setImgs_oponentes] = useState([]);
   const [puntos_victoria_oponentes, setPuntos_victoria_oponentes] = useState(
     []
-  );
-  const [bono_caballeros_oponentes, setBono_caballeros_oponentes] = useState(
-    []
-  );
-  const [bono_carreteras_oponentes, setBono_carreteras_oponentes] = useState(
-    []
-  );
+    );
+    const [bono_caballeros_oponentes, setBono_caballeros_oponentes] = useState(
+      []
+      );
+      const [bono_carreteras_oponentes, setBono_carreteras_oponentes] = useState(
+        []
+        );
+        
+        const [estado_jugador, setEstado_jugador] = useState(null);
+        
+        // Aquí va el id del jugador que tiene el turno
+        const [turno, setTurno] = useState(0);
 
-  const [estado_jugador, setEstado_jugador] = useState(null);
+        const [codigo_partida, setCodigo_partida] = useState(0);
 
-  // Aquí va el id del jugador que tiene el turno
-  const [turno, setTurno] = useState(0);
-
-  const [codigo_partida, setCodigo_partida] = useState(0);
-
-  // Recordatorio de fases:
-  // 0: Obtención de recursos
-  // 1: Uso de cartas de desarrollo
-  // 2: Negociación
-  // 3: Construcción
-  const [tiempo, setTiempo] = useState(0);
-  const [tiempo_maximo, setTiempo_maximo] = useState(30);
+        // Recordatorio de fases:
+        // 0: Obtención de recursos
+        // 1: Uso de cartas de desarrollo
+        // 2: Negociación
+        // 3: Construcción
+        const [tiempo, setTiempo] = useState(0);
+        const [tiempo_maximo, setTiempo_maximo] = useState(30);
   // pop up de la fase de tirada
   const [ShowPopupFaseTirada, setShowPopupFaseTirada] = useState(false);
-
+  
   const [jugadores, setJugadores] = useState([]);
   const [max_jugadores, setMax_jugadores] = useState(0);
-
+  
   const [board, setBoard] = useState({});
-
+  
   const [partida_empezada, setPartida_empezada] = useState(false);
   const [fase_actual, setFase_actual] = useState("");
-
+  
   const [skins_jugadores_poblados, setSkins_jugadores_poblados] = useState([]);
-  const [skins_jugadores_carreteras, setSkins_jugadores_carreteras] = useState(
-    []
-  );
+  const [skins_jugadores_carreteras, setSkins_jugadores_carreteras] = useState([]);
   const [skins_jugadores_ciudades, setSkins_jugadores_ciudades] = useState([]);
-  const [colores_jugadores, setColores_jugadores] = useState([]);
+  
   const [colores_oponentes, setColores_oponentes] = useState([]);
-
+  const [mi_color, setMi_color] = useState("");
+  
   const [aldeas_iniciales_colocadas, setAldeas_iniciales_colocadas] =
-    useState(false);
+  useState(false);
   const [puedo_colocar_aldea, setPuedo_colocar_aldea] = useState(false);
   const [puedo_colocar_carretera, setPuedo_colocar_carretera] = useState(false);
   const [aldea_que_puedo_construir, setAldea_que_puedo_construir] = useState(1);
@@ -219,6 +217,8 @@ function Partida() {
             detectar_cambio_fase(data.turn_phase, data.player_turn);
             setTurno(data.player_turn);
 
+            actualizar_dados(data.die_1, data.die_2);
+
             // Si el turno coincide con mi id y tengo ambos permisos a
             // false, activo el permiso de construir aldeas
             if (
@@ -311,7 +311,6 @@ function Partida() {
             let array_skins_jugadores_poblados = [null, null, null, null];
             let array_skins_jugadores_carreteras = [null, null, null, null];
             let array_skins_jugadores_ciudades = [null, null, null, null];
-            let array_colores_jugadores = [];
             let nuevo_usuario_to_color = [null, null, null, null, null];
 
             // Obtenemos de todos los jugadores sus skins y sus colores
@@ -323,7 +322,6 @@ function Partida() {
                 jugadores[i].selected_pieces_skin +
                 ".png";
               array_skins_jugadores_poblados[i] = url_skin_poblado;
-              // array_colores_jugadores = [...array_colores_jugadores, jugadores[i].color];
 
               const url_skin_carretera =
                 "http://localhost:3000/carreteras/" +
@@ -354,7 +352,6 @@ function Partida() {
             setSkins_jugadores_poblados(array_skins_jugadores_poblados);
             setSkins_jugadores_carreteras(array_skins_jugadores_carreteras);
             setSkins_jugadores_ciudades(array_skins_jugadores_ciudades);
-            setColores_jugadores(array_colores_jugadores);
             setUsuario_to_color(nuevo_usuario_to_color);
           })
           .catch((error) => {
@@ -445,9 +442,6 @@ function Partida() {
         // Si es mi turno, tiro los dados, si no, espero a que el
         // backend me diga qué ha salido
 
-        console.log(
-          "He sabido ver que es la fase RESOURCE_PRODUCTION GENIOOOOOOOOOO"
-        );
         console.log("nuevo turno: ", nuevo_turno);
         console.log("mi id: ", mi_id);
         if (nuevo_turno === mi_id) {
@@ -572,17 +566,15 @@ function Partida() {
     });
   }
 
-  function tirar_dados() {
-    // Obtengo la tira de dados del backend
-    const numeroAleatorio = Math.floor(Math.random() * 6) + 1;
-    const nuevaImagen = `http://localhost:3000/dados/dado_${numeroAleatorio}.png`;
+  function actualizar_dados(die1, die2) {
 
+    // Actualizo las imagenes de los dadso con los números pasados por parámetro
+    const nuevaImagen = `http://localhost:3000/dados/dado_${die1}.png`;
     setImg_dado_1(nuevaImagen);
 
-    const numeroAleatorio2 = Math.floor(Math.random() * 6) + 1;
-    const nuevaImagen2 = `http://localhost:3000/dados/dado_${numeroAleatorio2}.png`;
-
+    const nuevaImagen2 = `http://localhost:3000/dados/dado_${die2}.png`;
     setImg_dado_2(nuevaImagen2);
+
   }
 
   function color_to_hex(color) {
