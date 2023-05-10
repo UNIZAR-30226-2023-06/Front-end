@@ -2,7 +2,6 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ThemeContext } from './ThemeContext';
 
 import Tabs from "./Components/TabComponent/Tabs";
 import PopUpFaseTirada from "./pop-up-Fase-tirada";
@@ -84,7 +83,7 @@ function Partida() {
   const [img_dado_1, setImg_dado_1] = useState(
     "http://localhost:3000/dados/dado_1.png"
   );
-  
+
   const [img_dado_2, setImg_dado_2] = useState(
     "http://localhost:3000/dados/dado_2.png"
   );
@@ -236,7 +235,7 @@ function Partida() {
               data.player_turn !== mi_id
             ) {
               global_info.realizando_intercambio = false;
-              global_info.tipo_intercambio = "";
+              global_info.cantidad_ofrecida = 0;
               global_info.fase_intercambio = 0;
             }
 
@@ -1322,14 +1321,14 @@ function Partida() {
             // intercambio y el tipo de intercambio
             if (turno == mi_id && fase_actual === "TRADING") {
               global_info.realizando_intercambio = true;
-              global_info.tipo_intercambio = "4x1";
+              global_info.cantidad_ofrecida = 4;
 
               // Log
               console.log("Estoy realizando un intercambio 4x1");
             }
             else {
               global_info.realizando_intercambio = false;
-              global_info.tipo_intercambio = "";
+              global_info.cantidad_ofrecida = 0;
               global_info.fase_intercambio = 0;
             }
           }}
@@ -1403,7 +1402,7 @@ function Partida() {
 export default Partida;
 export const global_info = {
   realizando_intercambio: false,
-  tipo_intercambio: "",
+  cantidad_ofrecida: 0,
   fase_intercambio: 0,
   recurso_ofrecido: "",
 };

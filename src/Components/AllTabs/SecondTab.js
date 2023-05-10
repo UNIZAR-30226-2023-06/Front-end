@@ -15,12 +15,12 @@ const SecondTab = (params) => {
   /******************************** CONSTANTES ********************************/
   /****************************************************************************/
 
-  function realizar_intercambio(recurso_ofrecido, recuro_pedido) {
+  function realizar_intercambio(recurso_ofrecido, recuro_pedido, cantidad_ofrecida) {
 
     // Ejemplo url: 
     // http://localhost:8000/game_phases/trade_with_bank?lobby_id=1234&resource_type=1324&amount=1234&requested_type=1324
 
-    const url = "http://localhost:8000/game_phases/trade_with_bank?lobby_id=" + params.jugador_datos.codigo_partida + "&resource_type=" + recurso_ofrecido + "&amount=4&requested_type=" + recuro_pedido;
+    const url = "http://localhost:8000/game_phases/trade_with_bank?lobby_id=" + params.jugador_datos.codigo_partida + "&resource_type=" + recurso_ofrecido + "&amount=" + cantidad_ofrecida + "&requested_type=" + recuro_pedido;
 
     fetch(
       url,
@@ -100,7 +100,7 @@ const SecondTab = (params) => {
               global_info.recurso_ofrecido = "WOOD";
             }
             else {
-              realizar_intercambio(global_info.recurso_ofrecido, "WOOD");
+              realizar_intercambio(global_info.recurso_ofrecido, "WOOD", global_info.cantidad_ofrecida);
               
               global_info.fase_intercambio = 0;
               global_info.realizando_intercambio = false;
