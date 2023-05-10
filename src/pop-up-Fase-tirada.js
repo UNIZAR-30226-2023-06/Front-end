@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 const PopUpFaseTirada = (props) => {
   const [showPopup, setShowPopup] = useState(true);
+  const [shouldShowPopup, setShouldShowPopup] = useState(false);
   const [showDiceImage, setShowDiceImage] = useState(true);
   const [showExitButton, setShowExitButton] = useState(true);
   const [dado1, setDado1] = useState(null);
