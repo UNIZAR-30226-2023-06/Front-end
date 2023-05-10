@@ -372,6 +372,7 @@ export default function Prueba() {
       <div>
         <PopUpFaseTirada onClose={() => setShowPopup(false)}>
         </PopUpFaseTirada>
+        <pop-up-Recursos-recibidos onClose={() => setShowPopup(false)}/>
       </div>
     </div>
   );

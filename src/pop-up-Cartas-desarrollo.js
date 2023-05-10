@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
-import AliceCarousel from "react-alice-carousel";
-import "react-alice-carousel/lib/alice-carousel.css";
-import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
+import { toast } from "react-hot-toast";
 
 import { useNavigate } from "react-router-dom";
 
 // 1-- Importamos useCookies y jwt_decode
 import { useCookies } from "react-cookie";
-import jwt_decode from "jwt-decode";
 
 const PopUpCartasDesarrollo = (props) => {
   const [showPopup, setShowPopup] = useState(false);
   const [shouldShowPopup, setShouldShowPopup] = useState(false);
+  const [numeros, setNumeros] = useState([]); // Estado para almacenar los números
+  const [selectedCardIndex, setSelectedCardIndex] = useState(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showResourceSelection, setShowResourceSelection] = useState(false);
 
   const handleClose = () => {
     setShouldShowPopup(false);
@@ -20,8 +21,40 @@ const PopUpCartasDesarrollo = (props) => {
   };
 
   const handleOpen = () => {
+    GetNumCartas();
     setShouldShowPopup(true);
     setShowPopup(true);
+  };
+
+  const popUp2 = (index) => {
+    setSelectedCardIndex(index);
+    setShowConfirmation(true);
+  };
+
+  const handleConfirm = (index) => {
+    console.log(numeros);
+    console.log(selectedCardIndex);
+    if (numeros[selectedCardIndex] === 0) {
+      toast.error("No tienes los recursos suficientes");
+      setShowConfirmation(false);
+    } else {
+      if (selectedCardIndex === 6) {
+        console.log("hola");
+        setShowResourceSelection(true);
+        setShowConfirmation(false);
+      } else {
+        // Lógica adicional si el índice no es 6
+      }
+    }
+  };
+
+  const handleCancel = () => {
+    // Lógica para cuando se selecciona "No"
+    setShowConfirmation(false);
+  };
+
+  const handleResourceSelectionClose = () => {
+    setShowResourceSelection(false);
   };
 
   const handleBackgroundClick = (event) => {
@@ -38,266 +71,110 @@ const PopUpCartasDesarrollo = (props) => {
     }
   }, [shouldShowPopup]);
 
-  // Dinero del jugador
-  const [dinero, set_dinero] = React.useState(null);
-
-  const [fotos_perfil_compradas, set_fotos_perfil_compradas] = React.useState(
-    []
-  );
-
-  const fotos_perfil = [
-    "skin1",
-    "skin2",
-    "skin3",
-    "skin4",
-    "skin5",
-    "skin6",
-    "skin7",
-    "skin8",
-    "skin9",
-    "skin10",
-    "skin11",
-    "skin12",
-    "skin13",
-    "skin14",
-  ];
-
   // 2-- Creamos la estructura de las cookies
   const [cookies] = useCookies(["token"]);
 
   // 3-- Obtenemos el token de las cookies
   const Token = cookies.token;
 
-  // 4-- Obtenemos la información del token
-  const json_token = jwt_decode(Token);
-
-  // Función para acceder a la historia de navegación
-  const navigate = useNavigate();
-
-  // Función para volver a la página anterior
-  const handleBack = () => {
-    navigate(-1);
-  };
-
-  const handleDragStart = (e) => e.preventDefault();
-
-  const precio_foto_perfil = "10 $";
-
-  const precio_foto_perfil_int = 10;
-
-  const responsive = {
-    0: { items: 1 },
-    1: { items: 2 },
-    2: { items: 3 },
-    3: { items: 4 },
-    4: { items: 5 },
-    5: { items: 6 },
-  };
-
-  const [compra_realizada, set_compra_realizada] = React.useState(false);
-
-  ////////////////////////////////////////////////////////////////////////////
-  /////////////////////// FETCHS INICIALES NECESARIOS ////////////////////////
-  ////////////////////////////////////////////////////////////////////////////
-
-  useEffect(() => {
-    // 5-- Hacemos el fetch para obtener la información del usuario
+  function GetNumCartas() {
+    console.log(props.lobby);
     fetch(
-      `${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(
-        json_token.id
-      )}`,
+      `${process.env.REACT_APP_URL_BACKEND}/game_phases/get_player_state?lobby_id=${props.lobby}`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          Authorization: `Bearer ${Token}`,
+          Authorization: `Bearer ${props.token}`,
         },
       }
-    ).then((res) => {
-      res.json().then((data) => {
-        set_dinero(data.coins);
+    )
+      .then((res) => {
+        res.json().then((data) => {
+          console.log("----Informacion del usuario----");
+          console.log(data);
+          const newNumeros = [
+            data.hand.dev_cards.library,
+            data.hand.dev_cards.market,
+            data.hand.dev_cards.university,
+            data.hand.dev_cards.town_hall,
+            data.hand.dev_cards.church,
+            data.hand.dev_cards.knight,
+            data.hand.dev_cards.monopoly_progress,
+            data.hand.dev_cards.road_progress,
+            data.hand.dev_cards.invention_progress,
+          ];
+          setNumeros(newNumeros); // Actualizar el estado con los números obtenidos
+
+          console.log(numeros);
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
       });
-    });
-
-    // Fetch para obtener qué skins tiene compradas el usuario
-    fetch(`${process.env.REACT_APP_URL_BACKEND}/list-piece-skins`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Bearer ${Token}`,
-      },
-    }).then((res) => {
-      res.json().then((data) => {
-        console.log("Skins compradas:");
-        console.log(data);
-        set_fotos_perfil_compradas(data.piece_skins);
-      });
-    });
-  }, []);
-
-  ////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////// FUNCIONES /////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////
-
-  function comprar(precio, nombre_producto) {
-    const url_1 = `${process.env.REACT_APP_URL_BACKEND}/buy_piece_skin?piece_skin_name=${nombre_producto}`;
-
-    fetch(url_1, {
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Bearer ${Token}`,
-      },
-    }).then((res) => {
-      res.json().then((data) => {
-        console.log("Respuesta del servidor:");
-        console.log(data);
-
-        if (data.detail === "Piece skin bought successfully") {
-          set_dinero(dinero - precio);
-
-          set_fotos_perfil_compradas([
-            ...fotos_perfil_compradas,
-            nombre_producto,
-          ]);
-        }
-      });
-    });
   }
 
-  ////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////// COMPONENTES ////////////////////////////////
-  ////////////////////////////////////////////////////////////////////////////
+  const cartas = [
+    {
+      src: "http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-1.png",
+      alt: "Imagen 1",
+    },
+    {
+      src: "http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-2.png",
+      alt: "Imagen 2",
+    },
+    {
+      src: "http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-3.png",
+      alt: "Imagen 3",
+    },
+    {
+      src: "http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-4.png",
+      alt: "Imagen 4",
+    },
+    {
+      src: "http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-5.png",
+      alt: "Imagen 5",
+    },
+    {
+      src: "http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-6.png",
+      alt: "Imagen 6",
+    },
+    {
+      src: "http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-7.png",
+      alt: "Imagen 7",
+    },
+    {
+      src: "http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-8.png",
+      alt: "Imagen 8",
+    },
+    {
+      src: "http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-9.png",
+      alt: "Imagen 9",
+    },
+  ];
 
-  // CARRUSEL DE FOTOS DE PERFIL
-  const items_fotos_perfil = fotos_perfil.map((foto, i) => (
-    <div className="slide_tienda">
-      {
-        <Popup
-          trigger={
-            fotos_perfil_compradas.includes("skin" + (i + 1)) ? (
-              <div>
-                <img
-                  src={
-                    "http://localhost:3000/fotos_perfil/skin" + (i + 1) + ".png"
-                  }
-                  onDragStart={handleDragStart}
-                  role="presentation"
-                  className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
-                  style={{
-                    position: "relative",
-                    zIndex: 1,
-                  }}
-                />
-
-                <img
-                  src="http://localhost:3000/fotos_perfil/comprado.png"
-                  onDragStart={handleDragStart}
-                  role="presentation"
-                  className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 19,
-                    zIndex: 9999,
-                  }}
-                />
-              </div>
-            ) : (
-              <img
-                src={
-                  "http://localhost:3000/fotos_perfil/skin" + (i + 1) + ".png"
-                }
-                onDragStart={handleDragStart}
-                role="presentation"
-                className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
-              />
-            )
-          }
-          modal
-          nested
-          arrow={false}
-          contentStyle={{
-            width: "30%",
-            height: "40%",
-
-            border: "5px solid black",
-            borderRadius: "10px",
-          }}
-        >
-          {(close) => (
-            <div className="modal_tienda">
-              {/* Botón para cerrar el pop-up */}
-              <button className="close" onClick={close}>
-                &times;
-              </button>
-              {/* Imagen del objeto */}
-              <img
-                src={
-                  "http://localhost:3000/fotos_perfil/skin" + (i + 1) + ".png"
-                }
-                onDragStart={handleDragStart}
-                role="presentation"
-                className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
-              />
-              {/* Texto de "¿Estás seguro?" en el centro */}
-              <div className="text-center">
-                <br />
-                <br />
-                <div>
-                  {fotos_perfil_compradas.includes("skin" + (i + 1)) ? (
-                    <img
-                      src={"http://localhost:3000/green_check.png"}
-                      alt="Icono"
-                      className="icono_tienda"
-                    />
-                  ) : (
-                    <div>
-                      {dinero >= precio_foto_perfil_int ? (
-                        <p className="text-2xl font-bold">
-                          ¿Deseas usar esta carta?
-                        </p>
-                      ) : (
-                        <img
-                          src={"http://localhost:3000/red_cross.png"}
-                          alt="Icono"
-                          className="icono_tienda"
-                        />
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-              {/* Boton de comprar */}
-              <br /> <br />
-              <div className="flex justify-center">
-                {fotos_perfil_compradas.includes("skin" + (i + 1)) ? (
-                  // Texto verde de "compra realizada", en
-                  // tamaño de letra mediano y centrado
-                  <p className="compra_realizada_tienda">Compra realizada</p>
-                ) : (
-                  <div>
-                    <button
-                      className="boton_comprar_tienda"
-                      onClick={() => {
-                        comprar(10, "skin" + (i + 1));
-                        set_compra_realizada(true);
-                      }}
-                    >
-                      Usar carta
-                      <br />
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-        </Popup>
-      }
-    </div>
-  ));
-
+  const recursos = [
+    {
+      src: "http://localhost:3000/recursos/arcilla.png",
+      text: "arcilla",
+    },
+    {
+      src: "http://localhost:3000/recursos/madera.png",
+      text: "madera",
+    },
+    {
+      src: "http://localhost:3000/recursos/ovejas.png",
+      text: "ovejas",
+    },
+    {
+      src: "http://localhost:3000/recursos/roca.png",
+      text: "roca",
+    },
+    {
+      src: "http://localhost:3000/recursos/trigo.png",
+      text: "trigo",
+    },
+  ];
 
   return (
     <>
@@ -307,7 +184,7 @@ const PopUpCartasDesarrollo = (props) => {
           width: "150px",
           height: "150px",
           left: "1650px",
-          top:"300px",
+          top: "300px",
           cursor: "pointer",
         }}
         onClick={handleOpen}
@@ -360,78 +237,98 @@ const PopUpCartasDesarrollo = (props) => {
               style={{ width: "50px", height: "50px" }}
               onClick={handleClose}
             />
-<div style={{ display: "flex", justifyContent: "center" }}>
-  <div style={{ display: "flex", flexWrap: "wrap", width: "500px" }}>
-    {[1, 2, 3, 4, 5].map((number) => (
-      <div
-        key={number}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          margin: "10px",
-        }}
-      >
-        <img
-          src={`http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-${number}.png`}
-          alt={`Imagen ${number}`}
-          style={{ width: "150px", height: "190px", borderRadius: "20px" }}
+            <div className="grid grid-cols-5 gap-4">
+              {/* Cartas arriba */}
+              {cartas.slice(0, 5).map((carta, index) => (
+                <div
+                  key={index}
+                  className="p-2 relative"
+                  onClick={() => popUp2(index)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <img
+                    src={carta.src}
+                    alt={carta.alt}
+                    className="w-full h-auto"
+                    style={{ borderRadius: "15%" }}
+                  />
+                  <div className="absolute bottom-2 right-2 bg-white border border-black rounded-full w-8 h-8 flex items-center justify-center">
+                    <span className="text-black">{numeros[index]}</span>
+                  </div>
+                </div>
+              ))}
 
-        />
-        <div
-          style={{
-            background: "white",
-            borderRadius: "50%",
-            width: "30px",
-            height: "30px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: "5px",
-          }}
-        >
-          <span>{number}</span>
-        </div>
-      </div>
-    ))}
-  </div>
-  <div style={{ display: "flex", flexWrap: "wrap", width: "500px" }}>
-    {[6, 7, 8, 9].map((number) => (
-      <div
-        key={number}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          margin: "10px",
-        }}
-      >
-        <img
-          src={`http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-${number}.png`}
-          alt={`Imagen ${number}`}
-          style={{ width: "150px", height: "150px", borderRadius: "20px" }}
-        />
-        <div
-          style={{
-            background: "white",
-            borderRadius: "50%",
-            width: "30px",
-            height: "30px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: "5px",
-            
-          }}
-        >
-          <span>{number}</span>
-        </div>
-      </div>
-    ))}
-  </div>
-</div>
-
-
+              {/* Cartas abajo */}
+              {cartas.slice(5, 9).map((carta, index) => (
+                <div
+                  key={index}
+                  className="p-2 relative"
+                  onClick={() => popUp2(index + 5)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <img
+                    src={carta.src}
+                    alt={carta.alt}
+                    className="w-full h-auto"
+                    style={{ borderRadius: "15%" }}
+                  />
+                  <div className="absolute bottom-2 right-2 bg-white border border-black rounded-full w-8 h-8 flex items-center justify-center">
+                    <span className="text-black">{numeros[index + 5]}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {showConfirmation && (
+              <div className="fixed z-50 top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+                <div className="relative bg-gray-400 rounded-lg p-4 inline-flex flex-col items-center">
+                  <h1 className="text-3xl font-bold">Confirmación</h1>
+                  <p>¿Deseas usar esta carta?</p>
+                  <div className="flex gap-2 mt-4">
+                    <button
+                      className="px-4 py-2 bg-green-500 text-white rounded"
+                      onClick={handleConfirm}
+                    >
+                      Sí
+                    </button>
+                    <button
+                      className="px-4 py-2 bg-red-500 text-white rounded"
+                      onClick={handleCancel}
+                    >
+                      No
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+            {showResourceSelection && (
+              <div className="fixed z-50 top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+                <div className="relative bg-gray-400 rounded-lg p-4 inline-flex flex-col items-center">
+                  <h1 className="text-3xl font-bold">
+                    Elige un recurso para robar
+                  </h1>
+                  <div className="flex gap-4 mt-4">
+                    {recursos.map((recurso, index) => (
+                      <div
+                        key={index}
+                        className="p-2 relative flex flex-col items-center"
+                        onClick={() => handleResourceSelectionClose()}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <img
+                          src={recurso.src}
+                          alt={recurso.text}
+                          className="w-20 h-auto"
+                          style={{ borderRadius: "15%" }}
+                        />
+                        <div className="bg-white border border-black rounded mt-2 p-2">
+                          <span className="text-black">{recurso.text}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
             {props.children}
           </div>
         </div>
