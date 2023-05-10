@@ -120,14 +120,37 @@ const SecondTab = (params) => {
         </div>
 
         <div style={{
-          border: global_info.realizando_intercambio ? "3px solid white" : "1px solid white",
+          border: global_info.realizando_intercambio ? "3px solid " + (global_info.recurso_ofrecido == "CLAY" ? "green" : "white") : "1px solid white",
           width: "40%", // Establecer el ancho del cuadrado
           height: "50px", // Establecer la altura del cuadrado
           display: "flex", // Establecer la propiedad display a "flex"
           justifyContent: "center", // Centrar el contenido horizontalmente
           alignItems: "center", // Centrar el contenido verticalmente
           fontSize: "20px",
-        }}>
+        }}
+        onClick={() => {
+          // Si global_info.fase_intercambio es 0, se establece el valor a 1
+          // y guardo en global_info.recurso_ofrecido el recurso ofrecido.
+          // Si global_info.fase_intercambio es 1, se establece el valor a 0,
+          // pongo a false global_info.realizando_intercambio y hago el fetch
+          // al backend para realizar el intercambio.
+          // Todo esto solo se hace si global_info.realizando_intercambio es
+          // true.
+          if (global_info.realizando_intercambio) {
+            if (global_info.fase_intercambio == 0) {
+              global_info.fase_intercambio = 1;
+              global_info.recurso_ofrecido = "CLAY";
+            }
+            else {
+              realizar_intercambio(global_info.recurso_ofrecido, "CLAY", global_info.cantidad_ofrecida);
+              
+              global_info.fase_intercambio = 0;
+              global_info.realizando_intercambio = false;
+              global_info.recurso_ofrecido = "";
+            }
+          }
+        }}
+        >
           <img
             src="http://localhost:3000/recursos/arcilla.png" alt="madera"
             width="30" height="30"
@@ -147,14 +170,37 @@ const SecondTab = (params) => {
         justifyContent: "space-around",
       }}>
         <div style={{
-          border: global_info.realizando_intercambio ? "3px solid white" : "1px solid white",
+          border: global_info.realizando_intercambio ? "3px solid " + (global_info.recurso_ofrecido == "SHEEP" ? "green" : "white") : "1px solid white",
           width: "40%", // Establecer el ancho del cuadrado
           height: "50px", // Establecer la altura del cuadrado
           display: "flex", // Establecer la propiedad display a "flex"
           justifyContent: "center", // Centrar el contenido horizontalmente
           alignItems: "center", // Centrar el contenido verticalmente
           fontSize: "20px",
-        }}>
+        }}
+        onClick={() => {
+          // Si global_info.fase_intercambio es 0, se establece el valor a 1
+          // y guardo en global_info.recurso_ofrecido el recurso ofrecido.
+          // Si global_info.fase_intercambio es 1, se establece el valor a 0,
+          // pongo a false global_info.realizando_intercambio y hago el fetch
+          // al backend para realizar el intercambio.
+          // Todo esto solo se hace si global_info.realizando_intercambio es
+          // true.
+          if (global_info.realizando_intercambio) {
+            if (global_info.fase_intercambio == 0) {
+              global_info.fase_intercambio = 1;
+              global_info.recurso_ofrecido = "SHEEP";
+            }
+            else {
+              realizar_intercambio(global_info.recurso_ofrecido, "SHEEP", global_info.cantidad_ofrecida);
+              
+              global_info.fase_intercambio = 0;
+              global_info.realizando_intercambio = false;
+              global_info.recurso_ofrecido = "";
+            }
+          }
+        }}
+        >
           <img
             src="http://localhost:3000/recursos/ovejas.png" alt="madera"
             width="30" height="30"
@@ -166,14 +212,37 @@ const SecondTab = (params) => {
         </div>
 
         <div style={{
-          border: global_info.realizando_intercambio ? "3px solid white" : "1px solid white",
+          border: global_info.realizando_intercambio ? "3px solid " + (global_info.recurso_ofrecido == "WHEAT" ? "green" : "white") : "1px solid white",
           width: "40%", // Establecer el ancho del cuadrado
           height: "50px", // Establecer la altura del cuadrado
           display: "flex", // Establecer la propiedad display a "flex"
           justifyContent: "center", // Centrar el contenido horizontalmente
           alignItems: "center", // Centrar el contenido verticalmente
           fontSize: "20px",
-        }}>
+        }}
+        onClick={() => {
+          // Si global_info.fase_intercambio es 0, se establece el valor a 1
+          // y guardo en global_info.recurso_ofrecido el recurso ofrecido.
+          // Si global_info.fase_intercambio es 1, se establece el valor a 0,
+          // pongo a false global_info.realizando_intercambio y hago el fetch
+          // al backend para realizar el intercambio.
+          // Todo esto solo se hace si global_info.realizando_intercambio es
+          // true.
+          if (global_info.realizando_intercambio) {
+            if (global_info.fase_intercambio == 0) {
+              global_info.fase_intercambio = 1;
+              global_info.recurso_ofrecido = "WHEAT";
+            }
+            else {
+              realizar_intercambio(global_info.recurso_ofrecido, "WHEAT", global_info.cantidad_ofrecida);
+              
+              global_info.fase_intercambio = 0;
+              global_info.realizando_intercambio = false;
+              global_info.recurso_ofrecido = "";
+            }
+          }
+        }}
+        >
           <img
             src="http://localhost:3000/recursos/trigo.png" alt="madera"
             width="30" height="30"
@@ -188,8 +257,8 @@ const SecondTab = (params) => {
       <br />
 
       <div style={{
-        border: global_info.realizando_intercambio ? "3px solid white" : "1px solid white",
-        width: "40%", // Establecer el ancho del cuadrado
+          border: global_info.realizando_intercambio ? "3px solid " + (global_info.recurso_ofrecido == "STONE" ? "green" : "white") : "1px solid white",
+          width: "40%", // Establecer el ancho del cuadrado
         height: "50px", // Establecer la altura del cuadrado
         display: "flex", // Establecer la propiedad display a "flex"
         justifyContent: "center", // Centrar el contenido horizontalmente
@@ -197,7 +266,30 @@ const SecondTab = (params) => {
         fontSize: "20px",
 
         margin: "auto" // Centrar el cuadrado
-      }}>
+      }}
+      onClick={() => {
+        // Si global_info.fase_intercambio es 0, se establece el valor a 1
+        // y guardo en global_info.recurso_ofrecido el recurso ofrecido.
+        // Si global_info.fase_intercambio es 1, se establece el valor a 0,
+        // pongo a false global_info.realizando_intercambio y hago el fetch
+        // al backend para realizar el intercambio.
+        // Todo esto solo se hace si global_info.realizando_intercambio es
+        // true.
+        if (global_info.realizando_intercambio) {
+          if (global_info.fase_intercambio == 0) {
+            global_info.fase_intercambio = 1;
+            global_info.recurso_ofrecido = "STONE";
+          }
+          else {
+            realizar_intercambio(global_info.recurso_ofrecido, "STONE", global_info.cantidad_ofrecida);
+            
+            global_info.fase_intercambio = 0;
+            global_info.realizando_intercambio = false;
+            global_info.recurso_ofrecido = "";
+          }
+        }
+      }}
+      >
         <img
           src="http://localhost:3000/recursos/roca.png" alt="madera"
           width="30" height="30"
