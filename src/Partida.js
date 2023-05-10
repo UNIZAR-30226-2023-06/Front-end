@@ -1311,13 +1311,12 @@ function Partida() {
           avanzar_fase();
         }}
       />
+
+      <PopupTablaCostes />
       <PopUpCartasDesarrollo
         token={Token}
         lobby={codigo_partida}
-      />
-      <PopupTablaCostes />
-      <PopUpCartasDesarrollo/>
-      {/* </PopUpFaseTirada>*/}
+      />      {/* </PopUpFaseTirada>*/}
       {turno === mi_id && fase_actual === "RESOURCE_PRODUCTION" && (
         <PopUpFaseTirada
           show={ShowPopupFaseTirada}
