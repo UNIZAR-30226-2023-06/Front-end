@@ -140,7 +140,7 @@ export default function EditarPerfil() {
       console.error("Error:", error);
     });
 
-  fetch(`${process.env.REACT_APP_URL_BACKEND}/list-profile-pictures/`, {
+  fetch(`${process.env.REACT_APP_URL_BACKEND}/list-profile-pictures`, {
     method: "GET",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
