@@ -81,12 +81,12 @@ function Partida() {
   const [aldea_que_puedo_construir, setAldea_que_puedo_construir] = useState(1);
   const [ultima_aldea_construida, setUltima_aldea_construida] = useState(0);
 
-  const [img_dado_1, setImg_dado_1] = useState(
-    "http://localhost:3000/dados/dado_1.png"
-  );
-  const [img_dado_2, setImg_dado_2] = useState(
-    "http://localhost:3000/dados/dado_2.png"
-  );
+  // {  const [img_dado_1, setImg_dado_1] = useState(
+  //     "http://localhost:3000/dados/dado_1.png"
+  //   );
+  //   const [img_dado_2, setImg_dado_2] = useState(
+  //     "http://localhost:3000/dados/dado_2.png"
+  //   );}
 
   const [casas_legales, setCasas_legales] = useState([]);
   const [carretera_legales, setCarretera_legales] = useState([]);
@@ -220,7 +220,7 @@ function Partida() {
             detectar_cambio_fase(data.turn_phase, data.player_turn);
             setTurno(data.player_turn);
 
-            actualizar_dados(data.die_1, data.die_2);
+            // actualizar_dados(data.die_1, data.die_2);
 
             // Si el turno coincide con mi id y tengo ambos permisos a
             // false, activo el permiso de construir aldeas
@@ -436,19 +436,14 @@ function Partida() {
   function detectar_cambio_fase(fase, nuevo_turno) {
     if (fase_actual !== fase || nuevo_turno === mi_id) {
       setFase_actual(fase);
-
       if (fase === "RESOURCE_PRODUCTION") {
         // Si es mi turno, tiro los dados, si no, espero a que el
         // backend me diga qué ha salido
-
-        console.log("nuevo turno: ", nuevo_turno);
-        console.log("mi id: ", mi_id);
+        console.log(
+          "He sabido ver que es la fase RESOURCE_PRODUCTION GENIOOOOOOOOOO"
+        );
         if (nuevo_turno === mi_id) {
-          console.log(
-            "----------------ahora se deberia de mostrar la pop up--------------------------------"
-          );
-
-          //handlePopupClose();
+          // mostramos la pop up de tirar los dados s
           setShowPopupFaseTirada(true);
         } else {
           // TODO: Esperar a que el backend me diga qué ha salido
@@ -616,14 +611,14 @@ function Partida() {
       });
   }
 
-  function actualizar_dados(die1, die2) {
-    // Actualizo las imagenes de los dadso con los números pasados por parámetro
-    const nuevaImagen = `http://localhost:3000/dados/dado_${die1}.png`;
-    setImg_dado_1(nuevaImagen);
+  // function actualizar_dados(die1, die2) {
+  //   // Actualizo las imagenes de los dadso con los números pasados por parámetro
+  //   const nuevaImagen = `http://localhost:3000/dados/dado_${die1}.png`;
+  //   setImg_dado_1(nuevaImagen);
 
-    const nuevaImagen2 = `http://localhost:3000/dados/dado_${die2}.png`;
-    setImg_dado_2(nuevaImagen2);
-  }
+  //   const nuevaImagen2 = `http://localhost:3000/dados/dado_${die2}.png`;
+  //   setImg_dado_2(nuevaImagen2);
+  // }
 
   function color_to_hex(color) {
     if (color === "YELLOW") {
@@ -1048,7 +1043,7 @@ function Partida() {
                   {board[key][0] !== 0 && board[key][0]}
                 </button>
               }
-              {key == posicion_ladron && (
+              {key === posicion_ladron && (
                 <img
                   src={"http://localhost:3000/ladron.png"}
                   alt="ladron"
@@ -1276,7 +1271,7 @@ function Partida() {
         {turno == mi_id && "¡Tu turno!"}
       </h1>
 
-      <img
+      {/* <img
         src={img_dado_1}
         style={{
           position: "absolute",
@@ -1295,7 +1290,7 @@ function Partida() {
           width: "80px",
           height: "80px",
         }}
-      />
+      /> */}
 
       <button
         style={{
