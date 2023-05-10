@@ -1311,7 +1311,10 @@ function Partida() {
           avanzar_fase();
         }}
       />
-
+      <PopUpCartasDesarrollo
+        token={Token}
+        lobby={codigo_partida}
+      />
       <PopupTablaCostes />
       <PopUpCartasDesarrollo/>
       {/* </PopUpFaseTirada>*/}
