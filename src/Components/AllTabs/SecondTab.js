@@ -1,5 +1,8 @@
 import React from "react";
-const SecondTab = ( params ) => {
+
+import { global_info } from "../../Partida";
+
+const SecondTab = (params) => {
   /****************************************************************************/
   /******************************** CONSTANTES ********************************/
   /****************************************************************************/
@@ -9,11 +12,44 @@ const SecondTab = ( params ) => {
   const [carreteras, setCarreteras] = React.useState(0);
 
   /****************************************************************************/
+  /******************************** CONSTANTES ********************************/
+  /****************************************************************************/
+
+  function realizar_intercambio(recurso_ofrecido, recuro_pedido) {
+
+    // Ejemplo url: 
+    // http://localhost:8000/game_phases/trade_with_bank?lobby_id=1234&resource_type=1324&amount=1234&requested_type=1324
+
+    const url = "http://localhost:8000/game_phases/trade_with_bank?lobby_id=" + params.jugador_datos.codigo_partida + "&resource_type=" + recurso_ofrecido + "&amount=4&requested_type=" + recuro_pedido;
+
+    fetch(
+      url,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${params.Token}`,
+        },
+      }
+    )
+      .then((res) => {
+        res.json().then((data) => {
+          console.log("Intento de hacer el intercambio:", data);
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+
+  }
+
+  /****************************************************************************/
   /***************************** RETURN PRINCIPAL *****************************/
   /****************************************************************************/
 
   // console.log("Este es tablero del tab2: ", params.jugador_datos);
-  
+  // console.log("Informacion global: ", global_info);
+
   return (
     <div className="SecondTab_partida">
 
@@ -38,14 +74,41 @@ const SecondTab = ( params ) => {
         justifyContent: "space-around",
       }}>
         <div style={{
-          border: "1px solid white", // Establecer el borde a blanco
+          // Si global_info.realizando_intercambio es true, se muestra el borde
+          // de grosor 3px, si no, se muestra el borde de grosor 1px.
+          // Luego, si global_info.recurso_ofrecido es "WOOD", se muestra el
+          // borde de color verde, si no, se muestra el borde de color blanco.
+          border: global_info.realizando_intercambio ? "3px solid " + (global_info.recurso_ofrecido == "WOOD" ? "green" : "white") : "1px solid white",
           width: "40%", // Establecer el ancho del cuadrado
           height: "50px", // Establecer la altura del cuadrado
           display: "flex", // Establecer la propiedad display a "flex"
           justifyContent: "center", // Centrar el contenido horizontalmente
           alignItems: "center", // Centrar el contenido verticalmente
           fontSize: "20px",
-        }}>
+        }}
+        onClick={() => {
+          // Si global_info.fase_intercambio es 0, se establece el valor a 1
+          // y guardo en global_info.recurso_ofrecido el recurso ofrecido.
+          // Si global_info.fase_intercambio es 1, se establece el valor a 0,
+          // pongo a false global_info.realizando_intercambio y hago el fetch
+          // al backend para realizar el intercambio.
+          // Todo esto solo se hace si global_info.realizando_intercambio es
+          // true.
+          if (global_info.realizando_intercambio) {
+            if (global_info.fase_intercambio == 0) {
+              global_info.fase_intercambio = 1;
+              global_info.recurso_ofrecido = "WOOD";
+            }
+            else {
+              realizar_intercambio(global_info.recurso_ofrecido, "WOOD");
+              
+              global_info.fase_intercambio = 0;
+              global_info.realizando_intercambio = false;
+              global_info.recurso_ofrecido = "";
+            }
+          }
+        }}
+        >
           <img
             src="http://localhost:3000/recursos/madera.png" alt="madera"
             width="30" height="30"
@@ -57,7 +120,7 @@ const SecondTab = ( params ) => {
         </div>
 
         <div style={{
-          border: "1px solid white", // Establecer el borde a blanco
+          border: global_info.realizando_intercambio ? "3px solid white" : "1px solid white",
           width: "40%", // Establecer el ancho del cuadrado
           height: "50px", // Establecer la altura del cuadrado
           display: "flex", // Establecer la propiedad display a "flex"
@@ -84,7 +147,7 @@ const SecondTab = ( params ) => {
         justifyContent: "space-around",
       }}>
         <div style={{
-          border: "1px solid white", // Establecer el borde a blanco
+          border: global_info.realizando_intercambio ? "3px solid white" : "1px solid white",
           width: "40%", // Establecer el ancho del cuadrado
           height: "50px", // Establecer la altura del cuadrado
           display: "flex", // Establecer la propiedad display a "flex"
@@ -103,7 +166,7 @@ const SecondTab = ( params ) => {
         </div>
 
         <div style={{
-          border: "1px solid white", // Establecer el borde a blanco
+          border: global_info.realizando_intercambio ? "3px solid white" : "1px solid white",
           width: "40%", // Establecer el ancho del cuadrado
           height: "50px", // Establecer la altura del cuadrado
           display: "flex", // Establecer la propiedad display a "flex"
@@ -125,7 +188,7 @@ const SecondTab = ( params ) => {
       <br />
 
       <div style={{
-        border: "1px solid white", // Establecer el borde a blanco
+        border: global_info.realizando_intercambio ? "3px solid white" : "1px solid white",
         width: "40%", // Establecer el ancho del cuadrado
         height: "50px", // Establecer la altura del cuadrado
         display: "flex", // Establecer la propiedad display a "flex"
