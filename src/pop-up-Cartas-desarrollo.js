@@ -298,9 +298,42 @@ const PopUpCartasDesarrollo = (props) => {
     </div>
   ));
 
+
   return (
     <>
-      <button onClick={handleOpen}>Mostrar Popup</button>
+      <div
+        style={{
+          position: "relative",
+          width: "150px",
+          height: "150px",
+          left: "1650px",
+          top:"300px",
+          cursor: "pointer",
+        }}
+        onClick={handleOpen}
+      >
+        <img
+          src="http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-oculta.png"
+          alt="Imagen"
+          style={{ width: "100%", height: "100%" }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: "160px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            background: "rgba(0, 0, 0, 0.7)",
+            color: "white",
+            padding: "10px",
+            textAlign: "center",
+            width: "150px",
+            borderRadius: "5px",
+          }}
+        >
+          Ver cartas de desarrollo
+        </div>
+      </div>
       {showPopup && (
         <div
           className="fixed z-50 top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center"
@@ -327,23 +360,78 @@ const PopUpCartasDesarrollo = (props) => {
               style={{ width: "50px", height: "50px" }}
               onClick={handleClose}
             />
-            <div
-              className=""
-              style={{
-                minHeight: "640px",
-                minWidth: "500px",
-                maxWidth: "500px",
-              }}
-            >
-              {/* Slider de fotos de perfil */}
-              <div className="slider_fotos_perfil_tienda">
-                <AliceCarousel
-                  mouseTracking
-                  items={items_fotos_perfil}
-                  responsive={responsive}
-                />
-              </div>
-            </div>
+<div style={{ display: "flex", justifyContent: "center" }}>
+  <div style={{ display: "flex", flexWrap: "wrap", width: "500px" }}>
+    {[1, 2, 3, 4, 5].map((number) => (
+      <div
+        key={number}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          margin: "10px",
+        }}
+      >
+        <img
+          src={`http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-${number}.png`}
+          alt={`Imagen ${number}`}
+          style={{ width: "150px", height: "190px", borderRadius: "20px" }}
+
+        />
+        <div
+          style={{
+            background: "white",
+            borderRadius: "50%",
+            width: "30px",
+            height: "30px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: "5px",
+          }}
+        >
+          <span>{number}</span>
+        </div>
+      </div>
+    ))}
+  </div>
+  <div style={{ display: "flex", flexWrap: "wrap", width: "500px" }}>
+    {[6, 7, 8, 9].map((number) => (
+      <div
+        key={number}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          margin: "10px",
+        }}
+      >
+        <img
+          src={`http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-${number}.png`}
+          alt={`Imagen ${number}`}
+          style={{ width: "150px", height: "150px", borderRadius: "20px" }}
+        />
+        <div
+          style={{
+            background: "white",
+            borderRadius: "50%",
+            width: "30px",
+            height: "30px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: "5px",
+            
+          }}
+        >
+          <span>{number}</span>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+
             {props.children}
           </div>
         </div>

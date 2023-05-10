@@ -6,7 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 import Tabs from "./Components/TabComponent/Tabs";
 import PopUpFaseTirada from "./pop-up-Fase-tirada";
 import PopupTablaCostes from "./pop-up-TablaCostes";
-
+import PopUpFaseCompra from "./pop-up-FaseCompra";
+import PopUpCartasDesarrollo from "./pop-up-Cartas-desarrollo";
 // 1-- Importamos useCookies y jwt_decode
 import { useCookies } from "react-cookie";
 import jwt_decode from "jwt-decode";
@@ -65,7 +66,9 @@ function Partida() {
   const [fase_actual, setFase_actual] = useState("");
 
   const [skins_jugadores_poblados, setSkins_jugadores_poblados] = useState([]);
-  const [skins_jugadores_carreteras, setSkins_jugadores_carreteras] = useState([]);
+  const [skins_jugadores_carreteras, setSkins_jugadores_carreteras] = useState(
+    []
+  );
   const [skins_jugadores_ciudades, setSkins_jugadores_ciudades] = useState([]);
 
   const [colores_oponentes, setColores_oponentes] = useState([]);
@@ -96,7 +99,7 @@ function Partida() {
     "http://localhost:3000/casillas/ovejas.jpg",
     "http://localhost:3000/casillas/roca.jpg",
     "http://localhost:3000/casillas/trigo.jpg",
-    "http://localhost:3000/casillas/desierto.jpg"
+    "http://localhost:3000/casillas/desierto.jpg",
   ];
 
   const init_top_board = 340;
@@ -479,7 +482,7 @@ function Partida() {
     ).then((res) => {
       res
         .json()
-        .then((data) => { })
+        .then((data) => {})
         .catch((error) => {
           console.error("Error:", error);
         });
@@ -487,7 +490,6 @@ function Partida() {
   }
 
   function construir_poblado(coordenada) {
-
     if (!aldeas_iniciales_colocadas) {
       // Aviso al backend de que ya he colocado lo mío
       fetch(
@@ -499,21 +501,21 @@ function Partida() {
             Authorization: `Bearer ${Token}`,
           },
         }
-      ).then((res) => {
-        res.json().then((data) => {
-          console.log("Intento de colocar aldea:", data);
+      )
+        .then((res) => {
+          res.json().then((data) => {
+            console.log("Intento de colocar aldea:", data);
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
         });
-      }).catch((error) => {
-        console.error("Error:", error);
-      });
 
       setUltima_aldea_construida(ultima_aldea_construida + 1);
 
       setPuedo_colocar_aldea(false);
       setPuedo_colocar_carretera(true);
-    }
-
-    else {
+    } else {
       // Aviso al backend de que compro y coloco una aldea con una petición get
 
       // Ejemplo de url:
@@ -528,20 +530,20 @@ function Partida() {
             Authorization: `Bearer ${Token}`,
           },
         }
-      ).then((res) => {
-        res.json().then((data) => {
-          console.log("Intento de colocar aldea:", data);
+      )
+        .then((res) => {
+          res.json().then((data) => {
+            console.log("Intento de colocar aldea:", data);
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
         });
-      }).catch((error) => {
-        console.error("Error:", error);
-      });
     }
-
   }
 
   function construir_carretera(coordenada) {
-    if (!aldeas_iniciales_colocadas)
-    {
+    if (!aldeas_iniciales_colocadas) {
       fetch(
         `${process.env.REACT_APP_URL_BACKEND}/build-road?edge=${coordenada}`,
         {
@@ -551,21 +553,20 @@ function Partida() {
             Authorization: `Bearer ${Token}`,
           },
         }
-      ).then((res) => {
-        res.json().then((data) => {
-          console.log("Intento de colocar carretera:", data);
+      )
+        .then((res) => {
+          res.json().then((data) => {
+            console.log("Intento de colocar carretera:", data);
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
         });
-      }).catch((error) => {
-        console.error("Error:", error);
-      });
 
-      setPuedo_colocar_carretera(false)
+      setPuedo_colocar_carretera(false);
 
       avanzar_fase();
-    }
-
-    else
-    {
+    } else {
       // Aviso al backend de que compro y coloco una carretera con una petición get
 
       // Ejemplo de url:
@@ -580,15 +581,15 @@ function Partida() {
             Authorization: `Bearer ${Token}`,
           },
         }
-      ).then((res) => {
-        res.json().then((data) => {
-          console.log("Intento de colocar carretera:", data);
+      )
+        .then((res) => {
+          res.json().then((data) => {
+            console.log("Intento de colocar carretera:", data);
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
         });
-      }
-      ).catch((error) => {
-        console.error("Error:", error);
-      }
-      );
     }
   }
 
@@ -604,37 +605,34 @@ function Partida() {
           Authorization: `Bearer ${Token}`,
         },
       }
-    ).then((res) => {
-      res.json().then((data) => {
-        console.log("Intento de colocar ciudad:", data);
+    )
+      .then((res) => {
+        res.json().then((data) => {
+          console.log("Intento de colocar ciudad:", data);
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
       });
-    }).catch((error) => {
-      console.error("Error:", error);
-    });
   }
 
   function actualizar_dados(die1, die2) {
-
     // Actualizo las imagenes de los dadso con los números pasados por parámetro
     const nuevaImagen = `http://localhost:3000/dados/dado_${die1}.png`;
     setImg_dado_1(nuevaImagen);
 
     const nuevaImagen2 = `http://localhost:3000/dados/dado_${die2}.png`;
     setImg_dado_2(nuevaImagen2);
-
   }
 
   function color_to_hex(color) {
     if (color === "YELLOW") {
       return "#ffcf40";
-    }
-    else if (color === "BLUE") {
+    } else if (color === "BLUE") {
       return "#006db0";
-    }
-    else if (color === "GREEN") {
+    } else if (color === "GREEN") {
       return "#00a86b";
-    }
-    else {
+    } else {
       return "#9d2933";
     }
   }
@@ -994,18 +992,19 @@ function Partida() {
                       init_top_board -
                       top_variation_board[index] * top_variation_unit,
                     left: "50%",
-                    transform: `translateX(${init_left_board +
+                    transform: `translateX(${
+                      init_left_board +
                       left_variation_board[index] * left_variation_unit
-                      }px)`,
+                    }px)`,
 
                     backgroundImage: `url(${ficha_con_id[board[key][1]]})`,
-                    color: `${board[key][0] === 6 || board[key][0] === 8
-                      ? "red"
-                      : "white"
-                      }`,
+                    color: `${
+                      board[key][0] === 6 || board[key][0] === 8
+                        ? "red"
+                        : "white"
+                    }`,
                   }}
                   onClick={() => {
-
                     // log
                     console.log("Has pulsado el hexágono", key);
 
@@ -1018,50 +1017,58 @@ function Partida() {
                       // Ejemplo de url:
                       // https://cataninc-back-end-production-4d3e.up.railway.app/game_phases/move_thief?lobby_id=3&stolen_player_id=4&new_thief_position_tile_coord=5
 
-                      const url = `${process.env.REACT_APP_URL_BACKEND}/game_phases/move_thief?lobby_id=${codigo_partida}&stolen_player_id=${usuario_to_color[board[key][1]]}&new_thief_position_tile_coord=${key}`;
+                      const url = `${
+                        process.env.REACT_APP_URL_BACKEND
+                      }/game_phases/move_thief?lobby_id=${codigo_partida}&stolen_player_id=${
+                        usuario_to_color[board[key][1]]
+                      }&new_thief_position_tile_coord=${key}`;
 
                       // Petición GET para mover el ladrón
-                      fetch(
-                        url,
-                        {
-                          method: "GET",
-                          headers: {
-                            "Content-Type": "application/x-www-form-urlencoded",
-                            Authorization: `Bearer ${Token}`,
-                          },
-                        }
-                      ).then((res) => {
-                        res.json().then((data) => {
-                          console.log("Intento de mover ladrón:", data);
+                      fetch(url, {
+                        method: "GET",
+                        headers: {
+                          "Content-Type": "application/x-www-form-urlencoded",
+                          Authorization: `Bearer ${Token}`,
+                        },
+                      })
+                        .then((res) => {
+                          res.json().then((data) => {
+                            console.log("Intento de mover ladrón:", data);
 
-                          // Desactivo el booleano de colocando_ladron
-                          setColocando_ladron(false);
+                            // Desactivo el booleano de colocando_ladron
+                            setColocando_ladron(false);
+                          });
+                        })
+                        .catch((error) => {
+                          console.error("Error:", error);
                         });
-                      }
-                      ).catch((error) => {
-                        console.error("Error:", error);
-                      });
                     }
                   }}
                 >
                   {board[key][0] !== 0 && board[key][0]}
                 </button>
               }
-              {
-                (key == posicion_ladron) &&
+              {key == posicion_ladron && (
                 <img
                   src={"http://localhost:3000/ladron.png"}
                   alt="ladron"
                   style={{
                     position: "absolute",
-                    top: init_top_board + top_variation_ladron - top_variation_board[index] * top_variation_unit,
+                    top:
+                      init_top_board +
+                      top_variation_ladron -
+                      top_variation_board[index] * top_variation_unit,
                     left: "50%",
-                    transform: `translateX(${init_left_board + left_variation_ladron + left_variation_board[index] * left_variation_unit}px)`,
+                    transform: `translateX(${
+                      init_left_board +
+                      left_variation_ladron +
+                      left_variation_board[index] * left_variation_unit
+                    }px)`,
                     width: "100px",
                     height: "100px",
                   }}
                 />
-              }
+              )}
             </div>
           );
         })}
@@ -1079,10 +1086,11 @@ function Partida() {
               {type_road[index] === 0 &&
                 (road[key] != null || permiso_construccion) && (
                   <button
-                    className={`w-20 flex h-5 ${road[key] != null
-                      ? "carretera_partida"
-                      : "carretera_sin_comprar_partida"
-                      }`}
+                    className={`w-20 flex h-5 ${
+                      road[key] != null
+                        ? "carretera_partida"
+                        : "carretera_sin_comprar_partida"
+                    }`}
                     style={{
                       position: "absolute",
                       top:
@@ -1090,18 +1098,21 @@ function Partida() {
                         init_top_road_relative_vertical -
                         top_variation_road[index] * top_variation_unit,
                       left: "50%",
-                      transform: `translateX(${init_left_board +
+                      transform: `translateX(${
+                        init_left_board +
                         init_left_road_relative_vertical +
                         left_variation_road[index] * left_variation_unit
-                        }px) rotate(90deg)`,
+                      }px) rotate(90deg)`,
 
-                      backgroundImage: `url( ${road[key] != null
-                        ? `${skins_jugadores_carreteras[
-                        usuario_to_color[road[key]]
-                        ]
-                        }`
-                        : `${skins_jugadores_carreteras[mi_indice]}`
-                        } )`,
+                      backgroundImage: `url( ${
+                        road[key] != null
+                          ? `${
+                              skins_jugadores_carreteras[
+                                usuario_to_color[road[key]]
+                              ]
+                            }`
+                          : `${skins_jugadores_carreteras[mi_indice]}`
+                      } )`,
                     }}
                     onClick={() => {
                       construir_carretera(key);
@@ -1112,10 +1123,11 @@ function Partida() {
               {type_road[index] === 1 &&
                 (road[key] != null || permiso_construccion) && (
                   <button
-                    className={`w-20 flex h-5 ${road[key] != null
-                      ? "carretera_partida"
-                      : "carretera_sin_comprar_partida"
-                      }`}
+                    className={`w-20 flex h-5 ${
+                      road[key] != null
+                        ? "carretera_partida"
+                        : "carretera_sin_comprar_partida"
+                    }`}
                     style={{
                       position: "absolute",
                       top:
@@ -1123,18 +1135,21 @@ function Partida() {
                         init_top_road_relative_ascend -
                         top_variation_road[index] * top_variation_unit,
                       left: "50%",
-                      transform: `translateX(${init_left_board +
+                      transform: `translateX(${
+                        init_left_board +
                         init_left_road_relative_ascend +
                         left_variation_road[index] * left_variation_unit
-                        }px) rotate(-30deg)`,
+                      }px) rotate(-30deg)`,
 
-                      backgroundImage: `url( ${road[key] != null
-                        ? `${skins_jugadores_carreteras[
-                        usuario_to_color[road[key]]
-                        ]
-                        }`
-                        : `${skins_jugadores_carreteras[mi_indice]}`
-                        } )`,
+                      backgroundImage: `url( ${
+                        road[key] != null
+                          ? `${
+                              skins_jugadores_carreteras[
+                                usuario_to_color[road[key]]
+                              ]
+                            }`
+                          : `${skins_jugadores_carreteras[mi_indice]}`
+                      } )`,
                     }}
                     onClick={() => {
                       construir_carretera(key);
@@ -1145,10 +1160,11 @@ function Partida() {
               {type_road[index] === 2 &&
                 (road[key] != null || permiso_construccion) && (
                   <button
-                    className={`w-20 flex h-5 ${road[key] != null
-                      ? "carretera_partida"
-                      : "carretera_sin_comprar_partida"
-                      }`}
+                    className={`w-20 flex h-5 ${
+                      road[key] != null
+                        ? "carretera_partida"
+                        : "carretera_sin_comprar_partida"
+                    }`}
                     style={{
                       position: "absolute",
                       top:
@@ -1156,18 +1172,21 @@ function Partida() {
                         init_top_road_relative_descend -
                         top_variation_road[index] * top_variation_unit,
                       left: "50%",
-                      transform: `translateX(${init_left_board +
+                      transform: `translateX(${
+                        init_left_board +
                         init_left_road_relative_descend +
                         left_variation_road[index] * left_variation_unit
-                        }px) rotate(30deg)`,
+                      }px) rotate(30deg)`,
 
-                      backgroundImage: `url( ${road[key] != null
-                        ? `${skins_jugadores_carreteras[
-                        usuario_to_color[road[key]]
-                        ]
-                        }`
-                        : `${skins_jugadores_carreteras[mi_indice]}`
-                        } )`,
+                      backgroundImage: `url( ${
+                        road[key] != null
+                          ? `${
+                              skins_jugadores_carreteras[
+                                usuario_to_color[road[key]]
+                              ]
+                            }`
+                          : `${skins_jugadores_carreteras[mi_indice]}`
+                      } )`,
                     }}
                     onClick={() => {
                       construir_carretera(key);
@@ -1192,10 +1211,11 @@ function Partida() {
                 // miramos las que ya estan construidas y las que podemos construir
                 (building[key][1] !== null || permiso_construccion) && (
                   <button
-                    className={`w-10 flex h-10 ${building[key][1] != null
-                      ? "construccion_partida"
-                      : "construccion_sin_comprar_partida"
-                      }`}
+                    className={`w-10 flex h-10 ${
+                      building[key][1] != null
+                        ? "construccion_partida"
+                        : "construccion_sin_comprar_partida"
+                    }`}
                     style={{
                       position: "absolute",
                       top:
@@ -1203,20 +1223,23 @@ function Partida() {
                         init_top_building_relative_vertical -
                         top_variation_building[index] * top_variation_unit,
                       left: "50%",
-                      transform: `translateX(${init_left_board +
+                      transform: `translateX(${
+                        init_left_board +
                         init_left_building_relative_vertical +
                         left_variation_building[index] * left_variation_unit
-                        }px)`,
+                      }px)`,
                       // id | indiceColumna -> si id === 0[jugador ] -> id === 1 [tipo_construccion]
-                      backgroundImage: `url( ${building[key][1] !== null
-                        ? `${building[key][1] === 1
-                          ? skins_jugadores_poblados[
-                          usuario_to_color[building[key][0]]
-                          ]
-                          : "ciudad"
-                        }`
-                        : `${skins_jugadores_poblados[mi_indice]}`
-                        } )`,
+                      backgroundImage: `url( ${
+                        building[key][1] !== null
+                          ? `${
+                              building[key][1] === 1
+                                ? skins_jugadores_poblados[
+                                    usuario_to_color[building[key][0]]
+                                  ]
+                                : "ciudad"
+                            }`
+                          : `${skins_jugadores_poblados[mi_indice]}`
+                      } )`,
                     }}
                     onClick={() => {
                       construir_poblado(key);
@@ -1276,10 +1299,11 @@ function Partida() {
 
       <button
         style={{
-          backgroundImage: `url(${turno == mi_id && aldeas_iniciales_colocadas
-            ? "http://localhost:3000/skips/skip_on.png"
-            : "http://localhost:3000/skips/skip_off.png"
-            })`,
+          backgroundImage: `url(${
+            turno == mi_id && aldeas_iniciales_colocadas
+              ? "http://localhost:3000/skips/skip_on.png"
+              : "http://localhost:3000/skips/skip_off.png"
+          })`,
           backgroundSize: "cover",
           position: "absolute",
           right: "80px",
@@ -1294,9 +1318,20 @@ function Partida() {
       />
 
       <PopupTablaCostes />
+      <PopUpCartasDesarrollo/>
       {/* </PopUpFaseTirada>*/}
       {turno === mi_id && fase_actual === "RESOURCE_PRODUCTION" && (
-        <PopUpFaseTirada show={ShowPopupFaseTirada} token={Token} lobby={codigo_partida} />
+        <PopUpFaseTirada
+          show={ShowPopupFaseTirada}
+          token={Token}
+          lobby={codigo_partida}
+        />
+      )}
+      {turno === mi_id && fase_actual === "BUILDING" && (
+        <PopUpFaseCompra
+          token={Token}
+          lobby={codigo_partida}
+        />
       )}
     </div>
   );
