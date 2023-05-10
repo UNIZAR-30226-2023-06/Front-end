@@ -79,9 +79,9 @@ function Partida() {
 
     const ficha_con_id = [
         null,
-        "http://localhost:3000/casillas/ovejas.jpg",
-        "http://localhost:3000/casillas/arcilla.jpg",
         "http://localhost:3000/casillas/madera.jpg",
+        "http://localhost:3000/casillas/arcilla.jpg",
+        "http://localhost:3000/casillas/ovejas.jpg",
         "http://localhost:3000/casillas/roca.jpg",
         "http://localhost:3000/casillas/trigo.jpg",
         "http://localhost:3000/casillas/desierto.jpg"
@@ -101,6 +101,9 @@ function Partida() {
     const [posicion_ladron, setPosicion_ladron] = useState(87);
     const top_variation_ladron = 27;
     const left_variation_ladron = 27;
+
+    // Variable que gestiona si se está colocando el ladrón
+    const [colocando_ladron, setColocando_ladron] = useState(true);
 
     const [road, setRoad] = useState({});
 
@@ -454,95 +457,79 @@ function Partida() {
     }
 
     function construir_poblado(coordenada) {
-        if (aldeas_iniciales_colocadas) {
-            // Compruebo qué construccion hay en la coordenada
-            if (building[coordenada][1] === 0) {
-                // Compruebo si tengo los materiales para construir una ciudad
-                if (true) {
-                    return;
-                }
+
+        // Aviso al backend de que ya he colocado lo mío
+        fetch(
+            `${process.env.REACT_APP_URL_BACKEND}/build-village?node=${coordenada}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    Authorization: `Bearer ${Token}`,
+                },
             }
-            else {
-                // Compruebo si tengo los materiales para construir un poblado
-                if (true) {
-                    return;
-                }
-            }
-        }
-        else {  // no estan colocadas las aldeas iniciales 
+        ).then((res) => {
+            res.json().then((data) => {
+                console.log("Intento de colocar aldea:", data);
+            });
+        }).catch((error) => {
+            console.error("Error:", error);
+        });
+
+        if (! aldeas_iniciales_colocadas) {
             setUltima_aldea_construida(ultima_aldea_construida + 1);
 
             setPuedo_colocar_aldea(false);
             setPuedo_colocar_carretera(true);
-
-            // Cambio el conjunto de carreteras que puedo construir a los huecos
-            // alrededor de la aldea que acabo de construir
-
-            // Aviso al backend de que ya he colocado lo mío
-            fetch(
-                `${process.env.REACT_APP_URL_BACKEND}/build-village?node=${coordenada}`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                        Authorization: `Bearer ${Token}`,
-                    },
-                }
-            ).then((res) => {
-                res.json().then((data) => {
-                    console.log("Intento de colocar aldea:", data);
-                });
-            }).catch((error) => {
-                console.error("Error:", error);
-            });
         }
+
     }
 
     function construir_carretera(coordenada) {
-        if (aldeas_iniciales_colocadas) {
-
-            // Aviso al backend de que ya he colocado la carretera
-            fetch(
-                `${process.env.REACT_APP_URL_BACKEND}/build-road?edge=${coordenada}`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                        Authorization: `Bearer ${Token}`,
-                    },
-                }
-            ).then((res) => {
-                res.json().then((data) => {
-                    console.log("Intento de colocar carretera:", data);
-                });
-            }).catch((error) => {
-                console.error("Error:", error);
+        // Aviso al backend de que ya he colocado la carretera
+        fetch(
+            `${process.env.REACT_APP_URL_BACKEND}/build-road?edge=${coordenada}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    Authorization: `Bearer ${Token}`,
+                },
+            }
+        ).then((res) => {
+            res.json().then((data) => {
+                console.log("Intento de colocar carretera:", data);
             });
+        }).catch((error) => {
+            console.error("Error:", error);
+        });
 
-        }
-        else {
+        if (! aldeas_iniciales_colocadas) {
             setPuedo_colocar_carretera(false)
-
-            // Aviso al backend de que ya he colocado la carretera
-            fetch(
-                `${process.env.REACT_APP_URL_BACKEND}/build-road?edge=${coordenada}`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                        Authorization: `Bearer ${Token}`,
-                    },
-                }
-            ).then((res) => {
-                res.json().then((data) => {
-                    console.log("Intento de colocar carretera:", data);
-                });
-            }).catch((error) => {
-                console.error("Error:", error);
-            });
-
+            
             avanzar_fase();
         }
+    }
+
+    // Función para construir una ciudad
+    function construir_ciudad(coordenada) {
+        // Aviso al backend de que ya he colocado la ciudad
+        fetch(
+            `${process.env.REACT_APP_URL_BACKEND}/upgrade-village-to-city?node=${coordenada}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    Authorization: `Bearer ${Token}`,
+                },
+            }
+        ).then((res) => {
+            res.json().then((data) => {
+                console.log("Intento de colocar ciudad:", data);
+            });
+        }).catch((error) => {
+            console.error("Error:", error);
+        });
     }
 
     function tirar_dados() {
@@ -870,6 +857,45 @@ function Partida() {
 
                                         backgroundImage: `url(${ficha_con_id[board[key][1]]})`,
                                         color: `${(board[key][0] === 6 || board[key][0] === 8) ? "red" : "white"}`,
+                                    }}
+                                    onClick={() => {
+
+                                        // log
+                                        console.log("Has pulsado el hexágono", key);
+
+                                        // Si se está colocando el ladrón, hago la llamada al backend para indicar la nueva posición
+                                        // del ladrón
+                                        if (colocando_ladron) {
+                                            // log
+                                            console.log("Intento de mover ladrón");
+
+                                            // Ejemplo de url:
+                                            // https://cataninc-back-end-production-4d3e.up.railway.app/game_phases/move_thief?lobby_id=3&stolen_player_id=4&new_thief_position_tile_coord=5
+
+                                            const url = `${process.env.REACT_APP_URL_BACKEND}/game_phases/move_thief?lobby_id=${codigo_partida}&stolen_player_id=${usuario_to_color[board[key][1]]}&new_thief_position_tile_coord=${key}`;
+
+                                            // Petición GET para mover el ladrón
+                                            fetch(
+                                                url,
+                                                {
+                                                    method: "GET",
+                                                    headers: {
+                                                        "Content-Type": "application/x-www-form-urlencoded",
+                                                        Authorization: `Bearer ${Token}`,
+                                                    },
+                                                }
+                                            ).then((res) => {
+                                                res.json().then((data) => {
+                                                    console.log("Intento de mover ladrón:", data);
+
+                                                    // Desactivo el booleano de colocando_ladron
+                                                    setColocando_ladron(false);
+                                                });
+                                            }
+                                            ).catch((error) => {
+                                                console.error("Error:", error);
+                                            });
+                                        }
                                     }}
                                 >
                                     {
