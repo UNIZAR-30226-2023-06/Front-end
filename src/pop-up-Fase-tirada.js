@@ -109,7 +109,7 @@ const PopUpFaseTirada = (props) => {
         <div className="fixed z-50 inset-0 bg-black bg-opacity-0 flex items-center justify-center">
           <div
             className="relative bg-black rounded-lg p-4 bg-opacity-70 inline-flex flex-col items-center h-4/5 "
-            style={{ height: "700px", width: "500px" }}
+            style={{ height: "750px", width: "500px" }}
           >
             <h1
               className="text-5xl mt-2"
@@ -151,16 +151,14 @@ const PopUpFaseTirada = (props) => {
                     Tirar Dados
                   </button>
                 ) : (
-                  // (
-                  //   <button
-                  //     onClick={handleClose}
-                  //     class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-4 px-6 border border-gray-400 rounded shadow ml-2"
-                  //     style={{ fontSize: "30px", marginLeft: "20px" }}
-                  //   >
-                  //     Salir
-                  //   </button>
-                  // )
                   <>
+                    <button
+                      onClick={handleClose}
+                      class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-4 px-6 border border-gray-400 rounded shadow ml-2"
+                      style={{ fontSize: "30px", marginLeft: "140px" }}
+                    >
+                      Salir
+                    </button>
                     <h1
                       className="text-4xl"
                       style={{
