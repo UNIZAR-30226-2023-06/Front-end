@@ -1248,7 +1248,7 @@ function Partida() {
               global_info.realizando_intercambio = true;
               global_info.fase_intercambio = 1;
               global_info.cantidad_ofrecida = 2;
-              global_info.recurso_ofrecido = "CLAY";
+              global_info.recurso_ofrecido = "WOOD";
             }
           }}
         />
@@ -1272,7 +1272,7 @@ function Partida() {
               global_info.realizando_intercambio = true;
               global_info.fase_intercambio = 1;
               global_info.cantidad_ofrecida = 2;
-              global_info.recurso_ofrecido = "CLAY";
+              global_info.recurso_ofrecido = "WHEAT";
             }
           }}
         />
@@ -1296,7 +1296,7 @@ function Partida() {
               global_info.realizando_intercambio = true;
               global_info.fase_intercambio = 1;
               global_info.cantidad_ofrecida = 2;
-              global_info.recurso_ofrecido = "CLAY";
+              global_info.recurso_ofrecido = "STONE";
             }
           }}
         />
@@ -1318,9 +1318,8 @@ function Partida() {
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
               global_info.realizando_intercambio = true;
-              global_info.fase_intercambio = 1;
-              global_info.cantidad_ofrecida = 2;
-              global_info.recurso_ofrecido = "CLAY";
+              global_info.fase_intercambio = 0;
+              global_info.cantidad_ofrecida = 3;
             }
           }}
         />
@@ -1344,7 +1343,7 @@ function Partida() {
               global_info.realizando_intercambio = true;
               global_info.fase_intercambio = 1;
               global_info.cantidad_ofrecida = 2;
-              global_info.recurso_ofrecido = "CLAY";
+              global_info.recurso_ofrecido = "SHEEP";
             }
           }}
         />
@@ -1366,9 +1365,8 @@ function Partida() {
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
               global_info.realizando_intercambio = true;
-              global_info.fase_intercambio = 1;
-              global_info.cantidad_ofrecida = 2;
-              global_info.recurso_ofrecido = "CLAY";
+              global_info.fase_intercambio = 0;
+              global_info.cantidad_ofrecida = 3;
             }
           }}
         />
@@ -1390,9 +1388,8 @@ function Partida() {
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
               global_info.realizando_intercambio = true;
-              global_info.fase_intercambio = 1;
-              global_info.cantidad_ofrecida = 2;
-              global_info.recurso_ofrecido = "CLAY";
+              global_info.fase_intercambio = 0;
+              global_info.cantidad_ofrecida = 3;
             }
           }}
         />
@@ -1414,9 +1411,8 @@ function Partida() {
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
               global_info.realizando_intercambio = true;
-              global_info.fase_intercambio = 1;
-              global_info.cantidad_ofrecida = 2;
-              global_info.recurso_ofrecido = "CLAY";
+              global_info.fase_intercambio = 0;
+              global_info.cantidad_ofrecida = 3;
             }
           }}
         />
