@@ -15,6 +15,9 @@ const SecondTab = (params) => {
   /******************************** CONSTANTES ********************************/
   /****************************************************************************/
 
+  // console.log("URL: ", params.jugador_datos.Token);
+  // console.log("TODO: ", params);
+
   function realizar_intercambio(recurso_ofrecido, recuro_pedido, cantidad_ofrecida) {
 
     // Ejemplo url: 
@@ -28,7 +31,7 @@ const SecondTab = (params) => {
         method: "GET",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          Authorization: `Bearer ${params.Token}`,
+          Authorization: `Bearer ${params.jugador_datos.Token}`,
         },
       }
     )
