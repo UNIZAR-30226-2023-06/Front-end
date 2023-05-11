@@ -25,6 +25,8 @@ const SecondTab = (params) => {
 
     const url = "http://localhost:8000/game_phases/trade_with_bank?lobby_id=" + params.jugador_datos.codigo_partida + "&resource_type=" + recurso_ofrecido + "&amount=" + cantidad_ofrecida + "&requested_type=" + recuro_pedido;
 
+    console.log("La url es: ", url)
+
     fetch(
       url,
       {
