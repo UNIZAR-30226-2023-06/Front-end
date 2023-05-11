@@ -7,6 +7,7 @@ import Tabs from "./Components/TabComponent/Tabs";
 import PopUpFaseTirada from "./pop-up-Fase-tirada";
 import PopupTablaCostes from "./pop-up-TablaCostes";
 import PopUpFaseCompra from "./pop-up-FaseCompra";
+import PopUpFinPartida from "./pop-up-partida-terminada";
 import PopUpCartasDesarrollo from "./pop-up-Cartas-desarrollo";
 // 1-- Importamos useCookies y jwt_decode
 import { useCookies } from "react-cookie";
@@ -28,6 +29,10 @@ function Partida() {
 
   const [mi_id] = useState(json_token.id);
   const [mi_indice, setMi_indice] = useState(0);
+
+  const [partidaTerminada, setPartidaTerminada] = useState(false);
+  const [nombreGanador, setNombreGanador] = useState("");
+  const [idGanador, setIdGanador] = useState(0);
 
   const [imgs_oponentes, setImgs_oponentes] = useState([]);
   const [puntos_victoria_oponentes, setPuntos_victoria_oponentes] = useState(
@@ -196,6 +201,28 @@ function Partida() {
           .json()
           .then((data) => {
             console.log("JSON de la partida:", data);
+
+            // Si un jugador ya ha conseguido 10 puntos, detengo las iteraciones
+            if (data.player_0.victory_points >= 10) {
+              setPartidaTerminada(true);
+              setNombreGanador(data.player_0.name);
+              setIdGanador(data.player_0.id);
+            }
+            else if (data.player_1.victory_points >= 10) {
+              setPartidaTerminada(true);
+              setNombreGanador(data.player_1.name);
+              setIdGanador(data.player_1.id);
+            }
+            else if (data.player_2.victory_points >= 10) {
+              setPartidaTerminada(true);
+              setNombreGanador(data.player_2.name);
+              setIdGanador(data.player_2.id);
+            }
+            else if (data.player_3.victory_points >= 10) {
+              setPartidaTerminada(true);
+              setNombreGanador(data.player_3.name);
+              setIdGanador(data.player_3.id);
+            }
 
             const nuevos_jugadores = [
               data.player_0,
@@ -1628,10 +1655,12 @@ function Partida() {
       />
 
       <PopupTablaCostes />
+
       <PopUpCartasDesarrollo
         token={Token}
         lobby={codigo_partida}
-      />      {/* </PopUpFaseTirada>*/}
+      />
+
       {turno === mi_id && fase_actual === "RESOURCE_PRODUCTION" && (
         <PopUpFaseTirada
           show={ShowPopupFaseTirada}
@@ -1639,12 +1668,14 @@ function Partida() {
           lobby={codigo_partida}
         />
       )}
+
       {turno === mi_id && fase_actual === "BUILDING" && (
         <PopUpFaseCompra
           token={Token}
           lobby={codigo_partida}
         />
       )}
+      
     </div>
   );
 }
