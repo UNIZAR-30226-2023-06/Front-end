@@ -33,6 +33,9 @@ function Partida() {
   const [partidaTerminada, setPartidaTerminada] = useState(false);
   const [nombreGanador, setNombreGanador] = useState("");
   const [idGanador, setIdGanador] = useState(0);
+  const [imgGanador, setImgGanador] = useState("");
+
+  const [id_to_img, setId_to_img] = useState({});
 
   const [imgs_oponentes, setImgs_oponentes] = useState([]);
   const [puntos_victoria_oponentes, setPuntos_victoria_oponentes] = useState(
@@ -207,21 +210,25 @@ function Partida() {
               setPartidaTerminada(true);
               setNombreGanador(data.player_0.name);
               setIdGanador(data.player_0.id);
+              setImgGanador(id_to_img[data.player_0.id]);
             }
             else if (data.player_1.victory_points >= 10) {
               setPartidaTerminada(true);
               setNombreGanador(data.player_1.name);
               setIdGanador(data.player_1.id);
+              setImgGanador(id_to_img[data.player_1.id]);
             }
             else if (data.player_2.victory_points >= 10) {
               setPartidaTerminada(true);
               setNombreGanador(data.player_2.name);
               setIdGanador(data.player_2.id);
+              setImgGanador(id_to_img[data.player_2.id]);
             }
             else if (data.player_3.victory_points >= 10) {
               setPartidaTerminada(true);
               setNombreGanador(data.player_3.name);
               setIdGanador(data.player_3.id);
+              setImgGanador(id_to_img[data.player_3.id]);
             }
 
             const nuevos_jugadores = [
@@ -394,8 +401,12 @@ function Partida() {
 
               // Indico el color de cada jugador
               nuevo_usuario_to_color[color_to_codigo(jugadores[i].color)] = i;
-            }
 
+              id_to_img[jugadores[i].id] = jugadores[i].profile_pic === "default"
+              ? "http://localhost:3000/fotos_perfil/skin1.png"
+              : `http://localhost:3000/fotos_perfil/${lista_oponentes[i].profile_pic}.png`;
+            }
+            
             setSkins_jugadores_poblados(array_skins_jugadores_poblados);
             setSkins_jugadores_carreteras(array_skins_jugadores_carreteras);
             setSkins_jugadores_ciudades(array_skins_jugadores_ciudades);
@@ -757,7 +768,7 @@ function Partida() {
     const interval = setInterval(() => {
       ///////////////////////// CÓDIGO PERIODICO /////////////////////////
 
-      if (aldeas_iniciales_colocadas) {
+      if (aldeas_iniciales_colocadas && !partidaTerminada) {
         // Si no es mi turno, pongo el tiempo a 0, si no, lo actualizo
         if (turno !== mi_id) {
           setTiempo(0);
@@ -786,7 +797,6 @@ function Partida() {
         }
       }
 
-      ////////////////////////////////////////////////////////////////////
     }, 1000);
 
     return () => clearInterval(interval);
@@ -1675,7 +1685,17 @@ function Partida() {
           lobby={codigo_partida}
         />
       )}
-      
+
+      {partidaTerminada && (
+        <PopUpFinPartida
+          token={Token}
+          lobby={codigo_partida}
+          nombreGanador={nombreGanador}
+          idGanador={idGanador}
+          imgGanador={imgGanador}
+          mi_id={mi_id}
+        />
+      )}
     </div>
   );
 }
