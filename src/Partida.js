@@ -1197,9 +1197,37 @@ function Partida() {
                     }}
                   />
                 )}
+
+
+
             </div>
           );
         })}
+        {/************************** PUERTOS **************************/}
+
+        <button
+          className="w-36 flex h-40 hexagono_partida"
+          style={{
+            position: "absolute",
+            top:
+              init_top_board -
+              -1 * top_variation_unit,
+            left: "50%",
+            transform: `translateX(${init_left_board +
+              -5 * left_variation_unit
+              }px) rotate(-60deg)`,
+
+            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_arcilla.png)`,
+          }}
+          onClick={() => {
+            if (turno == mi_id && fase_actual === "TRADING") {
+              global_info.realizando_intercambio = true;
+              global_info.fase_intercambio = 1;
+              global_info.cantidad_ofrecida = 2;
+              global_info.recurso_ofrecido = "CLAY";
+            }
+          }}
+        />
 
         {/*************************** POBLADOS ***************************/}
 
@@ -1308,11 +1336,6 @@ function Partida() {
       >
         <button
           style={{
-            backgroundImage: `url(${turno == mi_id && aldeas_iniciales_colocadas
-              ? "http://localhost:3000/4x1/4x1_on.png"
-              : "http://localhost:3000/4x1/4x1_off.png"
-              })`,
-            backgroundSize: "cover",
             width: "170px",
             height: "80px",
           }}
@@ -1322,14 +1345,6 @@ function Partida() {
             if (turno == mi_id && fase_actual === "TRADING") {
               global_info.realizando_intercambio = true;
               global_info.cantidad_ofrecida = 4;
-
-              // Log
-              console.log("Estoy realizando un intercambio 4x1");
-            }
-            else {
-              global_info.realizando_intercambio = false;
-              global_info.cantidad_ofrecida = 0;
-              global_info.fase_intercambio = 0;
             }
           }}
         >
