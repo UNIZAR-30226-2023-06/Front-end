@@ -1229,6 +1229,198 @@ function Partida() {
           }}
         />
 
+        <button
+          className="w-36 flex h-40 hexagono_partida"
+          style={{
+            position: "absolute",
+            top:
+              init_top_board -
+              1 * top_variation_unit,
+            left: "50%",
+            transform: `translateX(${init_left_board +
+              -5 * left_variation_unit
+              }px) rotate(-60deg)`,
+
+            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_arcilla.png)`,
+          }}
+          onClick={() => {
+            if (turno == mi_id && fase_actual === "TRADING") {
+              global_info.realizando_intercambio = true;
+              global_info.fase_intercambio = 1;
+              global_info.cantidad_ofrecida = 2;
+              global_info.recurso_ofrecido = "CLAY";
+            }
+          }}
+        />
+
+        <button
+          className="w-36 flex h-40 hexagono_partida"
+          style={{
+            position: "absolute",
+            top:
+              init_top_board -
+              3 * top_variation_unit,
+            left: "50%",
+            transform: `translateX(${init_left_board +
+              1 * left_variation_unit
+              }px) rotate(60deg)`,
+
+            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_arcilla.png)`,
+          }}
+          onClick={() => {
+            if (turno == mi_id && fase_actual === "TRADING") {
+              global_info.realizando_intercambio = true;
+              global_info.fase_intercambio = 1;
+              global_info.cantidad_ofrecida = 2;
+              global_info.recurso_ofrecido = "CLAY";
+            }
+          }}
+        />
+
+        <button
+          className="w-36 flex h-40 hexagono_partida"
+          style={{
+            position: "absolute",
+            top:
+              init_top_board -
+              2 * top_variation_unit,
+            left: "50%",
+            transform: `translateX(${init_left_board +
+              4 * left_variation_unit
+              }px) rotate(60deg)`,
+
+            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_arcilla.png)`,
+          }}
+          onClick={() => {
+            if (turno == mi_id && fase_actual === "TRADING") {
+              global_info.realizando_intercambio = true;
+              global_info.fase_intercambio = 1;
+              global_info.cantidad_ofrecida = 2;
+              global_info.recurso_ofrecido = "CLAY";
+            }
+          }}
+        />
+
+        <button
+          className="w-36 flex h-40 hexagono_partida"
+          style={{
+            position: "absolute",
+            top:
+              init_top_board -
+              -3 * top_variation_unit,
+            left: "50%",
+            transform: `translateX(${init_left_board +
+              1 * left_variation_unit
+              }px) rotate(180deg)`,
+
+            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_arcilla.png)`,
+          }}
+          onClick={() => {
+            if (turno == mi_id && fase_actual === "TRADING") {
+              global_info.realizando_intercambio = true;
+              global_info.fase_intercambio = 1;
+              global_info.cantidad_ofrecida = 2;
+              global_info.recurso_ofrecido = "CLAY";
+            }
+          }}
+        />
+
+        <button
+          className="w-36 flex h-40 hexagono_partida"
+          style={{
+            position: "absolute",
+            top:
+              init_top_board -
+              -2 * top_variation_unit,
+            left: "50%",
+            transform: `translateX(${init_left_board +
+              4 * left_variation_unit
+              }px) rotate(180deg)`,
+
+            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_arcilla.png)`,
+          }}
+          onClick={() => {
+            if (turno == mi_id && fase_actual === "TRADING") {
+              global_info.realizando_intercambio = true;
+              global_info.fase_intercambio = 1;
+              global_info.cantidad_ofrecida = 2;
+              global_info.recurso_ofrecido = "CLAY";
+            }
+          }}
+        />
+
+        <button
+          className="w-36 flex h-40 hexagono_partida"
+          style={{
+            position: "absolute",
+            top:
+              init_top_board -
+              0 * top_variation_unit,
+            left: "50%",
+            transform: `translateX(${init_left_board +
+              6 * left_variation_unit
+              }px) rotate(120deg)`,
+
+            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_arcilla.png)`,
+          }}
+          onClick={() => {
+            if (turno == mi_id && fase_actual === "TRADING") {
+              global_info.realizando_intercambio = true;
+              global_info.fase_intercambio = 1;
+              global_info.cantidad_ofrecida = 2;
+              global_info.recurso_ofrecido = "CLAY";
+            }
+          }}
+        />
+
+        <button
+          className="w-36 flex h-40 hexagono_partida"
+          style={{
+            position: "absolute",
+            top:
+              init_top_board -
+              3 * top_variation_unit,
+            left: "50%",
+            transform: `translateX(${init_left_board +
+              -3 * left_variation_unit
+              }px) rotate(0deg)`,
+
+            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_arcilla.png)`,
+          }}
+          onClick={() => {
+            if (turno == mi_id && fase_actual === "TRADING") {
+              global_info.realizando_intercambio = true;
+              global_info.fase_intercambio = 1;
+              global_info.cantidad_ofrecida = 2;
+              global_info.recurso_ofrecido = "CLAY";
+            }
+          }}
+        />
+
+        <button
+          className="w-36 flex h-40 hexagono_partida"
+          style={{
+            position: "absolute",
+            top:
+              init_top_board -
+              -3 * top_variation_unit,
+            left: "50%",
+            transform: `translateX(${init_left_board +
+              -3 * left_variation_unit
+              }px) rotate(-120deg)`,
+
+            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_arcilla.png)`,
+          }}
+          onClick={() => {
+            if (turno == mi_id && fase_actual === "TRADING") {
+              global_info.realizando_intercambio = true;
+              global_info.fase_intercambio = 1;
+              global_info.cantidad_ofrecida = 2;
+              global_info.recurso_ofrecido = "CLAY";
+            }
+          }}
+        />
+
         {/*************************** POBLADOS ***************************/}
 
         {Object.entries(building).map(([key, value], index) => {
