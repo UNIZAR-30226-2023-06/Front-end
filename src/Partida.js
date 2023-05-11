@@ -1221,10 +1221,17 @@ function Partida() {
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
-              global_info.realizando_intercambio = true;
-              global_info.fase_intercambio = 1;
-              global_info.cantidad_ofrecida = 2;
-              global_info.recurso_ofrecido = "CLAY";
+              // Solo permito el intercambio si tengo una construcción en el
+              // nodo 33 o 48
+              if (
+                building["67"][0] === color_to_codigo(mi_color) ||
+                building["82"][0] === color_to_codigo(mi_color)
+              ) {
+                global_info.realizando_intercambio = true;
+                global_info.fase_intercambio = 1;
+                global_info.cantidad_ofrecida = 2;
+                global_info.recurso_ofrecido = "CLAY";
+              }
             }
           }}
         />
@@ -1245,10 +1252,15 @@ function Partida() {
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
-              global_info.realizando_intercambio = true;
-              global_info.fase_intercambio = 1;
-              global_info.cantidad_ofrecida = 2;
-              global_info.recurso_ofrecido = "WOOD";
+              if (
+                building["37"][0] === color_to_codigo(mi_color) ||
+                building["52"][0] === color_to_codigo(mi_color)
+              ) {
+                global_info.realizando_intercambio = true;
+                global_info.fase_intercambio = 1;
+                global_info.cantidad_ofrecida = 2;
+                global_info.recurso_ofrecido = "WOOD";
+              }
             }
           }}
         />
@@ -1269,10 +1281,15 @@ function Partida() {
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
-              global_info.realizando_intercambio = true;
-              global_info.fase_intercambio = 1;
-              global_info.cantidad_ofrecida = 2;
-              global_info.recurso_ofrecido = "WHEAT";
+              if (
+                building["90"][0] === color_to_codigo(mi_color) ||
+                building["107"][0] === color_to_codigo(mi_color)
+              ) {
+                global_info.realizando_intercambio = true;
+                global_info.fase_intercambio = 1;
+                global_info.cantidad_ofrecida = 2;
+                global_info.recurso_ofrecido = "WHEAT";
+              }
             }
           }}
         />
@@ -1293,10 +1310,15 @@ function Partida() {
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
-              global_info.realizando_intercambio = true;
-              global_info.fase_intercambio = 1;
-              global_info.cantidad_ofrecida = 2;
-              global_info.recurso_ofrecido = "STONE";
+              if (
+                building["156"][0] === color_to_codigo(mi_color) ||
+                building["173"][0] === color_to_codigo(mi_color)
+              ) {
+                global_info.realizando_intercambio = true;
+                global_info.fase_intercambio = 1;
+                global_info.cantidad_ofrecida = 2;
+                global_info.recurso_ofrecido = "STONE";
+              }
             }
           }}
         />
@@ -1317,9 +1339,14 @@ function Partida() {
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
-              global_info.realizando_intercambio = true;
-              global_info.fase_intercambio = 0;
-              global_info.cantidad_ofrecida = 3;
+              if (
+                building["165"][0] === color_to_codigo(mi_color) ||
+                building["182"][0] === color_to_codigo(mi_color)
+              ) {
+                global_info.realizando_intercambio = true;
+                global_info.fase_intercambio = 0;
+                global_info.cantidad_ofrecida = 3;
+              }
             }
           }}
         />
@@ -1340,10 +1367,15 @@ function Partida() {
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
-              global_info.realizando_intercambio = true;
-              global_info.fase_intercambio = 1;
-              global_info.cantidad_ofrecida = 2;
-              global_info.recurso_ofrecido = "SHEEP";
+              if (
+                building["201"][0] === color_to_codigo(mi_color) ||
+                building["218"][0] === color_to_codigo(mi_color)
+              ) {
+                global_info.realizando_intercambio = true;
+                global_info.fase_intercambio = 1;
+                global_info.cantidad_ofrecida = 2;
+                global_info.recurso_ofrecido = "SHEEP";
+              }
             }
           }}
         />
@@ -1364,9 +1396,14 @@ function Partida() {
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
-              global_info.realizando_intercambio = true;
-              global_info.fase_intercambio = 0;
-              global_info.cantidad_ofrecida = 3;
+              if (
+                building["205"][0] === color_to_codigo(mi_color) ||
+                building["220"][0] === color_to_codigo(mi_color)
+              ) {
+                global_info.realizando_intercambio = true;
+                global_info.fase_intercambio = 0;
+                global_info.cantidad_ofrecida = 3;
+              }
             }
           }}
         />
@@ -1387,9 +1424,14 @@ function Partida() {
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
-              global_info.realizando_intercambio = true;
-              global_info.fase_intercambio = 0;
-              global_info.cantidad_ofrecida = 3;
+              if (
+                building["39"][0] === color_to_codigo(mi_color) ||
+                building["56"][0] === color_to_codigo(mi_color)
+              ) {
+                global_info.realizando_intercambio = true;
+                global_info.fase_intercambio = 0;
+                global_info.cantidad_ofrecida = 3;
+              }
             }
           }}
         />
@@ -1410,9 +1452,14 @@ function Partida() {
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
-              global_info.realizando_intercambio = true;
-              global_info.fase_intercambio = 0;
-              global_info.cantidad_ofrecida = 3;
+              if (
+                building["114"][0] === color_to_codigo(mi_color) ||
+                building["131"][0] === color_to_codigo(mi_color)
+              ) {
+                global_info.realizando_intercambio = true;
+                global_info.fase_intercambio = 0;
+                global_info.cantidad_ofrecida = 3;
+              }
             }
           }}
         />
