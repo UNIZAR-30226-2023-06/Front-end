@@ -245,12 +245,14 @@ function Partida() {
               (jugador) => jugador.id === mi_id
             );
 
+            // añadir parametros al json
             const yoyo = {
               ...yo[0],
               codigo_partida: codigo_partida,
               Token: Token,
             }
 
+            
             setEstado_jugador(yoyo);
 
             setBoard(data.board.tiles);
@@ -1703,10 +1705,10 @@ function Partida() {
 
       <PopupTablaCostes />
 
-      <PopUpCartasDesarrollo
+      {/* <PopUpCartasDesarrollo
         token={Token}
         lobby={codigo_partida}
-      />
+      /> */}
 
       {turno === mi_id && fase_actual === "RESOURCE_PRODUCTION" && (
         <PopUpFaseTirada

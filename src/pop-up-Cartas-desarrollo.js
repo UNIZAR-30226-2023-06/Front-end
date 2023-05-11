@@ -36,13 +36,47 @@ const PopUpCartasDesarrollo = (props) => {
     console.log(numeros);
     console.log(selectedCardIndex);
     if (numeros[selectedCardIndex] === 0) {
-      toast.error("No tienes los recursos suficientes");
+      toast.error("No dispones de esta carta de desarrollo");
       setShowConfirmation(false);
     } else {
-      if (selectedCardIndex === 6) {
+      if (
+        selectedCardIndex === 0 ||
+        selectedCardIndex === 1 ||
+        selectedCardIndex === 2 ||
+        selectedCardIndex === 3 ||
+        selectedCardIndex === 4
+      ) {
+        // Hago una petición get al backend para usar la carta de desarrollo
+
+        // Ejemplo url:
+        // http://localhost:8000/game_phases/use_victory_point_progress_card?lobby_id=65
+        fetch(
+          `${process.env.REACT_APP_URL_BACKEND}/game_phases/use_victory_point_progress_card?lobby_id=${props.lobby}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              Authorization: `Bearer ${props.token}`,
+            },
+          }
+        )
+          .then((res) => {
+            res.json().then((data) => {
+              console.log("----Informacion del usuario----");
+              console.log(data);
+            });
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      } else if (selectedCardIndex === 5) {
+        // TODO: usar un caballero
+      } else if (selectedCardIndex === 6) {
         console.log("hola");
         setShowResourceSelection(true);
         setShowConfirmation(false);
+      } else if (selectedCardIndex === 7) {
+        // TODO: construcción de carreteras
       } else if (selectedCardIndex === 8) {
         setShowResourceSelection2(true);
         setShowConfirmation(false);
@@ -83,6 +117,25 @@ const PopUpCartasDesarrollo = (props) => {
     }
   };
 
+  function ComprarCartaDesarrollo() {
+    // Ejemplo de url:
+    // http://localhost:8000/game_phases/buy_development_card?lobby_id=654
+
+    fetch(
+      `${process.env.REACT_APP_URL_BACKEND}/game_phases/buy_development_card?lobby_id=${props.lobby}`
+    )
+      .then((res) => {
+        res.json().then((data) => {
+          console.log("----Informacion del usuario----");
+          console.log("---- sergio me he ido a cenar :)----");
+          console.log(data);
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+
   function GetNumCartas() {
     console.log(props.lobby);
     fetch(
@@ -99,6 +152,7 @@ const PopUpCartasDesarrollo = (props) => {
         res.json().then((data) => {
           console.log("----Informacion del usuario----");
           console.log(data);
+          // aqui se toman los números de las cartas que tenemos
           const newNumeros = [
             data.hand.dev_cards.library,
             data.hand.dev_cards.market,
@@ -154,7 +208,6 @@ const PopUpCartasDesarrollo = (props) => {
         },
       }
     )
-    
       .then((res) => {
         setSelectedResources([]);
         res.json().then((data) => {
@@ -233,11 +286,11 @@ const PopUpCartasDesarrollo = (props) => {
     <>
       <div
         style={{
-          position: "relative",
+          //position: "relative",
           width: "150px",
           height: "150px",
-          left: "1650px",
-          top: "300px",
+          //left: "1650px",
+          //top: "300px",
           cursor: "pointer",
         }}
         onClick={handleOpen}
@@ -247,9 +300,9 @@ const PopUpCartasDesarrollo = (props) => {
           alt="Imagen"
           style={{ width: "100%", height: "100%" }}
         />
-        <div
+        {/* <div
           style={{
-            position: "absolute",
+            //position: "absolute",
             top: "160px",
             left: "50%",
             transform: "translateX(-50%)",
@@ -262,7 +315,7 @@ const PopUpCartasDesarrollo = (props) => {
           }}
         >
           Ver cartas de desarrollo
-        </div>
+        </div> */}
       </div>
       {showPopup && (
         <div
@@ -272,7 +325,7 @@ const PopUpCartasDesarrollo = (props) => {
           <div
             className="relative bg-gray-400 rounded-lg p-4 inline-flex flex-col items-center h-4/5 "
             style={{
-              minHeight: "640px",
+              minHeight: "800px",
               minWidth: "1290px",
               maxWidth: "1290px",
             }}
@@ -330,6 +383,15 @@ const PopUpCartasDesarrollo = (props) => {
                   </div>
                 </div>
               ))}
+              <div className="p-2 relative" style={{ cursor: "pointer" }}>
+                <button className=" mt-4 px-4 py-2 rounded-lg text-white w-full h-auto"
+                onClick={ComprarCartaDesarrollo}>
+                  <h1 className="text-lg text-white absolute top-8 left-12 w-full h-full flex">
+                    COMPRAR CARTA
+                  </h1>
+                  <img src="http://localhost:3000/cartas-desarrollo/comprar-cartas-desarrollo.png"></img>
+                </button>
+              </div>
             </div>
             {showConfirmation && (
               <div className="fixed z-50 top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
