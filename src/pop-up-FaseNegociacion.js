@@ -1,9 +1,31 @@
 import React, { useState, useEffect } from "react";
 
-
 const PopUpFaseNegociacion = (props) => {
   const [showPopup, setShowPopup] = useState(false);
   const [shouldShowPopup, setShouldShowPopup] = useState(false);
+  const [arcilla, setMiArcilla] = useState(0);
+  const [roca, setMiRoca] = useState(0);
+  const [oveja, setMiOveja] = useState(0);
+  const [trigo, setMiTrigo] = useState(0);
+  const [madera, setMiMadera] = useState(0);
+  // orden: arcilla = 1, roca = 2, oveja = 3, trigo = 4, madera = 5
+  const [countOfrezco, setOfrezco] = useState([0, 0, 0, 0, 0]);
+
+  useEffect(() => {
+    if (props.show) {
+      setShouldShowPopup(true);
+      setShowPopup(true);
+
+      setMiArcilla(props.jugador_datos.hand.clay);
+      setMiRoca(props.jugador_datos.hand.rock);
+      setMiOveja(props.jugador_datos.hand.sheep);
+      setMiTrigo(props.jugador_datos.hand.wheat);
+      setMiMadera(props.jugador_datos.hand.wood);
+    } else {
+      setShowPopup(false);
+      setShouldShowPopup(false);
+    }
+  }, [props.show]);
 
   const handleClose = () => {
     setShouldShowPopup(false);
@@ -29,9 +51,13 @@ const PopUpFaseNegociacion = (props) => {
     }
   }, [shouldShowPopup]);
 
+  console.log("----------------------------------------");
+  console.log(props.jugador_datos);
+
+  console.log(props.jugador_datos.hand.clay);
+
   return (
     <>
-      <button onClick={handleOpen}>Mostrar Popup</button>
       {showPopup && (
         <div
           className="fixed z-50 top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center"
@@ -60,12 +86,12 @@ const PopUpFaseNegociacion = (props) => {
               >
                 <div className="mr-2">
                   <img
-                    src="http://localhost:3000/oveja.png"
+                    src="	http://localhost:3000/recursos/ovejas.png"
                     alt="oveja"
                     style={{ width: "65px", height: "65px" }}
                   />
                 </div>
-                <h1 className="text-4xl text-white ml-2">0</h1>
+                <h1 className="text-4xl text-white ml-2">{oveja}</h1>
               </div>
               <div
                 className="flex items-center"
@@ -73,12 +99,12 @@ const PopUpFaseNegociacion = (props) => {
               >
                 <div className="mr-2">
                   <img
-                    src="http://localhost:3000/troncos.png"
+                    src="	http://localhost:3000/recursos/madera.png"
                     alt="troncos"
                     style={{ width: "65px", height: "65px" }}
                   />
                 </div>
-                <h1 className="text-4xl text-white ml-2">0</h1>
+                <h1 className="text-4xl text-white ml-2">{madera}</h1>
               </div>
               <div
                 className="flex items-center"
@@ -86,12 +112,12 @@ const PopUpFaseNegociacion = (props) => {
               >
                 <div className="mr-2">
                   <img
-                    src="http://localhost:3000/cebada.png"
+                    src="	http://localhost:3000/recursos/trigo.png"
                     alt="cebada"
                     style={{ width: "65px", height: "65px" }}
                   />
                 </div>
-                <h1 className="text-4xl text-white ml-2">0</h1>
+                <h1 className="text-4xl text-white ml-2">{trigo}</h1>
               </div>
               <div
                 className="flex items-center"
@@ -99,12 +125,12 @@ const PopUpFaseNegociacion = (props) => {
               >
                 <div className="mr-2">
                   <img
-                    src="http://localhost:3000/piedras.png"
+                    src="	http://localhost:3000/recursos/roca.png"
                     alt="piedras"
                     style={{ width: "65px", height: "65px" }}
                   />
                 </div>
-                <h1 className="text-4xl text-white ml-2">0</h1>
+                <h1 className="text-4xl text-white ml-2">{roca}</h1>
               </div>
               <div
                 className="flex items-center"
@@ -112,12 +138,12 @@ const PopUpFaseNegociacion = (props) => {
               >
                 <div className="mr-2">
                   <img
-                    src="http://localhost:3000/arcilla.png"
+                    src="	http://localhost:3000/recursos/arcilla.png"
                     alt="arcilla"
                     style={{ width: "65px", height: "65px" }}
                   />
                 </div>
-                <h1 className="text-4xl text-white ml-2">0</h1>
+                <h1 className="text-4xl text-white ml-2">{arcilla}</h1>
               </div>
             </div>
 
@@ -150,11 +176,27 @@ const PopUpFaseNegociacion = (props) => {
                   }}
                 >
                   <img
-                    src="http://localhost:3000/oveja.png"
+                    src="	http://localhost:3000/recursos/ovejas.png"
                     alt="oveja"
                     style={{ width: "50px", height: "50px", marginTop: "22px" }}
                   />
                   <h1 className="text-4xl text-grey-900 ml-2 mt-7">0</h1>
+                  {/* 
+                  ESTO ESTA EN PROCESO ES LO DE LAS FLECHITAS PERO QUE CON EL STYLE DE ARRIBA HAY QUE 
+                  MIRAR COMO CUADRARLO,LAS FUNCIONES LAS TENGO TAMBIÉN FALTA SOLO AÑADIRLAS PERO VOY PASO 
+                  A PASO, GRACIAS POR LA PACIENCIA 
+                  <div key={3}>
+                    <button onClick={() => incrementarContador(3)}>▲</button>
+                    <input
+                      type="number"
+                      className="text-4xl"
+                      onChange={(e) =>
+                        ActulizarArray(3, parseInt(e.target.value))
+                      }
+                    />
+                    <button onClick={() => decrementarContador(3)}>▼</button>
+                  </div> */}
+                 
                 </div>
                 <div
                   class="w-1/2 h-20 bg-gray-100 rounded-lg inline-block"
@@ -171,7 +213,28 @@ const PopUpFaseNegociacion = (props) => {
                   }}
                 >
                   <img
-                    src="http://localhost:3000/troncos.png"
+                    src="	http://localhost:3000/recursos/madera.png"
+                    alt="madera"
+                    style={{ width: "50px", height: "50px", marginTop: "22px" }}
+                  />
+                  <h1 className="text-4xl text-grey-900 ml-2 mt-7">0</h1>
+                </div>{" "}
+                <div
+                  class="w-1/2 h-20 bg-gray-100 rounded-lg inline-block"
+                  style={{
+                    width: "150px",
+                    height: "100px",
+                    marginLeft: "30px",
+                    marginRight: "20px",
+                    marginTop: "20px",
+                    borderRadius: "13%",
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: "5px",
+                  }}
+                >
+                  <img
+                    src="	http://localhost:3000/recursos/trigo.png"
                     alt="oveja"
                     style={{ width: "50px", height: "50px", marginTop: "22px" }}
                   />
@@ -192,7 +255,7 @@ const PopUpFaseNegociacion = (props) => {
                   }}
                 >
                   <img
-                    src="http://localhost:3000/cebada.png"
+                    src="http://localhost:3000/recursos/roca.png"
                     alt="oveja"
                     style={{ width: "50px", height: "50px", marginTop: "22px" }}
                   />
@@ -213,28 +276,7 @@ const PopUpFaseNegociacion = (props) => {
                   }}
                 >
                   <img
-                    src="http://localhost:3000/piedras.png"
-                    alt="oveja"
-                    style={{ width: "50px", height: "50px", marginTop: "22px" }}
-                  />
-                  <h1 className="text-4xl text-grey-900 ml-2 mt-7">0</h1>
-                </div>{" "}
-                <div
-                  class="w-1/2 h-20 bg-gray-100 rounded-lg inline-block"
-                  style={{
-                    width: "150px",
-                    height: "100px",
-                    marginLeft: "30px",
-                    marginRight: "20px",
-                    marginTop: "20px",
-                    borderRadius: "13%",
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: "5px",
-                  }}
-                >
-                  <img
-                    src="http://localhost:3000/arcilla.png"
+                    src="	http://localhost:3000/recursos/arcilla.png"
                     alt="oveja"
                     style={{ width: "50px", height: "50px", marginTop: "22px" }}
                   />
@@ -262,7 +304,7 @@ const PopUpFaseNegociacion = (props) => {
                   }}
                 >
                   <img
-                    src="http://localhost:3000/oveja.png"
+                    src="	http://localhost:3000/recursos/ovejas.png"
                     alt="oveja"
                     style={{ width: "50px", height: "50px", marginTop: "22px" }}
                   />
@@ -283,7 +325,28 @@ const PopUpFaseNegociacion = (props) => {
                   }}
                 >
                   <img
-                    src="http://localhost:3000/troncos.png"
+                    src="http://localhost:3000/recursos/madera.png"
+                    alt="madera"
+                    style={{ width: "50px", height: "50px", marginTop: "22px" }}
+                  />
+                  <h1 className="text-4xl text-grey-900 ml-2 mt-7">0</h1>
+                </div>{" "}
+                <div
+                  class="w-1/2 h-20 bg-gray-100 rounded-lg inline-block"
+                  style={{
+                    width: "150px",
+                    height: "100px",
+                    marginLeft: "30px",
+                    marginRight: "20px",
+                    marginTop: "20px",
+                    borderRadius: "13%",
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: "5px",
+                  }}
+                >
+                  <img
+                    src="	http://localhost:3000/recursos/trigo.png"
                     alt="oveja"
                     style={{ width: "50px", height: "50px", marginTop: "22px" }}
                   />
@@ -304,7 +367,7 @@ const PopUpFaseNegociacion = (props) => {
                   }}
                 >
                   <img
-                    src="http://localhost:3000/cebada.png"
+                    src="	http://localhost:3000/recursos/roca.png"
                     alt="oveja"
                     style={{ width: "50px", height: "50px", marginTop: "22px" }}
                   />
@@ -325,28 +388,7 @@ const PopUpFaseNegociacion = (props) => {
                   }}
                 >
                   <img
-                    src="http://localhost:3000/piedras.png"
-                    alt="oveja"
-                    style={{ width: "50px", height: "50px", marginTop: "22px" }}
-                  />
-                  <h1 className="text-4xl text-grey-900 ml-2 mt-7">0</h1>
-                </div>{" "}
-                <div
-                  class="w-1/2 h-20 bg-gray-100 rounded-lg inline-block"
-                  style={{
-                    width: "150px",
-                    height: "100px",
-                    marginLeft: "30px",
-                    marginRight: "20px",
-                    marginTop: "20px",
-                    borderRadius: "13%",
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: "5px",
-                  }}
-                >
-                  <img
-                    src="http://localhost:3000/arcilla.png"
+                    src="	http://localhost:3000/recursos/arcilla.png"
                     alt="oveja"
                     style={{ width: "50px", height: "50px", marginTop: "22px" }}
                   />

@@ -52,21 +52,29 @@ const PopupTablaCostes = (props) => {
       {showPopup && (
         <div
           className="fixed z-50 top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center"
-          style={{
-            backgroundImage: bgImage,
-            backgroundSize: "contain",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center",
-            minHeight: "640px",
-            minWidth: "1290px",
-          }}
+          // style={{
+          //   //backgroundImage: bgImage,
+          //   backgroundSize: "contain",
+          //   backgroundRepeat: "no-repeat",
+          //   backgroundPosition: "center",
+          //   minHeight: "640px",
+          //   minWidth: "1290px",
+          // }}
           onClick={handleBackgroundClick}
         >
           <img
+            src="http://localhost:3000/tabla-de-costes.png"
+            alt="close"
+            className="absolute cursor-pointer my-auto mx-auto "
+            style={{ maxWidth: "720px", maxHeight: "1290px" }}
+            onClick={handleClose}
+          />
+          {/*   cruz para cerrar la pop-up*/}
+          <img
             src="http://localhost:3000/black_cross.png"
             alt="close"
-            className="absolute top-0 right-0 cursor-pointer mt-3 mr-3 pointer-events-auto"
-            style={{ width: "50px", height: "50px", left: "1300px" }}
+            className="absolute top-14 cursor-pointer mt-3 mr-8 pointer-events-auto"
+            style={{ width: "50px", height: "50px", left: "1250px" }}
             onClick={handleClose}
           />
           {props.children}

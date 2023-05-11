@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "reactjs-popup/dist/index.css";
-import { toast } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 import { useNavigate } from "react-router-dom";
 
@@ -122,13 +122,25 @@ const PopUpCartasDesarrollo = (props) => {
     // http://localhost:8000/game_phases/buy_development_card?lobby_id=654
 
     fetch(
-      `${process.env.REACT_APP_URL_BACKEND}/game_phases/buy_development_card?lobby_id=${props.lobby}`
+      `${process.env.REACT_APP_URL_BACKEND}/game_phases/buy_development_card?lobby_id=${props.lobby}`,
+      {
+        method: "GET",
+        headers: {
+          //"Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${props.token}`,
+        },
+      }
     )
       .then((res) => {
         res.json().then((data) => {
           console.log("----Informacion del usuario----");
-          console.log("---- sergio me he ido a cenar :)----");
           console.log(data);
+          if (data.detail === "No se pueden construir edificios en esta fase del turno") {
+            toast.error("solo se puede comprar en la fase de construcción de tu turnoo!!");
+          }
+          else if ( data.detail === "Error: No tienes los recursos suficientes para comprar la carta de desarrollo"){
+            toast.error("No tienes recursos suficientes :(");
+          }
         });
       })
       .catch((error) => {
@@ -384,8 +396,10 @@ const PopUpCartasDesarrollo = (props) => {
                 </div>
               ))}
               <div className="p-2 relative" style={{ cursor: "pointer" }}>
-                <button className=" mt-4 px-4 py-2 rounded-lg text-white w-full h-auto"
-                onClick={ComprarCartaDesarrollo}>
+                <button
+                  className=" mt-4 px-4 py-2 rounded-lg text-white w-full h-auto"
+                  onClick={ComprarCartaDesarrollo}
+                >
                   <h1 className="text-lg text-white absolute top-8 left-12 w-full h-full flex">
                     COMPRAR CARTA
                   </h1>

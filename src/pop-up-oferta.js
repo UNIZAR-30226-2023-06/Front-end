@@ -3,6 +3,11 @@ import React, { useState, useEffect } from "react";
 const PopUpOferta = (props) => {
   const [showPopup, setShowPopup] = useState(false);
   const [shouldShowPopup, setShouldShowPopup] = useState(false);
+  const [arcilla, setMiArcilla] = useState(0);
+  const [roca, setMiRoca] = useState(0);
+  const [oveja, setMiOveja] = useState(0);
+  const [trigo, setMiTrigo] = useState(0);
+  const [madera, setMiMadera] = useState(0);
 
   const handleClose = () => {
     setShouldShowPopup(false);
