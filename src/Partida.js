@@ -1241,7 +1241,7 @@ function Partida() {
               -5 * left_variation_unit
               }px) rotate(-60deg)`,
 
-            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_arcilla.png)`,
+            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_madera.png)`,
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
@@ -1265,7 +1265,7 @@ function Partida() {
               1 * left_variation_unit
               }px) rotate(60deg)`,
 
-            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_arcilla.png)`,
+            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_trigo.png)`,
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
@@ -1289,7 +1289,7 @@ function Partida() {
               4 * left_variation_unit
               }px) rotate(60deg)`,
 
-            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_arcilla.png)`,
+            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_roca.png)`,
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
@@ -1313,7 +1313,7 @@ function Partida() {
               1 * left_variation_unit
               }px) rotate(180deg)`,
 
-            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_arcilla.png)`,
+            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_3.png)`,
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
@@ -1337,7 +1337,7 @@ function Partida() {
               4 * left_variation_unit
               }px) rotate(180deg)`,
 
-            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_arcilla.png)`,
+            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_ovejas.png)`,
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
@@ -1361,7 +1361,7 @@ function Partida() {
               6 * left_variation_unit
               }px) rotate(120deg)`,
 
-            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_arcilla.png)`,
+            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_3.png)`,
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
@@ -1385,7 +1385,7 @@ function Partida() {
               -3 * left_variation_unit
               }px) rotate(0deg)`,
 
-            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_arcilla.png)`,
+            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_3.png)`,
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
@@ -1409,7 +1409,7 @@ function Partida() {
               -3 * left_variation_unit
               }px) rotate(-120deg)`,
 
-            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_arcilla.png)`,
+            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_3.png)`,
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
