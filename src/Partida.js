@@ -72,10 +72,11 @@ function Partida() {
   const [partida_empezada, setPartida_empezada] = useState(false);
   const [fase_actual, setFase_actual] = useState("");
 
+  const [usandoCartaCarreteras, setUsandoCartaCarreteras] = useState(false);
+  const [cartasCarreteraColocadas, setCartasCarreteraColocadas] = useState(0);
+
   const [skins_jugadores_poblados, setSkins_jugadores_poblados] = useState([]);
-  const [skins_jugadores_carreteras, setSkins_jugadores_carreteras] = useState(
-    []
-  );
+  const [skins_jugadores_carreteras, setSkins_jugadores_carreteras] = useState([]);
   const [skins_jugadores_ciudades, setSkins_jugadores_ciudades] = useState([]);
 
   const [colores_oponentes, setColores_oponentes] = useState([]);
@@ -403,10 +404,10 @@ function Partida() {
               nuevo_usuario_to_color[color_to_codigo(jugadores[i].color)] = i;
 
               id_to_img[jugadores[i].id] = jugadores[i].profile_pic === "default"
-              ? "http://localhost:3000/fotos_perfil/skin1.png"
-              : `http://localhost:3000/fotos_perfil/${lista_oponentes[i].profile_pic}.png`;
+                ? "http://localhost:3000/fotos_perfil/skin1.png"
+                : `http://localhost:3000/fotos_perfil/${lista_oponentes[i].profile_pic}.png`;
             }
-            
+
             setSkins_jugadores_poblados(array_skins_jugadores_poblados);
             setSkins_jugadores_carreteras(array_skins_jugadores_carreteras);
             setSkins_jugadores_ciudades(array_skins_jugadores_ciudades);
@@ -589,8 +590,42 @@ function Partida() {
     }
   }
 
+  // Función que permite colocar 2 carreteras seguidas
+  function carta_carreteras() {
+    setUsandoCartaCarreteras(true);
+  }
+
   function construir_carretera(coordenada) {
-    if (!aldeas_iniciales_colocadas) {
+    if (usandoCartaCarreteras) {
+      // Aviso al backend de que ya he colocado lo mío
+      fetch(
+        `${process.env.REACT_APP_URL_BACKEND}/build-road?edge=${coordenada}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${Token}`,
+          },
+        }
+      )
+        .then((res) => {
+          res.json().then((data) => {
+            console.log("Intento de colocar carretera:", data);
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+
+      setCartasCarreteraColocadas(cartasCarreteraColocadas + 1);
+
+      if (cartasCarreteraColocadas === 2) {
+        setUsandoCartaCarreteras(false);
+        setCartasCarreteraColocadas(0);
+      }
+    }
+
+    else if (!aldeas_iniciales_colocadas) {
       fetch(
         `${process.env.REACT_APP_URL_BACKEND}/build-road?edge=${coordenada}`,
         {
@@ -1618,6 +1653,8 @@ function Partida() {
               global_info.realizando_intercambio = true;
               global_info.cantidad_ofrecida = 4;
             }
+
+            carta_carreteras();
           }}
         >
           4x1
