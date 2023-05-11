@@ -14,7 +14,8 @@ const PopUpCartasDesarrollo = (props) => {
   const [selectedCardIndex, setSelectedCardIndex] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showResourceSelection, setShowResourceSelection] = useState(false);
-
+  const [showResourceSelection2, setShowResourceSelection2] = useState(false);
+  const [selectedResources, setSelectedResources] = useState([]);
   const handleClose = () => {
     setShouldShowPopup(false);
     props.onClose();
@@ -42,8 +43,9 @@ const PopUpCartasDesarrollo = (props) => {
         console.log("hola");
         setShowResourceSelection(true);
         setShowConfirmation(false);
-      } else {
-        // Lógica adicional si el índice no es 6
+      } else if (selectedCardIndex === 8) {
+        setShowResourceSelection2(true);
+        setShowConfirmation(false);
       }
     }
   };
@@ -54,7 +56,8 @@ const PopUpCartasDesarrollo = (props) => {
   };
 
   const handleResourceSelectionClose = () => {
-    setShowResourceSelection(false);
+    UsarDescubrimiento();
+    setShowResourceSelection2(false);
   };
 
   const handleBackgroundClick = (event) => {
@@ -71,11 +74,14 @@ const PopUpCartasDesarrollo = (props) => {
     }
   }, [shouldShowPopup]);
 
-  // 2-- Creamos la estructura de las cookies
-  const [cookies] = useCookies(["token"]);
-
-  // 3-- Obtenemos el token de las cookies
-  const Token = cookies.token;
+  const handleResourceSelection = (resource) => {
+    if (selectedResources.length < 2) {
+      setSelectedResources((prevSelectedResources) => [
+        ...prevSelectedResources,
+        resource,
+      ]);
+    }
+  };
 
   function GetNumCartas() {
     console.log(props.lobby);
@@ -107,6 +113,53 @@ const PopUpCartasDesarrollo = (props) => {
           setNumeros(newNumeros); // Actualizar el estado con los números obtenidos
 
           console.log(numeros);
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+
+  function UsarMonopolio(resource) {
+    console.log(props.lobby);
+    fetch(
+      `${process.env.REACT_APP_URL_BACKEND}/game_phases/use_monopoly_progress_card?lobby_id=${props.lobby}&resource=${resource}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${props.token}`,
+        },
+      }
+    )
+      .then((res) => {
+        res.json().then((data) => {
+          console.log("----Informacion del usuario----");
+          console.log(data);
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+
+  function UsarDescubrimiento() {
+    fetch(
+      `${process.env.REACT_APP_URL_BACKEND}//game_phases/use_invention_card?lobby_id=${props.lobby}&resource1=${selectedResources[0]}&resource2=${selectedResources[1]}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${props.token}`,
+        },
+      }
+    )
+    
+      .then((res) => {
+        setSelectedResources([]);
+        res.json().then((data) => {
+          console.log("----Informacion del usuario----");
+          console.log(data);
         });
       })
       .catch((error) => {
@@ -319,6 +372,7 @@ const PopUpCartasDesarrollo = (props) => {
                           alt={recurso.text}
                           className="w-20 h-auto"
                           style={{ borderRadius: "15%" }}
+                          onClick={UsarMonopolio(recurso.text)}
                         />
                         <div className="bg-white border border-black rounded mt-2 p-2">
                           <span className="text-black">{recurso.text}</span>
@@ -326,6 +380,51 @@ const PopUpCartasDesarrollo = (props) => {
                       </div>
                     ))}
                   </div>
+                </div>
+              </div>
+            )}
+            {showResourceSelection2 && (
+              <div className="fixed z-50 top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+                <div className="relative bg-gray-400 rounded-lg p-4 inline-flex flex-col items-center">
+                  <h1 className="text-3xl font-bold">
+                    Elige dos recursos para robar
+                  </h1>
+                  <div className="flex gap-4 mt-4">
+                    {recursos.map((recurso, index) => (
+                      <div
+                        key={index}
+                        className="p-2 relative flex flex-col items-center"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleResourceSelection(recurso.text)}
+                      >
+                        <img
+                          src={recurso.src}
+                          alt={recurso.text}
+                          className="w-20 h-auto"
+                          style={{ borderRadius: "15%" }}
+                        />
+                        <div className="bg-white border border-black rounded mt-2 p-2">
+                          <span
+                            className={`text-black ${
+                              selectedResources.includes(recurso.text)
+                                ? "text-green-500"
+                                : ""
+                            }`}
+                          >
+                            {recurso.text}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {selectedResources.length === 2 && (
+                    <button
+                      className="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+                      onClick={() => handleResourceSelectionClose()}
+                    >
+                      Usar
+                    </button>
+                  )}
                 </div>
               </div>
             )}
