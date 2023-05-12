@@ -1139,7 +1139,7 @@ function Partida() {
                   {board[key][0] !== 0 && board[key][0]}
                 </button>
               }
-              {key === posicion_ladron && (
+              {key === posicion_ladron && (               
                 <img
                   src={"http://localhost:3000/ladron.png"}
                   alt="ladron"
