@@ -820,6 +820,17 @@ height: 200 px;
   left: 50px;
 }
 
+.slider_skins_tienda {
+  width: 80%;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  top: 700px;
+  left: 10%;
+  margin: 0;
+}
+ 
+
 .slider_fotos_fichas_tienda {
   width: 80%;
   height: 100%;

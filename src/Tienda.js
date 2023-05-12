@@ -1,334 +1,727 @@
-import React, { useEffect } from "react";
-
-import AliceCarousel from 'react-alice-carousel';
-import 'react-alice-carousel/lib/alice-carousel.css';
-
-import Popup from 'reactjs-popup';
-import 'reactjs-popup/dist/index.css';
-
-import { useNavigate } from 'react-router-dom';
-
-// 1-- Importamos useCookies y jwt_decode
-import { useCookies } from "react-cookie";
+import React from "react";
 import jwt_decode from "jwt-decode";
 
-function Tienda() {
+import { Link } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { Navigate } from "react-router-dom";
+import { useState } from "react";
+import { useEffect } from "react";
+import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
+import AliceCarousel from "react-alice-carousel";
+import "react-alice-carousel/lib/alice-carousel.css";
 
-    ////////////////////////////////////////////////////////////////////////////
-    ////////////////////// DECLARACIÓN DE LAS CONSTANTES ///////////////////////
-    ////////////////////////////////////////////////////////////////////////////
+import Popup from "reactjs-popup";
+import "reactjs-popup/dist/index.css";
+export default function Tienda() {
+  /* --------------------------- variables --------------------------- */
 
-    // Dinero del jugador
-    const [dinero, set_dinero] = React.useState(null);
+  const [desplegado, setDesplegado] = useState(true);
+  const styleSidebarOn =
+    "transition-all duration-900 w-80 h-full opacity-95 p-5 pt-8 border border-solid border-cyan-900 sidebar_PrivateHome";
+  const styleSidebarOff = "hidden transition-all duration-900";
+  const styleMenuOn =
+    "transition-all duration-900 absolute top-0 left-0 w-10 h-10 object-cover";
+  const styleMenuOff = "hidden transition-all duration-900";
+  const styleCruzOn =
+    "hover:cursor-pointer transition-all duration-900 absolute top-0 right-0 w-8 h-8 mr-2 mt-2 object-cover";
+  const styleCruzOff = "transition-all duration-900 hidden";
+  const styleLinks = "gap-3 mt-2 ml-1 flex flex-grow relative ";
+  const [screenSize, setScreenSize] = useState(window.innerWidth);
 
-    const [fotos_perfil_compradas, set_fotos_perfil_compradas] =
-        React.useState([]);
+  const [dinero, set_dinero] = React.useState(null);
+  const [nombre, set_nombre] = React.useState(null);
+  const [codigo, set_codigo] = React.useState(null);
+  const [imagen, set_imagen] = React.useState(null);
+  const [nummensajes, set_nummensajes] = React.useState(null);
+  const [elo, set_elo] = React.useState(null);
+  const navigate = useNavigate();
+  const handleBack = () => {
+    navigate(-1);
+  };
 
-    const fotos_perfil = [
-        "skin1",
-        "skin2",
-        "skin3",
-        "skin4",
-        "skin5",
-        "skin6",
-        "skin7",
-        "skin8",
-        "skin9",
-        "skin10",
-        "skin11",
-        "skin12",
-        "skin13",
-        "skin14",
-    ]
+  const handleDragStart = (e) => e.preventDefault();
 
-    // 2-- Creamos la estructura de las cookies
-    const [cookies] = useCookies(["token"]);
+  const [cookies, setCookie] = useCookies(["token"]); // Agregamos removeCookie
+  // Dinero del jugador
 
-    // 3-- Obtenemos el token de las cookies
-    const Token = cookies.token;
+  const [fotos_perfil_compradas, set_fotos_perfil_compradas] = React.useState(
+    []
+  );
 
-    // 4-- Obtenemos la información del token
-    const json_token = jwt_decode(Token);
+  const fotos_perfil = [
+    "skin1",
+    "skin2",
+    "skin3",
+    "skin4",
+    "skin5",
+    "skin6",
+    "skin7",
+    "skin8",
+    "skin9",
+    "skin10",
+    "skin11",
+    "skin12",
+    "skin13",
+    "skin14",
+  ];
 
-    // Función para acceder a la historia de navegación
-    const navigate = useNavigate();
+  /* --------------------------- calculamos el tamaño de la ventana --------------------------- */
+  const precio_foto_perfil = "10 $";
 
-    // Función para volver a la página anterior
-    const handleBack = () => { navigate(-1); };
+  const precio_foto_perfil_int = 10;
 
-    const handleDragStart = (e) => e.preventDefault();
+  const responsive = {
+    0: { items: 1 },
+    1: { items: 2 },
+    2: { items: 3 },
+    3: { items: 4 },
+    4: { items: 5 },
+    5: { items: 6 },
+  };
 
-    const precio_foto_perfil = "10 $";
+  const precio_fichas = "50 $";
 
-    const precio_foto_perfil_int = 10;
+  const responsive_fotos_fichas = {
+    6: { items: 1 },
+    7: { items: 2 },
+    8: { items: 3 },
+    9: { items: 4 },
+    10: { items: 5 },
+    11: { items: 6 },
+  };
 
-    const responsive = {
-        0: { items: 1 },
-        1: { items: 2 },
-        2: { items: 3 },
-        3: { items: 4 },
-        4: { items: 5 },
-        5: { items: 6 },
+  const [compra_realizada, set_compra_realizada] = React.useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const newScreenWidth = window.innerWidth;
+      setScreenSize(newScreenWidth);
+      if (newScreenWidth < 720) {
+        setDesplegado(false);
+      } else {
+        setDesplegado(true);
+      }
     };
-
-    const precio_fichas = "50 $";
-
-    const responsive_fotos_fichas = {
-        6: { items: 1 },
-        7: { items: 2 },
-        8: { items: 3 },
-        9: { items: 4 },
-        10: { items: 5 },
-        11: { items: 6 },
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
     };
+  }, [screenSize]);
 
-    const [compra_realizada, set_compra_realizada] = React.useState(false);
+  /* --------------------------- seguridad  --------------------------- */
 
-    ////////////////////////////////////////////////////////////////////////////
-    /////////////////////// FETCHS INICIALES NECESARIOS ////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
-
-    useEffect(() => {
-        // 5-- Hacemos el fetch para obtener la información del usuario
-        fetch(`${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(json_token.id)}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "Authorization": `Bearer ${Token}`,
-            }
-        })
-            .then((res) => {
-                res.json().then((data) => {
-                    set_dinero(data.coins)
-                });
-            })
-
-        // Fetch para obtener qué skins tiene compradas el usuario
-        fetch(`${process.env.REACT_APP_URL_BACKEND}/list-piece-skins`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "Authorization": `Bearer ${Token}`
-            }
-        })
-            .then((res) => {
-                res.json().then((data) => {
-                    console.log("Skins compradas:");
-                    console.log(data);
-                    set_fotos_perfil_compradas(data.piece_skins);
-                });
-            })
-    }, []);
-
-    ////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////// FUNCIONES /////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
-
-    function comprar(precio, nombre_producto) {
-
-        const url_1 = `${process.env.REACT_APP_URL_BACKEND}/buy_piece_skin?piece_skin_name=${nombre_producto}`;
-
-        fetch(url_1, {
-            method: "POST",
-            headers: {
-                accept: "application/json",
-                "Content-Type": "application/x-www-form-urlencoded",
-                "Authorization": `Bearer ${Token}`,
-            },
-        })
-            .then((res) => {
-                res.json().then((data) => {
-                    console.log("Respuesta del servidor:");
-                    console.log(data);
-
-                    if (data.detail === "Piece skin bought successfully") {
-                        set_dinero(dinero - precio);
-
-                        set_fotos_perfil_compradas([...fotos_perfil_compradas, nombre_producto]);
-                    }
-                });
-            })
+  // en caso de que no estemos logueados ve a la página de login
+  useEffect(() => {
+    if (cookies.token === "") {
+      navigate("/login");
     }
+  }, [cookies.token, navigate]);
 
-    ////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////// COMPONENTES ////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
+  /* --------------------------- cookies  --------------------------- */
 
-    // CARRUSEL DE FOTOS DE PERFIL
-    const items_fotos_perfil = fotos_perfil.map((foto, i) => (
-        <div className="slide_tienda">
-            {
-                <Popup trigger={
-                    fotos_perfil_compradas.includes("skin" + (i + 1)) ?
-                        (
-                            <div>
-                                <img src={"http://localhost:3000/fotos_perfil/skin" + (i + 1) + ".png"} onDragStart={handleDragStart} role="presentation"
-                                    className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
-                                    style={{
-                                        position: 'relative',
-                                        zIndex: 1
-                                    }}
-                                />
+  // cargamos los datos de los usuarios y hacemos decode del token
+  const Token = cookies.token;
+  const json_token = jwt_decode(Token);
+  // console.log(json_token);
 
-                                <img src="http://localhost:3000/fotos_perfil/comprado.png" onDragStart={handleDragStart} role="presentation"
-                                    className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
-                                    style={{
-                                        position: 'absolute',
-                                        top: 0,
-                                        left: 19,
-                                        zIndex: 9999
-                                    }}
-                                />
-                            </div>
-                        )
-                        :
-                        (
-                            <img src={"http://localhost:3000/fotos_perfil/skin" + (i + 1) + ".png"} onDragStart={handleDragStart} role="presentation"
-                                className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle" />
-                        )
-                } modal nested
-                    arrow={false}
+  /* --------------------------- obtener datos usuario  --------------------------- */
 
-                    contentStyle={{
-                        width: "30%",
-                        height: "40%",
+  useEffect(() => {
+    fetch(
+      `${process.env.REACT_APP_URL_BACKEND}/get-user-from-id/${parseInt(
+        json_token.id
+      )}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${Token}`,
+        },
+      }
+    )
+      .then((res) => {
+        res.json().then((data) => {
+          // Actualizamos el estado de cosas
+          const img =
+            data.profile_picture === "default"
+              ? "http://localhost:3000/fotos_perfil/skin1.png"
+              : `http://localhost:3000/fotos_perfil/${data.profile_picture}.png`;
 
-                        border: "5px solid black",
-                        borderRadius: "10px",
-                    }}
-                >
-                    {close => (
-                        <div className="modal_tienda">
-                            {/* Botón para cerrar el pop-up */}
-                            <button className="close" onClick={close}>
-                                &times;
-                            </button>
+          set_dinero(data.coins);
+          set_codigo(data.id);
+          set_nombre(data.username);
+          set_imagen(img);
+          set_elo(data.elo);
+          console.log(img);
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
 
-                            {/* Imagen del objeto */}
-                            <img src={"http://localhost:3000/fotos_perfil/skin" + (i + 1) + ".png"} onDragStart={handleDragStart} role="presentation"
-                                className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle" />
+    // Fetch para obtener qué skins tiene compradas el usuario
+    fetch(`${process.env.REACT_APP_URL_BACKEND}/list-piece-skins`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Bearer ${Token}`,
+      },
+    }).then((res) => {
+      res.json().then((data) => {
+        console.log("Skins compradas:");
+        console.log(data);
+        set_fotos_perfil_compradas(data.piece_skins);
+      });
+    });
+  }, [json_token.id]);
 
-                            {/* Texto de "¿Estás seguro?" en el centro */}
-                            <div className="text-center">
-                                <br />
-                                <br />
-                                <div>
-                                    {fotos_perfil_compradas.includes("skin" + (i + 1)) ? (
-                                        <img src={"http://localhost:3000/green_check.png"} alt="Icono" className="icono_tienda" />
-                                    ) : (
-                                        <div>
-                                            {dinero >= precio_foto_perfil_int ? (
-                                                <p className="text-2xl font-bold">¿Estás seguro?</p>
-                                            ) : (
-                                                <img src={"http://localhost:3000/red_cross.png"} alt="Icono" className="icono_tienda" />
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
+  /* --------------------------- miramos si hay mensajes pendientes --------------------------- */
 
-                            {/* Boton de comprar */}
-                            <br /> <br />
-                            <div className="flex justify-center">
+  fetch(`${process.env.REACT_APP_URL_BACKEND}/get_friend_requests`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${Token}`,
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      response.json().then((data) => {
+        //console.log(data.number_of_requests);
+        set_nummensajes(data.number_of_requests);
+      });
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
 
-                                {fotos_perfil_compradas.includes("skin" + (i + 1)) ? (
-                                    // Texto verde de "compra realizada", en
-                                    // tamaño de letra mediano y centrado
-                                    <p className="compra_realizada_tienda" >
-                                        Compra realizada
-                                    </p>
-                                ) : (
-                                    <div>
-                                        {dinero >= precio_foto_perfil_int ? (
-                                            <button className="boton_comprar_tienda"
-                                                onClick={() => {
-                                                    comprar(10, "skin" + (i + 1));
-                                                    set_compra_realizada(true);
-                                                }}
-                                            >
-                                                Confirmar compra:
-                                                <br />
-                                                {precio_foto_perfil}
-                                            </button>
-                                        ) : (
-                                            <p className="saldo_insuficiente_tienda" >
-                                                Saldo insuficiente
-                                            </p>
-                                        )}
-                                    </div>
-                                    
-                                )}
+  ////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////// FUNCIONES /////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
 
-                            </div>
-                        </div>
+  function comprar(precio, nombre_producto) {
+    const url_1 = `${process.env.REACT_APP_URL_BACKEND}/buy_piece_skin?piece_skin_name=${nombre_producto}`;
+
+    fetch(url_1, {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Bearer ${Token}`,
+      },
+    }).then((res) => {
+      res.json().then((data) => {
+        console.log("Respuesta del servidor:");
+        console.log(data);
+
+        if (data.detail === "Piece skin bought successfully") {
+          set_dinero(dinero - precio);
+
+          set_fotos_perfil_compradas([
+            ...fotos_perfil_compradas,
+            nombre_producto,
+          ]);
+        }
+      });
+    });
+  }
+
+  ////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////// COMPONENTES ////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
+
+  // CARRUSEL DE FOTOS DE PERFIL
+  const items_fotos_perfil = fotos_perfil.map((foto, i) => (
+    <div className="slide_tienda">
+      {
+        <Popup
+          trigger={
+            fotos_perfil_compradas.includes("skin" + (i + 1)) ? (
+              <div>
+                <img
+                  src={
+                    "http://localhost:3000/fotos_perfil/skin" + (i + 1) + ".png"
+                  }
+                  onDragStart={handleDragStart}
+                  role="presentation"
+                  className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
+                  style={{
+                    position: "relative",
+                    zIndex: 1,
+                  }}
+                />
+
+                <img
+                  src="http://localhost:3000/fotos_perfil/comprado.png"
+                  onDragStart={handleDragStart}
+                  role="presentation"
+                  className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 19,
+                    zIndex: 9999,
+                  }}
+                />
+              </div>
+            ) : (
+              <img
+                src={
+                  "http://localhost:3000/fotos_perfil/skin" + (i + 1) + ".png"
+                }
+                onDragStart={handleDragStart}
+                role="presentation"
+                className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
+              />
+            )
+          }
+          modal
+          nested
+          arrow={false}
+          contentStyle={{
+            width: "30%",
+            height: "40%",
+
+            border: "5px solid black",
+            borderRadius: "10px",
+          }}
+        >
+          {(close) => (
+            <div className="modal_tienda">
+              {/* Botón para cerrar el pop-up */}
+              <button className="close" onClick={close}>
+                &times;
+              </button>
+              {/* Imagen del objeto */}
+              <img
+                src={
+                  "http://localhost:3000/fotos_perfil/skin" + (i + 1) + ".png"
+                }
+                onDragStart={handleDragStart}
+                role="presentation"
+                className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
+              />
+              {/* Texto de "¿Estás seguro?" en el centro */}
+              <div className="text-center">
+                <br />
+                <br />
+                <div>
+                  {fotos_perfil_compradas.includes("skin" + (i + 1)) ? (
+                    <img
+                      src={"http://localhost:3000/green_check.png"}
+                      alt="Icono"
+                      className="icono_tienda"
+                    />
+                  ) : (
+                    <div>
+                      {dinero >= precio_foto_perfil_int ? (
+                        <p className="text-2xl font-bold">¿Estás seguro?</p>
+                      ) : (
+                        <img
+                          src={"http://localhost:3000/red_cross.png"}
+                          alt="Icono"
+                          className="icono_tienda"
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+              {/* Boton de comprar */}
+              <br /> <br />
+              <div className="flex justify-center">
+                {fotos_perfil_compradas.includes("skin" + (i + 1)) ? (
+                  // Texto verde de "compra realizada", en
+                  // tamaño de letra mediano y centrado
+                  <p className="compra_realizada_tienda">Compra realizada</p>
+                ) : (
+                  <div>
+                    {dinero >= precio_foto_perfil_int ? (
+                      <button
+                        className="boton_comprar_tienda"
+                        onClick={() => {
+                          comprar(10, "skin" + (i + 1));
+                          set_compra_realizada(true);
+                        }}
+                      >
+                        Confirmar compra:
+                        <br />
+                        {precio_foto_perfil}
+                      </button>
+                    ) : (
+                      <p className="saldo_insuficiente_tienda">
+                        Saldo insuficiente
+                      </p>
                     )}
-                </Popup>
-            }
-
-            {/* Precio del objeto */}
-            {precio_foto_perfil}
-        </div>
-    ));
-
-    // CARRUSEL DE FICHAS
-    /*const items_fotos_fichas = fotos_perfil.map((foto, i) => (
-        <div className="slide_tienda">
-            <img src="http://localhost:3000/perfil1.avif" onDragStart={handleDragStart} role="presentation"
-                className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle" />
-
-            {precio_fichas}
-        </div>
-    ));*/
-
-    ////////////////////////////////////////////////////////////////////////////
-    //////////////////////////// FUNCIÓN PRINCIPAL /////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
-
-    return (
-        <div className="estilo">
-            {/* Flecha de retroceso */}
-            <img src="http://localhost:3000/flecha_retroceso.png" className="icono_retroceso" onClick={handleBack} alt="flecha_retroceso" />
-
-            {/* Icono y texto del dinero */}
-            <img src="http://localhost:3000/dinero.png" className="icono_dinero_tienda" alt="icono_dinero" />
-            <TextComponent dinero={dinero} />
-
-            {/*************************** Sliders ****************************/}
-
-            {/* Titulo de "fotos de perfil" */}
-            <a className="titulo_fotos_perfil_tienda">Fotos de perfil</a>
-
-            {/* Slider de fotos de perfil */}
-            <div className="slider_fotos_perfil_tienda">
-                <AliceCarousel
-                    mouseTracking
-                    items={items_fotos_perfil}
-                    responsive={responsive}
-                    controlsStrategy="alternate"
-                />
+                  </div>
+                )}
+              </div>
             </div>
-            
-            {/* Titulo de "fotos de perfil" */}
-            {/*<a className="titulo_fotos_fichas_tienda">Fichas</a>*/}
+          )}
+        </Popup>
+      }
 
-            {/* Slider de fotos de perfil */}
-            {/*<div className="slider_fotos_fichas_tienda">
-                <AliceCarousel
-                    mouseTracking
-                    items={items_fotos_fichas}
-                    responsive={responsive_fotos_fichas}
-                    controlsStrategy="alternate"
-                />
-            </div>*/}
+      {/* Precio del objeto */}
+      {precio_foto_perfil}
+    </div>
+  ));
+
+  function TextComponent(props) {
+    return <a className="dinero_tienda">{props.dinero}</a>;
+  }
+
+  return (
+    /* --------------------------- fondo de las montañas --------------------------- */
+    <div className="w-full h-full flex imagenCustomPrivateHome">
+      {/* --------------------------- menu --------------------------- */}
+      <div
+        className={`over_SideBaar relative h-full ${
+          // si la ventana es pequeña o desplegado falso que no se vea
+          screenSize < 720 && !desplegado ? styleSidebarOff : styleSidebarOn
+        }`}
+      >
+        {/* --------------------------- cruz de cerrar menu --------------------------- */}
+        <img
+          src="http://localhost:3000/white_cross.png"
+          alt="imagen para cerrar la sidebar"
+          className={`hover:cursor-pointer ${
+            screenSize < 720 && desplegado ? styleCruzOn : styleCruzOff
+          }`}
+          onClick={() => {
+            setDesplegado(false);
+          }}
+        />
+
+        {/* --------------------------- datos del usuario --------------------------- */}
+
+        <div className="relative block gap-x-4 mx-auto">
+          {/* --------------------------- foto del avatar --------------------------- */}
+          <img
+            alt="profil"
+            src={imagen}
+            className={`mx-auto object-cover rounded-full h-28 w-28 mt-9 bg-teal-200`}
+          />
+          {/* --------------------------- nombre del usuario --------------------------- */}
+
+          <h1
+            className={`text-white origin-center content-center font-medium text-xl mt-2`}
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            {nombre}#{codigo}
+          </h1>
+          <h1
+            className={`text-white origin-center content-center font-medium text-lg mt-2`}
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            ELO: {elo} ⚔
+          </h1>
+          {/* --------------------------- dinero --------------------------- */}
+          <h1
+            className={`text-white origin-center content-center font-medium text-lg mt-1`}
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            {dinero}
+
+            <img
+              alt="profil"
+              src="http://localhost:3000/white_dinero.png"
+              className={`w-6 h-6 ml-2`}
+            />
+          </h1>
         </div>
-    );
-}
+        <ul className="flex flex-col w-full items-start py-6 px-4 gap-2">
+          {/* --------------------------- volver al home --------------------------- */}
+          <a href="http://localhost:3000/home" className={styleLinks}>
+            <img
+              alt="profil"
+              src="http://localhost:3000/home.png"
+              className={`object-cover h-7 w-7`}
+            />
 
-// Para que el otro componente se actualice, lo paso como prop al componente.
-function TextComponent(props) {
-    return (
-        <a className="dinero_tienda">{props.dinero}</a>
-    );
-}
+            <h1
+              href="http://localhost:3000/editarPerfil"
+              variant={Link}
+              className={`text-white origin-center content-center font-medium text-xl`}
+            >
+              Inicio
+            </h1>
+          </a>
+          {/* --------------------------- editar perfil --------------------------- */}
+          <a href="http://localhost:3000/editarPerfil" className={styleLinks}>
+            <img
+              alt="profil"
+              src="http://localhost:3000/editProfile.png"
+              className={`object-cover h-7 w-7`}
+            />
 
-export default Tienda;
+            <h1
+              href="http://localhost:3000/editarPerfil"
+              variant={Link}
+              className={`text-white origin-center content-center font-medium text-xl`}
+            >
+              Editar perfil
+            </h1>
+          </a>
+          {/* --------------------------- amigos ---------------------------*/}
+          <a href="http://localhost:3000/amigosT" className={styleLinks}>
+            {/* imagen amigos*/}
+            <img
+              alt="profil"
+              src="http://localhost:3000/friends.png"
+              className={`object-cover h-7 w-7}`}
+            />
+            {nummensajes > 0 && (
+              <>
+                <div
+                  className="absolute top-0 right-0 transform translate-x-14 -translate-y-1/4 h-4 w-4 bg-red-800 text-white text-xs flex items-center justify-center rounded-full"
+                  style={{ left: "50%" }}
+                >
+                  {nummensajes}
+                </div>
+              </>
+            )}
+            <h1
+              href="/login"
+              variant={Link}
+              className={`text-white font-medium text-xl duration-300`}
+            >
+              Amigos
+            </h1>
+          </a>
+          {/* --------------------------- tienda --------------------------- */}
+          <a href="http://localhost:3000/tienda" className={styleLinks}>
+            <img
+              alt="profil"
+              src="http://localhost:3000/shopping-cart.png"
+              className={`object-cover h-7 w-7`}
+            />
+
+            <h1
+              href="http://localhost:3000/editarPerfil"
+              variant={Link}
+              className={`text-white origin-center content-center font-medium text-xl`}
+            >
+              Tienda
+            </h1>
+          </a>
+          {/* --------------------------- Instrucciones --------------------------- */}
+          <a href="http://localhost:3000/Instrucciones" className={styleLinks}>
+            <img
+              alt="profil"
+              src="http://localhost:3000/libro-abierto.png"
+              className={`object-cover h-7 w-7`}
+            />
+
+            <h1
+              href="http://localhost:3000/Instrucciones"
+              variant={Link}
+              className={`text-white origin-center content-center font-medium text-xl`}
+            >
+              Instrucciones
+            </h1>
+          </a>
+          {/* --------------------------- logout --------------------------- */}
+
+          <div
+            className={`hover:cursor-pointer ${styleLinks}`}
+            onClick={() => {
+              // "borramos" las cookies
+              setCookie("token", "", { path: "/" });
+              window.location.href = "http://localhost:3000/login";
+            }}
+          >
+            {/* imagen log out*/}
+            <img
+              alt="profil"
+              src="http://localhost:3000/logout.png"
+              className={`object-cover h-7 w-7`}
+            />
+
+            <h1
+              href="/login"
+              variant={Link}
+              className={`text-white origin-center content-center font-medium text-xl`}
+            >
+              Cerrar sesión
+            </h1>
+          </div>
+          {/* --------------------------- añadir amigos --------------------------- */}
+
+          <form
+            className={`flex bottom-0 left-0 mt-72`}
+            // `bottom-0 left-0 p-4 w-auto fixed`
+            // "absolute left-0 w-full bg-gray-200 p-4">
+
+            onSubmit={(e) => {
+              e.preventDefault(); // Agregar esto para evitar que la página se recargue
+              fetch(
+                `${process.env.REACT_APP_URL_BACKEND}/send_friend_request?friend_id=${e.target.amigo_id.value}`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    Authorization: `Bearer ${Token}`,
+                  },
+                }
+              )
+                .then((res) => {
+                  res.json().then((data) => {
+                    if (data.detail === `Friend request already exists`) {
+                      toast.error(
+                        "este usuario ya tiene una solicitud tuya pendiente"
+                      );
+                    } else if (data.detail === `User not found`) {
+                      toast.error("usuario no encontrado");
+                      toast("si quieres enviar una solicitud pon solo el id", {
+                        ico: `😉`,
+                      });
+                    } else if (data.detail === `Friend request sent`) {
+                      toast.success("solicitud enviada con éxito");
+                    }
+                  });
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                });
+            }}
+          >
+            <input
+              id="amigo_id"
+              className={`w-48 p-2 mr-2 border border-transparent border-b-white focus:border focus:border-white bg-transparent text-white`}
+              type="text"
+              placeholder="Añadir amigo: 2345"
+            />
+            <button className="px-4 py-2 rounded-full bg-cyan-900 hover:bg-slate-900 text-white w-12 h-10">
+              <img
+                src="http://localhost:3000/add-friend.png"
+                alt="boton de añadir amigos"
+              />
+            </button>
+          </form>
+        </ul>
+      </div>
+      {/* --------------------------- menu plegado --------------------------- */}
+      <img
+        src="http://localhost:3000/menu.png"
+        alt="menu desplegable, clicka aqui para desplegarlo"
+        className={`hover:cursor-pointer w-8 h-8 m-4 ${
+          screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
+        }`}
+        onClick={() => {
+          setDesplegado(true);
+        }}
+      />
+      {/* --------------------------- botones centrales ---------------------------*/}
+      <h1 className="m-14">
+        <div
+          className="bg-cyan-900/60 rounded-lg p-4 inline-flex flex-col items-center h-4/5"
+          style={{ minHeight: "800px", minWidth: "1290px" }}
+        >
+          {/* Flecha de retroceso */}
+          <img
+            src="http://localhost:3000/flecha_retroceso.png"
+            onClick={handleBack}
+            alt="flecha_retroceso"
+            style={{
+              width: "80px",
+              height: "80px",
+              marginRight: "1100px",
+              cursor: "pointer",
+            }}
+          />
+
+          <div className="flex items-center">
+            <TextComponent dinero={dinero} />
+            {/* Icono y texto del dinero */}
+            <img
+              src="http://localhost:3000/dinero.png"
+              style={{
+                width: "80px",
+                height: "80px",
+                margin: "50px",
+                /* El icono está a la izquierda */
+                position: "absolute",
+                top: "0",
+                left: "150px",
+              }}
+              alt="icono_dinero"
+            />
+          </div>
+
+          {/*************************** Sliders ****************************/}
+
+          <div
+            className="overflow-y-scroll opacity-95 bg-cyan-900 rounded-xl shadow-xl"
+            style={{
+              width: "900px",
+              height: "calc(100% - 200px)",
+              overflow: "auto",
+              position: "relative",
+              margin: "20px",
+            }}
+          >
+            <div style={{ marginTop: "50px" }}>
+              {/* Titulo de "fotos de perfil" */}
+
+              <a
+                style={{
+                  fontSize: "30px",
+                  fontWeight: "bold",
+                  display: "flex",
+                  alignItems: "center",
+                  paddingLeft: "20px",
+                  position: "absolute",
+                  textDecoration: "none",
+                  overflow: "hidden",
+                  top: "20px",
+                  right: "625px",
+                }}
+              >
+                Fotos de perfil
+              </a>
+
+              {/* Slider de fotos de perfil */}
+              <AliceCarousel
+                mouseTracking
+                items={items_fotos_perfil}
+                responsive={responsive}
+                controlsStrategy="alternate"
+              />
+            </div>
+
+            <div>
+              {/* Titulo de "fotos de perfil" */}
+              <a
+                style={{
+                  fontSize: "30px",
+                  fontWeight: "bold",
+                  display: "flex",
+                  alignItems: "center",
+                  paddingLeft: "20px",
+                  position: "absolute",
+                  textDecoration: "none",
+                  overflow: "hidden",
+                  top: "360px",
+                  right: "750px",
+                }}
+              >
+                Skins
+              </a>
+
+              {/* Slider de fotos de perfil */}
+              <AliceCarousel
+                mouseTracking
+                items={items_fotos_perfil}
+                responsive={responsive}
+                controlsStrategy="alternate"
+              />
+            </div>
+          </div>
+        </div>
+      </h1>
+    </div>
+  );
+}
