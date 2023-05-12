@@ -130,6 +130,21 @@ export default function Creando_partida_privada() {
         >
           CONFIGURAR PARTIDA
         </h1>
+        {/* ---------------------------  Número de jugadores  --------------------------- */}
+        <div className="flex flex-row">
+          <h1
+            href="http://localhost:3000/editarPerfil"
+            variant={Link}
+            className={`text-white origin-center content-center font-medium text-xl`}
+          >
+            Número de jugadores
+          </h1>
+          {/* <img src="http://localhost:3000/oveja.png" className=" w-14 h-14"></img> */}
+          <input type="number" defaultValue={0} min={0} 
+          className=" mt-2 w-24 h-12 rounded-full text-right"
+         ></input>
+        </div>
+         
         {/* --------------------------- volver al home --------------------------- */}
         <a
           href="http://localhost:3000/home"

@@ -14,6 +14,7 @@ import PopUpFaseNegociacion from "./pop-up-FaseNegociacion";
 // 1-- Importamos useCookies y jwt_decode
 import { useCookies } from "react-cookie";
 import jwt_decode from "jwt-decode";
+import { toast } from "react-hot-toast";
 
 function Partida() {
   ////////////////////////////////////////////////////////////////////////////
@@ -1648,6 +1649,8 @@ function Partida() {
             if (turno == mi_id && fase_actual === "TRADING") {
               global_info.realizando_intercambio = true;
               global_info.cantidad_ofrecida = 4;
+            } else {
+              toast.error("Solo haceptado en la fase de TRADING!!");
             }
 
             carta_carreteras();

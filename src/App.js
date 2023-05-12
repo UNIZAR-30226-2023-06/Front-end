@@ -23,8 +23,8 @@ export default function App() {
       <Toaster position="top-center" reverseOrder={false} />
       <Router>
         <Routes>
-          <Route exact path="/" element={<Home />}/>
-          <Route exact path="/login" element={<Login />}/>
+          {/* <Route exact path="/" element={<Home />}/> */}
+          <Route exact path="/" element={<Login />}/>
           <Route exact path="/registro" element={<Registro/>}/>
           <Route exact path="/home" element={<PrivateHome/>} />
           <Route exact path="/amigosT" element={<Amigos_todos/>} />
