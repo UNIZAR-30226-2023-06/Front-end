@@ -134,6 +134,42 @@ export default function PrivateHome() {
     }
   );
 
+  // ¿Tenemos una partida en marcha?
+
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_URL_BACKEND}/get-lobby-from-player`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Bearer ${Token}`,
+      },
+    })
+      .then((res) => {
+        res.json().then((data) => {
+          // Actualizamos el estado de cosas
+
+          console.log(data);
+          toast((t) => (
+            <span>
+              ¡Tienes una partida en marcha!
+              <button
+                className="bg-cyan-900 hover:bg-cyan-950 text-white font-bold py-2 px-4 rounded"
+                onClick={() => {
+                  console.log("aqui ira la redirección");
+                  navigate("/partida");
+                }}
+              >
+                Regresar a la partida
+              </button>
+            </span>
+          ));
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
+
   /* --------------------------- canimacion spinner --------------------------- */
   const Spinner = () => {
     return (
@@ -269,16 +305,16 @@ export default function PrivateHome() {
         Authorization: `Bearer ${Token}`,
       },
     })
-    .then((response) => {
-      toast.success("Esperando confirmación del resto de jugadores");
-    })
-    .catch((error) => {
-      if (error.response.status === 409) {
-        console.log("Error 409: ya estas buscando una partida");
-      } else {
-        console.error("Error:", error);
-      }
-    });
+      .then((response) => {
+        toast.success("Esperando confirmación del resto de jugadores");
+      })
+      .catch((error) => {
+        if (error.response.status === 409) {
+          console.log("Error 409: ya estas buscando una partida");
+        } else {
+          console.error("Error:", error);
+        }
+      });
     // damos permiso para comprobar si la partida se puede empezar
     console.log("vemos el estado de la partida");
   }
@@ -675,8 +711,10 @@ export default function PrivateHome() {
                   onSubmit={(e) => {
                     e.preventDefault();
                     toast.error("esto de momento es postu que no hace nada :)");
-                    toast.success(`Código introducido: ${e.target.idPartidaPrivada.value}`);
-                    // comprobamos que la sala existe, y si es asi entonces vamos al lobby privado 
+                    toast.success(
+                      `Código introducido: ${e.target.idPartidaPrivada.value}`
+                    );
+                    // comprobamos que la sala existe, y si es asi entonces vamos al lobby privado
                   }}
                 >
                   <div className="flex flex-col">

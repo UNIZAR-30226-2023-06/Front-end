@@ -13,30 +13,25 @@ const PopUpFaseNegociacion = (props) => {
   const [countOfrezco, setOfrezco] = useState([0, 0, 0, 0, 0]);
   const [countQuiero, setQuiero] = useState([0, 0, 0, 0, 0]);
 
-  // lista para el map 
+  // lista para el map
   const items = [
     { src: "ovejas.png", alt: "oveja", value: oveja },
     { src: "madera.png", alt: "troncos", value: madera },
     { src: "trigo.png", alt: "cebada", value: trigo },
     { src: "roca.png", alt: "piedras", value: roca },
     { src: "arcilla.png", alt: "arcilla", value: arcilla },
-  ]
+  ];
 
-  useEffect(() => {
-    if (props.show) {
-      setShouldShowPopup(true);
-      setShowPopup(true);
+  // useEffect(() => {
+  //   if (props.show) {
+  //     setShouldShowPopup(true);
+  //     setShowPopup(true);
 
-      setMiArcilla(props.jugador_datos.hand.clay);
-      setMiRoca(props.jugador_datos.hand.rock);
-      setMiOveja(props.jugador_datos.hand.sheep);
-      setMiTrigo(props.jugador_datos.hand.wheat);
-      setMiMadera(props.jugador_datos.hand.wood);
-    } else {
-      setShowPopup(false);
-      setShouldShowPopup(false);
-    }
-  }, [props.show]);
+  //   } else {
+  //     setShowPopup(false);
+  //     setShouldShowPopup(false);
+  //   }
+  // }, [props.show]);
 
   const handleClose = () => {
     setShouldShowPopup(false);
@@ -46,6 +41,11 @@ const PopUpFaseNegociacion = (props) => {
   const handleOpen = () => {
     setShouldShowPopup(true);
     setShowPopup(true);
+    setMiArcilla(props.jugador_datos.hand.clay);
+    setMiRoca(props.jugador_datos.hand.rock);
+    setMiOveja(props.jugador_datos.hand.sheep);
+    setMiTrigo(props.jugador_datos.hand.wheat);
+    setMiMadera(props.jugador_datos.hand.wood);
   };
 
   const handleBackgroundClick = (event) => {
@@ -70,7 +70,7 @@ const PopUpFaseNegociacion = (props) => {
       // ofrezco
       const newValues = [...countOfrezco];
       newValues[index] = value;
-      setOfrezco(newValues);  
+      setOfrezco(newValues);
     } else {
       // quiero
       const newValues = [...countQuiero];
@@ -85,29 +85,41 @@ const PopUpFaseNegociacion = (props) => {
 
   function LanzarOfertar(e) {
     e.preventDefault();
-    // TODO: falta conectar con el backend que la funcion aún no existe pero esta todo preparado ya :) 
+    // TODO: falta conectar con el backend que la funcion aún no existe pero esta todo preparado ya :)
     console.log("------------------------");
     console.log("y quiero a cambio: ", countQuiero);
     console.log("yo doy: ", countOfrezco);
-    toast.success('CONSEJO: negocia por el chat!', {
-
+    toast.success("CONSEJO: negocia por el chat!", {
       style: {
-        border: '1px solid #713200',
-        padding: '16px',
-        color: '#713200',
+        border: "1px solid #713200",
+        padding: "16px",
+        color: "#713200",
       },
       iconTheme: {
-        primary: '#713200',
-        secondary: '#FFFAEE',
+        primary: "#713200",
+        secondary: "#FFFAEE",
       },
     });
-    
-    toast.success("Su oferta ha sido enviada!");
 
+    toast.success("Su oferta ha sido enviada!");
   }
 
   return (
     <>
+      <img
+        src="http://localhost:3000/iconos-no-recursos/comerciar-jugadores.png"
+        alt="Abrir Popup"
+        className="cursor-pointer"
+        onClick={handleOpen}
+        style={{
+          position: "absolute",
+          left: "15.8%",
+          bottom: "30px",
+
+          // Escalo la imagen para que se vea más pequeña
+          transform: "scale(0.2)",
+        }}
+      />
       {showPopup && (
         <div
           className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center"
@@ -210,8 +222,7 @@ const PopUpFaseNegociacion = (props) => {
                 ))}
               </div>
             </div>
-            <form onSubmit={LanzarOfertar}
-            >
+            <form onSubmit={LanzarOfertar}>
               <div class=" mt-20">
                 <button
                   class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-4 px-6 border border-gray-400 rounded shadow ml-2"

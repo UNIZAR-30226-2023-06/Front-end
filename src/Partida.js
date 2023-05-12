@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-
 import Tabs from "./Components/TabComponent/Tabs";
 import PopUpFaseTirada from "./pop-up-Fase-tirada";
 import PopupTablaCostes from "./pop-up-TablaCostes";
@@ -1626,40 +1625,42 @@ function Partida() {
       </h1>
 
       {/* Div donde se encuentra el botón de 4x1 */}
-      <div
-        className="scale-75"
-        style={{
-          position: "absolute",
-          left: "28%",
-          bottom: "125px",
-
-          // Marco blanco y fondo gris
-          // border: "5px solid white",
-          //backgroundColor: "grey",
-        }}
-      >
-        <button
+      {turno === mi_id && fase_actual === "TRADING" && (
+        <div
+          className="scale-75"
           style={{
-            width: "170px",
-            height: "80px",
-          }}
-          onClick={() => {
-            // Si es nuestro turno y es la fase de intercambio, indicamos el
-            // intercambio y el tipo de intercambio
-            if (turno == mi_id && fase_actual === "TRADING") {
-              global_info.realizando_intercambio = true;
-              global_info.cantidad_ofrecida = 4;
-            } else {
-              toast.error("Solo haceptado en la fase de TRADING!!");
-            }
+            position: "absolute",
+            left: "27%",
+            bottom: "125px",
 
-            carta_carreteras();
+            // Marco blanco y fondo gris
+            // border: "5px solid white",
+            //backgroundColor: "grey",
           }}
         >
-          <img src="http://localhost:3000/iconos-no-recursos/comerciar-banco.png" />
-        </button>
-      </div>
+          <button
+            style={{
+              width: "170px",
+              height: "80px",
+            }}
+            onClick={() => {
+              // Si es nuestro turno y es la fase de intercambio, indicamos el
+              // intercambio y el tipo de intercambio
+              // if (turno == mi_id && fase_actual === "TRADING") {
+                global_info.realizando_intercambio = true;
+                global_info.cantidad_ofrecida = 4;
+              // } else {
+              //   toast.error("Solo haceptado en la fase de TRADING!!");
+              // }
 
+              // carta_carreteras();
+            }}
+          >
+            <img src="http://localhost:3000/iconos-no-recursos/comerciar-banco.png" />
+          </button>
+        </div>
+      )}
+      
       <img
         src={img_dado_1}
         style={{
@@ -1716,14 +1717,16 @@ function Partida() {
         />
       )}
 
+      {/* ---------------------- Negociar con otros jugadores ------------------- */}
       {turno === mi_id && fase_actual === "TRADING" && (
         <PopUpFaseNegociacion
-          show={ShowPopupFaseNegociacion}
+          //show={ShowPopupFaseNegociacion}
           token={Token}
           lobby={codigo_partida}
           jugador_datos={estado_jugador}
         />
       )}
+
       {turno === mi_id && fase_actual === "BUILDING" && (
         <PopUpFaseCompra token={Token} lobby={codigo_partida} />
       )}
