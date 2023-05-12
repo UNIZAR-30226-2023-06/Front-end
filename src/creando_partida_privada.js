@@ -33,6 +33,8 @@ export default function Creando_partida_privada() {
   const [cookies, setCookie] = useCookies(["token"]); // Agregamos removeCookie
   const label = { inputProps: { "aria-label": "Switch demo" } };
 
+  const [codigo_partida, setCodigo_partida] = useState(null);
+
   // PARTE DE LO DE LOS USUARIOS ESTO PUEDE ESTAR RELOKO PERO ES LO QUE HAY
 
   // Nombres de los jugadores en la sala
@@ -61,12 +63,12 @@ export default function Creando_partida_privada() {
   const [mostrar_img_jugador_3, setMostrar_img_jugador_3] = useState(false);
   const [mostrar_img_jugador_4, setMostrar_img_jugador_4] = useState(false);
 
-  const jugadores = [
+  const [jugadores, setJugadores] = useState([
     { img: "http://localhost:3000/jugadores.png", nombre: "Ayelen#1234" },
     { img: "http://localhost:3000/jugadores.png", nombre: "Loreto#1234" },
     { img: null, nombre: null },
     { img: null, nombre: null },
-  ];
+  ]);
 
   function actualizar_jugadores() {
     // Pongo el nombre de los jugadores en la sala
@@ -121,9 +123,81 @@ export default function Creando_partida_privada() {
 
   /* --------------------------- calculamos el tamaño de la ventana --------------------------- */
 
+  // Llamamos cada segundo a actualizar_jugadores
   useEffect(() => {
-    actualizar_jugadores();
+    const interval = setInterval(() => {
+      // Si el codigo de la partida no es null, actualizo los jugadores
+      if (codigo_partida !== null) {
+        // Ejemplo url:
+        // http://localhost:8000/get-lobby-from-id?lobby_id=1253
+
+        const url = `${process.env.REACT_APP_URL_BACKEND}/get-lobby-from-id?lobby_id=${codigo_partida}`;
+        fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${Token}`,
+          },
+        })
+          .then((res) => {
+            res.json().then((data) => {
+              console.log(data);
+              // Actualizo los jugadores
+              setJugadores(data.game.jugadores);
+            });
+          }
+          )
+          .catch((error) => {
+            console.error("Error:", error);
+          }
+          );
+      }
+    }, 1000);
+    return () => clearInterval(interval);
   }, []);
+
+  const url = `${process.env.REACT_APP_URL_BACKEND}/create-lobby`;
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${Token}`,
+    },
+  })
+    .then((res) => {
+      res.json().then((data) => {
+        console.log(data);
+        // Compruebo si la sala se ha creado correctamente
+        if (data.detail === "Lobby created") {
+          // Guardo el código de la sala
+          setCodigo_partida(data.lobby_id);
+
+          // Si se ha creado correctamente, me uno a la partida
+          const url = `${process.env.REACT_APP_URL_BACKEND}/join-lobby?lobby_id=${data.lobby_id}`;
+
+          fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${Token}`,
+            },
+          })
+            .then((res) => {
+              res.json().then((data) => {
+                console.log(data);
+              });
+            }
+            )
+            .catch((error) => {
+              console.error("Error:", error);
+            }
+            );
+        }
+      });
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
 
   useEffect(() => {
     const handleResize = () => {
@@ -242,15 +316,14 @@ export default function Creando_partida_privada() {
         className={`over_SideBaar relative h-full ${
           // si la ventana es pequeña o desplegado falso que no se vea
           screenSize < 720 && !desplegado ? styleSidebarOff : styleSidebarOn
-        }`}
+          }`}
       >
         {/* --------------------------- cruz de cerrar menu --------------------------- */}
         <img
           src="http://localhost:3000/white_cross.png"
           alt="imagen para cerrar la sidebar"
-          className={`hover:cursor-pointer ${
-            screenSize < 720 && desplegado ? styleCruzOn : styleCruzOff
-          }`}
+          className={`hover:cursor-pointer ${screenSize < 720 && desplegado ? styleCruzOn : styleCruzOff
+            }`}
           onClick={() => {
             setDesplegado(false);
           }}
@@ -439,9 +512,8 @@ export default function Creando_partida_privada() {
         <img
           src="http://localhost:3000/menu.png"
           alt="menu desplegable, clicka aqui para desplegarlo"
-          className={`hover:cursor-pointer w-8 h-8 m-4 ${
-            screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
-          }`}
+          className={`hover:cursor-pointer w-8 h-8 m-4 ${screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
+            }`}
           onClick={() => {
             setDesplegado(true);
           }}
