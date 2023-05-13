@@ -516,21 +516,7 @@ const SecondTab = (params) => {
             }}
           >
             {/* --------------------------------- cartas de desarrollo ---------------------------------- */}
-            {/* <img
-              src="http://localhost:3000/cartas_desarrollo.png" alt="madera"
-              style={{
-                transform: "scale(0.8)",
-              }}
-            /> */}
-
-            {/* <img
-              src="http://localhost:3000/cartas_desarrollo.png"
-              alt="Abrir Popup"
-              className="cursor-pointer"
-              //onClick={handleOpenCartasRecursos}
-            /> */}
-            {/* cartas de desarrollo ignoren el nombre que tiene thx */}
-            <PopUpCartasDesarrollo token={params.jugador_datos.Token} lobby={params.jugador_datos.codigo_partida} />
+            <PopUpCartasDesarrollo turno={params.turno} mi_id={params.mi_id} token={params.jugador_datos.Token} lobby={params.jugador_datos.codigo_partida} />
           </div>
 
           <br />

@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 // 1-- Importamos useCookies y jwt_decode
 import { useCookies } from "react-cookie";
 
-const PopUpCartasDesarrollo = (props) => {
+const PopUpCartasDesarrollo = (params) => {
   const [showPopup, setShowPopup] = useState(false);
   const [shouldShowPopup, setShouldShowPopup] = useState(false);
   const [numeros, setNumeros] = useState([]); // Estado para almacenar los números
@@ -18,7 +18,7 @@ const PopUpCartasDesarrollo = (props) => {
   const [selectedResources, setSelectedResources] = useState([]);
   const handleClose = () => {
     setShouldShowPopup(false);
-    props.onClose();
+    params.onClose();
   };
 
   const handleOpen = () => {
@@ -28,8 +28,10 @@ const PopUpCartasDesarrollo = (props) => {
   };
 
   const popUp2 = (index) => {
-    setSelectedCardIndex(index);
-    setShowConfirmation(true);
+    if (params.turno === params.mi_id) {
+      setSelectedCardIndex(index);
+      setShowConfirmation(true);
+    }
   };
 
   const handleConfirm = (index) => {
@@ -51,12 +53,12 @@ const PopUpCartasDesarrollo = (props) => {
         // Ejemplo url:
         // http://localhost:8000/game_phases/use_victory_point_progress_card?lobby_id=65
         fetch(
-          `${process.env.REACT_APP_URL_BACKEND}/game_phases/use_victory_point_progress_card?lobby_id=${props.lobby}`,
+          `${process.env.REACT_APP_URL_BACKEND}/game_phases/use_victory_point_progress_card?lobby_id=${params.lobby}`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
-              Authorization: `Bearer ${props.token}`,
+              Authorization: `Bearer ${params.token}`,
             },
           }
         )
@@ -122,12 +124,12 @@ const PopUpCartasDesarrollo = (props) => {
     // http://localhost:8000/game_phases/buy_development_card?lobby_id=654
 
     fetch(
-      `${process.env.REACT_APP_URL_BACKEND}/game_phases/buy_development_card?lobby_id=${props.lobby}`,
+      `${process.env.REACT_APP_URL_BACKEND}/game_phases/buy_development_card?lobby_id=${params.lobby}`,
       {
         method: "GET",
         headers: {
           //"Content-Type": "application/x-www-form-urlencoded",
-          Authorization: `Bearer ${props.token}`,
+          Authorization: `Bearer ${params.token}`,
         },
       }
     )
@@ -149,14 +151,14 @@ const PopUpCartasDesarrollo = (props) => {
   }
 
   function GetNumCartas() {
-    console.log(props.lobby);
+    console.log(params.lobby);
     fetch(
-      `${process.env.REACT_APP_URL_BACKEND}/game_phases/get_player_state?lobby_id=${props.lobby}`,
+      `${process.env.REACT_APP_URL_BACKEND}/game_phases/get_player_state?lobby_id=${params.lobby}`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          Authorization: `Bearer ${props.token}`,
+          Authorization: `Bearer ${params.token}`,
         },
       }
     )
@@ -187,14 +189,14 @@ const PopUpCartasDesarrollo = (props) => {
   }
 
   function UsarMonopolio(resource) {
-    console.log(props.lobby);
+    console.log(params.lobby);
     fetch(
-      `${process.env.REACT_APP_URL_BACKEND}/game_phases/use_monopoly_progress_card?lobby_id=${props.lobby}&resource=${resource}`,
+      `${process.env.REACT_APP_URL_BACKEND}/game_phases/use_monopoly_progress_card?lobby_id=${params.lobby}&resource=${resource}`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          Authorization: `Bearer ${props.token}`,
+          Authorization: `Bearer ${params.token}`,
         },
       }
     )
@@ -211,12 +213,12 @@ const PopUpCartasDesarrollo = (props) => {
 
   function UsarDescubrimiento() {
     fetch(
-      `${process.env.REACT_APP_URL_BACKEND}//game_phases/use_invention_card?lobby_id=${props.lobby}&resource1=${selectedResources[0]}&resource2=${selectedResources[1]}`,
+      `${process.env.REACT_APP_URL_BACKEND}//game_phases/use_invention_card?lobby_id=${params.lobby}&resource1=${selectedResources[0]}&resource2=${selectedResources[1]}`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          Authorization: `Bearer ${props.token}`,
+          Authorization: `Bearer ${params.token}`,
         },
       }
     )
@@ -504,7 +506,7 @@ const PopUpCartasDesarrollo = (props) => {
                 </div>
               </div>
             )}
-            {props.children}
+            {params.children}
           </div>
         </div>
       )}

@@ -277,6 +277,14 @@ function Partida() {
               setColocando_ladron(true);
             }
 
+            // Si recibo del global_info que se está colocando el ladron, lo pongo a true
+            if (
+              global_info.colocando_ladron &&
+              !ladronYaColocado
+            ) {
+              setColocando_ladron(true);
+            }
+
             // Log de colocando_ladron
             console.log("Colocando ladron:", colocando_ladron);
 
@@ -1076,7 +1084,7 @@ function Partida() {
           backgroundColor: "blue",
         }}
       >
-        <Tabs jugador_datos={estado_jugador} />
+        <Tabs jugador_datos={estado_jugador} turno={turno} mi_id={mi_id}/>
       </div>
 
       {/************************** HEXAGONOS ***************************/}
@@ -1118,7 +1126,7 @@ function Partida() {
 
                     // Si se está colocando el ladrón, hago la llamada al backend para indicar la nueva posición
                     // del ladrón
-                    if (colocando_ladron) {
+                    if (colocando_ladron || global_info.colocando_ladron) {
                       // log
                       console.log("Intento de mover ladrón");
 
@@ -1143,6 +1151,8 @@ function Partida() {
 
                             // Desactivo el booleano de colocando_ladron
                             setColocando_ladron(false);
+                            global_info.colocando_ladron(false);
+
                             setLadronYaColocado(true);
                           });
                         })
@@ -1740,8 +1750,12 @@ function Partida() {
 
 export default Partida;
 export const global_info = {
+  // Para los intercambios con el banco
   realizando_intercambio: false,
   cantidad_ofrecida: 0,
   fase_intercambio: 0,
   recurso_ofrecido: "",
+
+  // Para el uso del ladrón
+  colocando_ladron: false,
 };
