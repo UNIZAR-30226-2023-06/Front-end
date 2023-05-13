@@ -106,6 +106,8 @@ function Partida() {
   const [casas_legales, setCasas_legales] = useState([]);
   const [carretera_legales, setCarretera_legales] = useState([]);
 
+  const [coloresAlrededorLadron, setColoresAlrededorLadron] = useState([]);
+
   const ficha_con_id = [
     null,
     "http://localhost:3000/casillas/madera.jpg",
@@ -266,6 +268,8 @@ function Partida() {
 
             // setTiempo_maximo(data.turn_time);
             setTiempo_maximo(9999999);
+
+            
 
             detectar_cambio_fase(data.turn_phase, data.player_turn);
             setTurno(data.player_turn);
@@ -917,7 +921,15 @@ function Partida() {
                 border: eligiendoJugadorRobar ? "5px solid white" : "",
               }}
 
+              // Compruebo si el color de este oponetne está en coloresAlrededorLadron
+              // Si es así, hago un log
+              
+              
+
               onClick={() => {
+                const contieneColor = coloresAlrededorLadron.includes(
+                  color_to_codigo(colores_oponentes[0]);
+                  
                 if (eligiendoJugadorRobar) {
                   // Log
                   console.log("Click en jugador 1");
@@ -1272,6 +1284,34 @@ function Partida() {
                       setLadronYaColocado(true);
                       setEligiendoJugadorRobar(true);
                       setNuevaPosicionLadron(parseInt(key));
+
+                      // Obtengo los colores alrededor de la nueva posición del ladrón
+
+                      // Ejemplo url:
+                      // http://127.0.0.1:8000/get-nodes-around-tile?lobby_id=1234&tileCoord=122
+
+                      fetch(
+                        `http://
+                        ${process.env.REACT_APP_HOST}:${process.env.REACT_APP_PORT}/
+                        get-nodes-around-tile?lobby_id=${lobby_id}&tileCoord=${key}`,
+                        {
+                          method: "GET",
+                          headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            Authorization: `Bearer ${Token}`,
+                          },
+
+                        })
+                        .then((res) => {
+                          res.json().then((data) => {
+                            console.log("Colores alrededor del ladrón:", data);
+                            setColoresAlrededorLadron(data);
+                          });
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                        }
+                        );
                     }
                   }}
                 >

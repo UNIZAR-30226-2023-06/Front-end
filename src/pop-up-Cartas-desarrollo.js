@@ -84,6 +84,11 @@ const PopUpCartasDesarrollo = (params) => {
       } else if (selectedCardIndex === 5) {
         // Log
         console.log("Se ha seleccionado la carta de caballero");
+
+        // Avisamos al backend de que nos reste la carta de desarrollo
+
+        // Ejemplo url;
+        // 
         
         global_info.colocando_ladron = true;
 
