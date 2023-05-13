@@ -129,13 +129,13 @@ function Partida() {
   const left_variation_unit = 80;
 
   const [posicion_ladron, setPosicion_ladron] = useState(87);
+  const [colocando_ladron, setColocando_ladron] = useState(false);
   const top_variation_ladron = 27;
   const left_variation_ladron = 27;
 
   const [road, setRoad] = useState({});
 
   // Variable que gestiona si se está colocando el ladrón
-  const [colocando_ladron, setColocando_ladron] = useState(true);
 
   // 0 para las verticales, 1 para las ascendentes, 2 para las descendentes
   const type_road = [
@@ -1139,7 +1139,10 @@ function Partida() {
                   {board[key][0] !== 0 && board[key][0]}
                 </button>
               }
-              {key === posicion_ladron && (               
+
+              {/* Ladrón */}
+              {/* NOTA: NO CAMBIAR EL == POR ===, SI NO NO FUNCIONA */}
+              {key == posicion_ladron && (               
                 <img
                   src={"http://localhost:3000/ladron.png"}
                   alt="ladron"
@@ -1160,6 +1163,7 @@ function Partida() {
                   }}
                 />
               )}
+
             </div>
           );
         })}
