@@ -39,6 +39,7 @@ function Partida() {
 
   const [id_to_img, setId_to_img] = useState({});
 
+  const [idsOponentes, setIdsOponentes] = useState([]);
   const [imgs_oponentes, setImgs_oponentes] = useState([]);
   const [puntos_victoria_oponentes, setPuntos_victoria_oponentes] = useState(
     []
@@ -129,9 +130,10 @@ function Partida() {
   const left_variation_unit = 80;
 
   const [posicion_ladron, setPosicion_ladron] = useState(87);
+  const [nuevaPosicionLadron, setNuevaPosicionLadron] = useState(87);
   const [colocando_ladron, setColocando_ladron] = useState(false);
   const [ladronYaColocado, setLadronYaColocado] = useState(true);
-  const [eligiendoJugadorRobar, setEligiendoJugadorRobar] = useState(false);
+  const [eligiendoJugadorRobar, setEligiendoJugadorRobar] = useState(true);
   const top_variation_ladron = 27;
   const left_variation_ladron = 27;
 
@@ -364,6 +366,7 @@ function Partida() {
             let nueva_lista_bono_caballeros_oponentes = [];
             let nueva_lista_bono_carreteras_oponentes = [];
             let nuevos_colores_oponentes = [];
+            let nuevos_ids_oponentes = [];
 
             for (let i = 0; i < lista_oponentes.length; i++) {
               const nueva_img_oponente =
@@ -393,6 +396,11 @@ function Partida() {
                 ...nuevos_colores_oponentes,
                 lista_oponentes[i].color,
               ];
+
+              nuevos_ids_oponentes = [
+                ...nuevos_ids_oponentes,
+                lista_oponentes[i].id,
+              ];
             }
 
             setImgs_oponentes(nueva_lista_imgs_oponentes);
@@ -400,6 +408,7 @@ function Partida() {
             setBono_caballeros_oponentes(nueva_lista_bono_caballeros_oponentes);
             setBono_carreteras_oponentes(nueva_lista_bono_carreteras_oponentes);
             setColores_oponentes(nuevos_colores_oponentes);
+            setIdsOponentes(nuevos_ids_oponentes);
 
             let array_skins_jugadores_poblados = [null, null, null, null];
             let array_skins_jugadores_carreteras = [null, null, null, null];
@@ -533,12 +542,12 @@ function Partida() {
           // mostramos la pop up de tirar los dados s
           setShowPopupFaseTirada(true);
           setShowPopupFaseNegociacion(false);
-          
+
           // Log de ambas fases
           if (fase_actual !== fase) {
             console.log("Fase actual:", fase_actual);
             console.log("Fase nueva:", fase);
-            
+
             setLadronYaColocado(false);
           }
         } else {
@@ -906,7 +915,45 @@ function Partida() {
               className="superior_jugador_1_partida"
               style={{
                 backgroundColor: color_to_hex(colores_oponentes[0]),
+
+                // Si eligiendoJugadorRobar está a true, añado un borde blanco
+                // alrededor del jugador con un grosor de 5px
+                border: eligiendoJugadorRobar ? "5px solid white" : "",
               }}
+
+              onClick={() => {
+                if (eligiendoJugadorRobar) {
+                  // Log
+                  console.log("Click en jugador 1");
+
+                  // log
+                  console.log("Intento de mover ladrón");
+
+                  // Ejemplo de url:
+                  // https://cataninc-back-end-production-4d3e.up.railway.app/game_phases/move_thief?lobby_id=3&stolen_player_id=4&new_thief_position_tile_coord=5
+
+                  const url = `${process.env.REACT_APP_URL_BACKEND
+                    }/game_phases/move_thief?lobby_id=${codigo_partida}&stolen_player_id=${idsOponentes[0]}&new_thief_position_tile_coord=${nuevaPosicionLadron}`;
+
+                  // Petición GET para mover el ladrón
+                  fetch(url, {
+                    method: "GET",
+                    headers: {
+                      "Content-Type": "application/x-www-form-urlencoded",
+                      Authorization: `Bearer ${Token}`,
+                    },
+                  })
+                    .then((res) => {
+                      res.json().then((data) => {
+                        console.log("Intento de mover ladrón:", data);
+                      });
+                    })
+                    .catch((error) => {
+                      console.error("Error:", error);
+                    });
+                }
+              }
+              }
             >
               <img
                 src={imgs_oponentes[0]}
@@ -961,6 +1008,43 @@ function Partida() {
               className="superior_jugador_2_partida"
               style={{
                 backgroundColor: color_to_hex(colores_oponentes[1]),
+
+                // Si eligiendoJugadorRobar está a true, añado un borde blanco
+                // alrededor del jugador con un grosor de 5px
+                border: eligiendoJugadorRobar ? "5px solid white" : "",
+              }}
+
+              onClick={() => {
+                if (eligiendoJugadorRobar) {
+                  // Log
+                  console.log("Click en jugador 1");
+
+                  // log
+                  console.log("Intento de mover ladrón");
+
+                  // Ejemplo de url:
+                  // https://cataninc-back-end-production-4d3e.up.railway.app/game_phases/move_thief?lobby_id=3&stolen_player_id=4&new_thief_position_tile_coord=5
+
+                  const url = `${process.env.REACT_APP_URL_BACKEND
+                    }/game_phases/move_thief?lobby_id=${codigo_partida}&stolen_player_id=${idsOponentes[1]}&new_thief_position_tile_coord=${nuevaPosicionLadron}`;
+
+                  // Petición GET para mover el ladrón
+                  fetch(url, {
+                    method: "GET",
+                    headers: {
+                      "Content-Type": "application/x-www-form-urlencoded",
+                      Authorization: `Bearer ${Token}`,
+                    },
+                  })
+                    .then((res) => {
+                      res.json().then((data) => {
+                        console.log("Intento de mover ladrón:", data);
+                      });
+                    })
+                    .catch((error) => {
+                      console.error("Error:", error);
+                    });
+                }
               }}
             >
               <img
@@ -1016,6 +1100,43 @@ function Partida() {
               className="superior_jugador_3_partida"
               style={{
                 backgroundColor: color_to_hex(colores_oponentes[2]),
+
+                // Si eligiendoJugadorRobar está a true, añado un borde blanco
+                // alrededor del jugador con un grosor de 5px
+                border: eligiendoJugadorRobar ? "5px solid white" : "",
+              }}
+
+              onClick={() => {
+                if (eligiendoJugadorRobar) {
+                  // Log
+                  console.log("Click en jugador 1");
+
+                  // log
+                  console.log("Intento de mover ladrón");
+
+                  // Ejemplo de url:
+                  // https://cataninc-back-end-production-4d3e.up.railway.app/game_phases/move_thief?lobby_id=3&stolen_player_id=4&new_thief_position_tile_coord=5
+
+                  const url = `${process.env.REACT_APP_URL_BACKEND
+                    }/game_phases/move_thief?lobby_id=${codigo_partida}&stolen_player_id=${idsOponentes[2]}&new_thief_position_tile_coord=${nuevaPosicionLadron}`;
+
+                  // Petición GET para mover el ladrón
+                  fetch(url, {
+                    method: "GET",
+                    headers: {
+                      "Content-Type": "application/x-www-form-urlencoded",
+                      Authorization: `Bearer ${Token}`,
+                    },
+                  })
+                    .then((res) => {
+                      res.json().then((data) => {
+                        console.log("Intento de mover ladrón:", data);
+                      });
+                    })
+                    .catch((error) => {
+                      console.error("Error:", error);
+                    });
+                }
               }}
             >
               <img
@@ -1130,8 +1251,8 @@ function Partida() {
 
                     backgroundImage: `url(${ficha_con_id[board[key][1]]})`,
                     color: `${board[key][0] === 6 || board[key][0] === 8
-                        ? "red"
-                        : "white"
+                      ? "red"
+                      : "white"
                       }`,
                   }}
                   onClick={() => {
@@ -1148,32 +1269,7 @@ function Partida() {
 
                       setLadronYaColocado(true);
                       setEligiendoJugadorRobar(true);
-
-                      // log
-                      console.log("Intento de mover ladrón");
-
-                      // Ejemplo de url:
-                      // https://cataninc-back-end-production-4d3e.up.railway.app/game_phases/move_thief?lobby_id=3&stolen_player_id=4&new_thief_position_tile_coord=5
-
-                      const url = `${process.env.REACT_APP_URL_BACKEND
-                        }/game_phases/move_thief?lobby_id=${codigo_partida}&stolen_player_id=${7771}&new_thief_position_tile_coord=${key}`;
-
-                      // Petición GET para mover el ladrón
-                      fetch(url, {
-                        method: "GET",
-                        headers: {
-                          "Content-Type": "application/x-www-form-urlencoded",
-                          Authorization: `Bearer ${Token}`,
-                        },
-                      })
-                        .then((res) => {
-                          res.json().then((data) => {
-                            console.log("Intento de mover ladrón:", data);
-                          });
-                        })
-                        .catch((error) => {
-                          console.error("Error:", error);
-                        });
+                      setNuevaPosicionLadron(parseInt(key));
                     }
                   }}
                 >
@@ -1222,8 +1318,8 @@ function Partida() {
                 (road[key] != null || permiso_construccion) && (
                   <button
                     className={`w-20 flex h-5 ${road[key] != null
-                        ? "carretera_partida"
-                        : "carretera_sin_comprar_partida"
+                      ? "carretera_partida"
+                      : "carretera_sin_comprar_partida"
                       }`}
                     style={{
                       position: "absolute",
@@ -1238,11 +1334,11 @@ function Partida() {
                         }px) rotate(90deg)`,
 
                       backgroundImage: `url( ${road[key] != null
-                          ? `${skins_jugadores_carreteras[
-                          usuario_to_color[road[key]]
-                          ]
-                          }`
-                          : `${skins_jugadores_carreteras[mi_indice]}`
+                        ? `${skins_jugadores_carreteras[
+                        usuario_to_color[road[key]]
+                        ]
+                        }`
+                        : `${skins_jugadores_carreteras[mi_indice]}`
                         } )`,
                     }}
                     onClick={() => {
@@ -1255,8 +1351,8 @@ function Partida() {
                 (road[key] != null || permiso_construccion) && (
                   <button
                     className={`w-20 flex h-5 ${road[key] != null
-                        ? "carretera_partida"
-                        : "carretera_sin_comprar_partida"
+                      ? "carretera_partida"
+                      : "carretera_sin_comprar_partida"
                       }`}
                     style={{
                       position: "absolute",
@@ -1271,11 +1367,11 @@ function Partida() {
                         }px) rotate(-30deg)`,
 
                       backgroundImage: `url( ${road[key] != null
-                          ? `${skins_jugadores_carreteras[
-                          usuario_to_color[road[key]]
-                          ]
-                          }`
-                          : `${skins_jugadores_carreteras[mi_indice]}`
+                        ? `${skins_jugadores_carreteras[
+                        usuario_to_color[road[key]]
+                        ]
+                        }`
+                        : `${skins_jugadores_carreteras[mi_indice]}`
                         } )`,
                     }}
                     onClick={() => {
@@ -1288,8 +1384,8 @@ function Partida() {
                 (road[key] != null || permiso_construccion) && (
                   <button
                     className={`w-20 flex h-5 ${road[key] != null
-                        ? "carretera_partida"
-                        : "carretera_sin_comprar_partida"
+                      ? "carretera_partida"
+                      : "carretera_sin_comprar_partida"
                       }`}
                     style={{
                       position: "absolute",
@@ -1304,11 +1400,11 @@ function Partida() {
                         }px) rotate(30deg)`,
 
                       backgroundImage: `url( ${road[key] != null
-                          ? `${skins_jugadores_carreteras[
-                          usuario_to_color[road[key]]
-                          ]
-                          }`
-                          : `${skins_jugadores_carreteras[mi_indice]}`
+                        ? `${skins_jugadores_carreteras[
+                        usuario_to_color[road[key]]
+                        ]
+                        }`
+                        : `${skins_jugadores_carreteras[mi_indice]}`
                         } )`,
                     }}
                     onClick={() => {
@@ -1568,8 +1664,8 @@ function Partida() {
                 (building[key][1] !== null || permiso_construccion) && (
                   <button
                     className={`w-10 flex h-10 ${building[key][1] != null
-                        ? "construccion_partida"
-                        : "construccion_sin_comprar_partida"
+                      ? "construccion_partida"
+                      : "construccion_sin_comprar_partida"
                       }`}
                     style={{
                       position: "absolute",
@@ -1584,13 +1680,13 @@ function Partida() {
                         }px)`,
                       // id | indiceColumna -> si id === 0[jugador ] -> id === 1 [tipo_construccion]
                       backgroundImage: `url( ${building[key][1] !== null
-                          ? `${building[key][1] === 1
-                            ? skins_jugadores_poblados[
-                            usuario_to_color[building[key][0]]
-                            ]
-                            : "ciudad"
-                          }`
-                          : `${skins_jugadores_poblados[mi_indice]}`
+                        ? `${building[key][1] === 1
+                          ? skins_jugadores_poblados[
+                          usuario_to_color[building[key][0]]
+                          ]
+                          : "ciudad"
+                        }`
+                        : `${skins_jugadores_poblados[mi_indice]}`
                         } )`,
                     }}
                     onClick={() => {
@@ -1704,8 +1800,8 @@ function Partida() {
       <button
         style={{
           backgroundImage: `url(${turno == mi_id && aldeas_iniciales_colocadas
-              ? "http://localhost:3000/skips/skip_on.png"
-              : "http://localhost:3000/skips/skip_off.png"
+            ? "http://localhost:3000/skips/skip_on.png"
+            : "http://localhost:3000/skips/skip_off.png"
             })`,
           backgroundSize: "cover",
           position: "absolute",
