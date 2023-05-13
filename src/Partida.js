@@ -923,10 +923,13 @@ function Partida() {
 
               // Compruebo si el color de este oponetne está en coloresAlrededorLadron
               // Si es así, hago un log
-              const contieneColor = coloresAlrededorLadron.includes(
-                color_to_codigo(colores_oponentes[0]);
+              
+              
 
               onClick={() => {
+                const contieneColor = coloresAlrededorLadron.includes(
+                  color_to_codigo(colores_oponentes[0]);
+                  
                 if (eligiendoJugadorRobar) {
                   // Log
                   console.log("Click en jugador 1");
