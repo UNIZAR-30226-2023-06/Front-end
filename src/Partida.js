@@ -84,6 +84,7 @@ function Partida() {
     []
   );
   const [skins_jugadores_ciudades, setSkins_jugadores_ciudades] = useState([]);
+  const [skinMarFondo, setSkinMarFondo] = useState("");
 
   const [colores_oponentes, setColores_oponentes] = useState([]);
   const [mi_color, setMi_color] = useState("");
@@ -107,6 +108,7 @@ function Partida() {
   const [carretera_legales, setCarretera_legales] = useState([]);
 
   const [coloresAlrededorLadron, setColoresAlrededorLadron] = useState([]);
+  const [indicesAlrededorLadron, setIndicesAlrededorLadron] = useState([]);
 
   const ficha_con_id = [
     null,
@@ -262,14 +264,20 @@ function Partida() {
 
             setEstado_jugador(yoyo);
 
+            const miSkinMar = yoyo.selected_grid_skin;
+
+            if (miSkinMar === "default") {
+              setSkinMarFondo("skin0");
+            } else {
+              setSkinMarFondo(miSkinMar);
+            }
+
             setBoard(data.board.tiles);
             setRoad(data.board.edges);
             setBuilding(data.board.nodes);
 
             // setTiempo_maximo(data.turn_time);
             setTiempo_maximo(9999999);
-
-            
 
             detectar_cambio_fase(data.turn_phase, data.player_turn);
             setTurno(data.player_turn);
@@ -287,16 +295,16 @@ function Partida() {
             }
 
             // Si recibo del global_info que se está colocando el ladron, lo pongo a true
-            if (
-              global_info.colocando_ladron &&
-              !ladronYaColocado
-            ) {
+            if (global_info.colocando_ladron && !ladronYaColocado) {
               setColocando_ladron(true);
             }
 
             // Log de colocando_ladron
             console.log("Colocando ladron:", colocando_ladron);
-            console.log("Global info colocando ladron:", global_info.colocando_ladron);
+            console.log(
+              "Global info colocando ladron:",
+              global_info.colocando_ladron
+            );
 
             actualizar_dados(data.die_1, data.die_2);
 
@@ -319,6 +327,9 @@ function Partida() {
             ) {
               setPuedo_colocar_aldea(true);
             }
+
+            // Log de los colores de los oponentes
+            console.log("Colores de los oponentes:", colores_oponentes);
 
             // Si no es mi turno, desactivo los permisos de construir
             // aldeas y carreteras
@@ -422,9 +433,7 @@ function Partida() {
               const url_skin_carretera =
                 "http://localhost:3000/carreteras/" +
                 jugadores[i].color +
-                "/" +
-                jugadores[i].selected_pieces_skin +
-                ".png";
+                "/default.png";
               array_skins_jugadores_carreteras[i] = url_skin_carretera;
 
               const url_skin_ciudad =
@@ -530,7 +539,6 @@ function Partida() {
   // si la fase actual es distinta a la que se le pasa por parametro
   function detectar_cambio_fase(fase, nuevo_turno) {
     if (fase_actual !== fase || nuevo_turno === mi_id) {
-
       if (fase !== fase_actual) {
         setColocando_ladron(false);
         global_info.colocando_ladron = false;
@@ -585,7 +593,7 @@ function Partida() {
     ).then((res) => {
       res
         .json()
-        .then((data) => { })
+        .then((data) => {})
         .catch((error) => {
           console.error("Error:", error);
         });
@@ -899,7 +907,8 @@ function Partida() {
   return (
     <div
       style={{
-        backgroundImage: `url(http://localhost:3000/fondo_mar.jpg)`,
+        //backgroundImage: `url(http://localhost:3000/fondo_mar.jpg)`,
+        backgroundImage: `url(http://localhost:3000/skin_mar/${skinMarFondo}.png)`,
         backgroundSize: "cover",
 
         height: "100vh",
@@ -920,16 +929,20 @@ function Partida() {
                 // alrededor del jugador con un grosor de 5px
                 border: eligiendoJugadorRobar ? "5px solid white" : "",
               }}
-
               // Compruebo si el color de este oponetne está en coloresAlrededorLadron
               // Si es así, hago un log
-              
-              
 
               onClick={() => {
-                const contieneColor = coloresAlrededorLadron.includes(color_to_codigo(colores_oponentes[0]));
-                
-                if (contieneColor && eligiendoJugadorRobar) {
+                let definitivamenteTieneColor = false;
+                const colorOponente0 = color_to_codigo(colores_oponentes[0]);
+                // Recorro con un for los pares obtenidos para ver si tiene el color del jugador
+                for (let i = 0; i < coloresAlrededorLadron.nodes.length; i++) {
+                  if (coloresAlrededorLadron.nodes[i][0] === colorOponente0) {
+                    definitivamenteTieneColor = true;
+                  }
+                }
+
+                if (definitivamenteTieneColor && eligiendoJugadorRobar) {
                   // Log
                   console.log("Click en jugador 1");
 
@@ -939,8 +952,7 @@ function Partida() {
                   // Ejemplo de url:
                   // https://cataninc-back-end-production-4d3e.up.railway.app/game_phases/move_thief?lobby_id=3&stolen_player_id=4&new_thief_position_tile_coord=5
 
-                  const url = `${process.env.REACT_APP_URL_BACKEND
-                    }/game_phases/move_thief?lobby_id=${codigo_partida}&stolen_player_id=${idsOponentes[0]}&new_thief_position_tile_coord=${nuevaPosicionLadron}`;
+                  const url = `${process.env.REACT_APP_URL_BACKEND}/game_phases/move_thief?lobby_id=${codigo_partida}&stolen_player_id=${idsOponentes[0]}&new_thief_position_tile_coord=${nuevaPosicionLadron}`;
 
                   // Petición GET para mover el ladrón
                   fetch(url, {
@@ -959,10 +971,9 @@ function Partida() {
                       console.error("Error:", error);
                     });
 
-                    setEligiendoJugadorRobar(false);
+                  setEligiendoJugadorRobar(false);
                 }
-              }
-              }
+              }}
             >
               <img
                 src={imgs_oponentes[0]}
@@ -1022,11 +1033,17 @@ function Partida() {
                 // alrededor del jugador con un grosor de 5px
                 border: eligiendoJugadorRobar ? "5px solid white" : "",
               }}
-
               onClick={() => {
-                const contieneColor = coloresAlrededorLadron.includes(color_to_codigo(colores_oponentes[1]));
+                let definitivamenteTieneColor = false;
+                const colorOponente0 = color_to_codigo(colores_oponentes[1]);
+                // Recorro con un for los pares obtenidos para ver si tiene el color del jugador
+                for (let i = 0; i < coloresAlrededorLadron.nodes.length; i++) {
+                  if (coloresAlrededorLadron.nodes[i][0] === colorOponente0) {
+                    definitivamenteTieneColor = true;
+                  }
+                }
 
-                if (eligiendoJugadorRobar && contieneColor) {
+                if (eligiendoJugadorRobar && definitivamenteTieneColor) {
                   // Log
                   console.log("Click en jugador 1");
 
@@ -1036,8 +1053,7 @@ function Partida() {
                   // Ejemplo de url:
                   // https://cataninc-back-end-production-4d3e.up.railway.app/game_phases/move_thief?lobby_id=3&stolen_player_id=4&new_thief_position_tile_coord=5
 
-                  const url = `${process.env.REACT_APP_URL_BACKEND
-                    }/game_phases/move_thief?lobby_id=${codigo_partida}&stolen_player_id=${idsOponentes[1]}&new_thief_position_tile_coord=${nuevaPosicionLadron}`;
+                  const url = `${process.env.REACT_APP_URL_BACKEND}/game_phases/move_thief?lobby_id=${codigo_partida}&stolen_player_id=${idsOponentes[1]}&new_thief_position_tile_coord=${nuevaPosicionLadron}`;
 
                   // Petición GET para mover el ladrón
                   fetch(url, {
@@ -1056,7 +1072,7 @@ function Partida() {
                       console.error("Error:", error);
                     });
 
-                    setEligiendoJugadorRobar(false);
+                  setEligiendoJugadorRobar(false);
                 }
               }}
             >
@@ -1118,11 +1134,17 @@ function Partida() {
                 // alrededor del jugador con un grosor de 5px
                 border: eligiendoJugadorRobar ? "5px solid white" : "",
               }}
-
               onClick={() => {
-                const contieneColor = coloresAlrededorLadron.includes(color_to_codigo(colores_oponentes[2]));
+                let definitivamenteTieneColor = false;
+                const colorOponente0 = color_to_codigo(colores_oponentes[2]);
+                // Recorro con un for los pares obtenidos para ver si tiene el color del jugador
+                for (let i = 0; i < coloresAlrededorLadron.nodes.length; i++) {
+                  if (coloresAlrededorLadron.nodes[i][0] === colorOponente0) {
+                    definitivamenteTieneColor = true;
+                  }
+                }
 
-                if (eligiendoJugadorRobar && contieneColor) {
+                if (eligiendoJugadorRobar && definitivamenteTieneColor) {
                   // Log
                   console.log("Click en jugador 1");
 
@@ -1132,8 +1154,7 @@ function Partida() {
                   // Ejemplo de url:
                   // https://cataninc-back-end-production-4d3e.up.railway.app/game_phases/move_thief?lobby_id=3&stolen_player_id=4&new_thief_position_tile_coord=5
 
-                  const url = `${process.env.REACT_APP_URL_BACKEND
-                    }/game_phases/move_thief?lobby_id=${codigo_partida}&stolen_player_id=${idsOponentes[2]}&new_thief_position_tile_coord=${nuevaPosicionLadron}`;
+                  const url = `${process.env.REACT_APP_URL_BACKEND}/game_phases/move_thief?lobby_id=${codigo_partida}&stolen_player_id=${idsOponentes[2]}&new_thief_position_tile_coord=${nuevaPosicionLadron}`;
 
                   // Petición GET para mover el ladrón
                   fetch(url, {
@@ -1152,7 +1173,7 @@ function Partida() {
                       console.error("Error:", error);
                     });
 
-                    setEligiendoJugadorRobar(false);
+                  setEligiendoJugadorRobar(false);
                 }
               }}
             >
@@ -1236,7 +1257,12 @@ function Partida() {
           backgroundColor: "blue",
         }}
       >
-        <Tabs jugador_datos={estado_jugador} turno={turno} mi_id={mi_id} fase={fase_actual} />
+        <Tabs
+          jugador_datos={estado_jugador}
+          turno={turno}
+          mi_id={mi_id}
+          fase={fase_actual}
+        />
       </div>
 
       {/************************** HEXAGONOS ***************************/}
@@ -1262,15 +1288,17 @@ function Partida() {
                       init_top_board -
                       top_variation_board[index] * top_variation_unit,
                     left: "50%",
-                    transform: `translateX(${init_left_board +
+                    transform: `translateX(${
+                      init_left_board +
                       left_variation_board[index] * left_variation_unit
-                      }px)`,
+                    }px)`,
 
                     backgroundImage: `url(${ficha_con_id[board[key][1]]})`,
-                    color: `${board[key][0] === 6 || board[key][0] === 8
-                      ? "red"
-                      : "white"
-                      }`,
+                    color: `${
+                      board[key][0] === 6 || board[key][0] === 8
+                        ? "red"
+                        : "white"
+                    }`,
                   }}
                   onClick={() => {
                     // log
@@ -1279,7 +1307,6 @@ function Partida() {
                     // Si se está colocando el ladrón, hago la llamada al backend para indicar la nueva posición
                     // del ladrón
                     if (colocando_ladron || global_info.colocando_ladron) {
-
                       // Desactivo el booleano de colocando_ladron
                       setColocando_ladron(false);
                       global_info.colocando_ladron = false;
@@ -1293,27 +1320,34 @@ function Partida() {
                       // Ejemplo url:
                       // http://127.0.0.1:8000/get-nodes-around-tile?lobby_id=1234&tileCoord=122
 
+                      // Log
+                      console.log(
+                        "Acabo de colocar el ladrón en la casilla",
+                        key
+                      );
+
                       fetch(
-                        `http://
-                        ${process.env.REACT_APP_HOST}:8000/get-nodes-around-tile?lobby_id=${codigo_partida}&tileCoord=${key}`,
+                        `${process.env.REACT_APP_URL_BACKEND}/get-nodes-around-tile?lobby_id=${codigo_partida}&tileCoord=${key}`,
                         {
                           method: "GET",
                           headers: {
                             "Content-Type": "application/x-www-form-urlencoded",
                             Authorization: `Bearer ${Token}`,
                           },
-
-                        })
+                        }
+                      )
                         .then((res) => {
                           res.json().then((data) => {
-                            console.log("Colores alrededor del ladrón:", data);
                             setColoresAlrededorLadron(data);
                           });
                         })
                         .catch((err) => {
+                          // Log
+                          console.log(
+                            "Error al obtener los colores alrededor del ladrón"
+                          );
                           console.log(err);
-                        }
-                        );
+                        });
                     }
                   }}
                 >
@@ -1334,16 +1368,16 @@ function Partida() {
                       top_variation_ladron -
                       top_variation_board[index] * top_variation_unit,
                     left: "50%",
-                    transform: `translateX(${init_left_board +
+                    transform: `translateX(${
+                      init_left_board +
                       left_variation_ladron +
                       left_variation_board[index] * left_variation_unit
-                      }px)`,
+                    }px)`,
                     width: "100px",
                     height: "100px",
                   }}
                 />
               )}
-
             </div>
           );
         })}
@@ -1361,10 +1395,11 @@ function Partida() {
               {type_road[index] === 0 &&
                 (road[key] != null || permiso_construccion) && (
                   <button
-                    className={`w-20 flex h-5 ${road[key] != null
-                      ? "carretera_partida"
-                      : "carretera_sin_comprar_partida"
-                      }`}
+                    className={`w-20 flex h-5 ${
+                      road[key] != null
+                        ? "carretera_partida"
+                        : "carretera_sin_comprar_partida"
+                    }`}
                     style={{
                       position: "absolute",
                       top:
@@ -1372,18 +1407,21 @@ function Partida() {
                         init_top_road_relative_vertical -
                         top_variation_road[index] * top_variation_unit,
                       left: "50%",
-                      transform: `translateX(${init_left_board +
+                      transform: `translateX(${
+                        init_left_board +
                         init_left_road_relative_vertical +
                         left_variation_road[index] * left_variation_unit
-                        }px) rotate(90deg)`,
+                      }px) rotate(90deg)`,
 
-                      backgroundImage: `url( ${road[key] != null
-                        ? `${skins_jugadores_carreteras[
-                        usuario_to_color[road[key]]
-                        ]
-                        }`
-                        : `${skins_jugadores_carreteras[mi_indice]}`
-                        } )`,
+                      backgroundImage: `url( ${
+                        road[key] != null
+                          ? `${
+                              skins_jugadores_carreteras[
+                                usuario_to_color[road[key]]
+                              ]
+                            }`
+                          : `${skins_jugadores_carreteras[mi_indice]}`
+                      } )`,
                     }}
                     onClick={() => {
                       construir_carretera(key);
@@ -1394,10 +1432,11 @@ function Partida() {
               {type_road[index] === 1 &&
                 (road[key] != null || permiso_construccion) && (
                   <button
-                    className={`w-20 flex h-5 ${road[key] != null
-                      ? "carretera_partida"
-                      : "carretera_sin_comprar_partida"
-                      }`}
+                    className={`w-20 flex h-5 ${
+                      road[key] != null
+                        ? "carretera_partida"
+                        : "carretera_sin_comprar_partida"
+                    }`}
                     style={{
                       position: "absolute",
                       top:
@@ -1405,18 +1444,21 @@ function Partida() {
                         init_top_road_relative_ascend -
                         top_variation_road[index] * top_variation_unit,
                       left: "50%",
-                      transform: `translateX(${init_left_board +
+                      transform: `translateX(${
+                        init_left_board +
                         init_left_road_relative_ascend +
                         left_variation_road[index] * left_variation_unit
-                        }px) rotate(-30deg)`,
+                      }px) rotate(-30deg)`,
 
-                      backgroundImage: `url( ${road[key] != null
-                        ? `${skins_jugadores_carreteras[
-                        usuario_to_color[road[key]]
-                        ]
-                        }`
-                        : `${skins_jugadores_carreteras[mi_indice]}`
-                        } )`,
+                      backgroundImage: `url( ${
+                        road[key] != null
+                          ? `${
+                              skins_jugadores_carreteras[
+                                usuario_to_color[road[key]]
+                              ]
+                            }`
+                          : `${skins_jugadores_carreteras[mi_indice]}`
+                      } )`,
                     }}
                     onClick={() => {
                       construir_carretera(key);
@@ -1427,10 +1469,11 @@ function Partida() {
               {type_road[index] === 2 &&
                 (road[key] != null || permiso_construccion) && (
                   <button
-                    className={`w-20 flex h-5 ${road[key] != null
-                      ? "carretera_partida"
-                      : "carretera_sin_comprar_partida"
-                      }`}
+                    className={`w-20 flex h-5 ${
+                      road[key] != null
+                        ? "carretera_partida"
+                        : "carretera_sin_comprar_partida"
+                    }`}
                     style={{
                       position: "absolute",
                       top:
@@ -1438,18 +1481,21 @@ function Partida() {
                         init_top_road_relative_descend -
                         top_variation_road[index] * top_variation_unit,
                       left: "50%",
-                      transform: `translateX(${init_left_board +
+                      transform: `translateX(${
+                        init_left_board +
                         init_left_road_relative_descend +
                         left_variation_road[index] * left_variation_unit
-                        }px) rotate(30deg)`,
+                      }px) rotate(30deg)`,
 
-                      backgroundImage: `url( ${road[key] != null
-                        ? `${skins_jugadores_carreteras[
-                        usuario_to_color[road[key]]
-                        ]
-                        }`
-                        : `${skins_jugadores_carreteras[mi_indice]}`
-                        } )`,
+                      backgroundImage: `url( ${
+                        road[key] != null
+                          ? `${
+                              skins_jugadores_carreteras[
+                                usuario_to_color[road[key]]
+                              ]
+                            }`
+                          : `${skins_jugadores_carreteras[mi_indice]}`
+                      } )`,
                     }}
                     onClick={() => {
                       construir_carretera(key);
@@ -1467,8 +1513,9 @@ function Partida() {
             position: "absolute",
             top: init_top_board - -1 * top_variation_unit,
             left: "50%",
-            transform: `translateX(${init_left_board + -5 * left_variation_unit
-              }px) rotate(-60deg)`,
+            transform: `translateX(${
+              init_left_board + -5 * left_variation_unit
+            }px) rotate(-60deg)`,
 
             backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_arcilla.png)`,
           }}
@@ -1495,8 +1542,9 @@ function Partida() {
             position: "absolute",
             top: init_top_board - 1 * top_variation_unit,
             left: "50%",
-            transform: `translateX(${init_left_board + -5 * left_variation_unit
-              }px) rotate(-60deg)`,
+            transform: `translateX(${
+              init_left_board + -5 * left_variation_unit
+            }px) rotate(-60deg)`,
 
             backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_madera.png)`,
           }}
@@ -1521,8 +1569,9 @@ function Partida() {
             position: "absolute",
             top: init_top_board - 3 * top_variation_unit,
             left: "50%",
-            transform: `translateX(${init_left_board + 1 * left_variation_unit
-              }px) rotate(60deg)`,
+            transform: `translateX(${
+              init_left_board + 1 * left_variation_unit
+            }px) rotate(60deg)`,
 
             backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_trigo.png)`,
           }}
@@ -1547,8 +1596,9 @@ function Partida() {
             position: "absolute",
             top: init_top_board - 2 * top_variation_unit,
             left: "50%",
-            transform: `translateX(${init_left_board + 4 * left_variation_unit
-              }px) rotate(60deg)`,
+            transform: `translateX(${
+              init_left_board + 4 * left_variation_unit
+            }px) rotate(60deg)`,
 
             backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_roca.png)`,
           }}
@@ -1573,8 +1623,9 @@ function Partida() {
             position: "absolute",
             top: init_top_board - -3 * top_variation_unit,
             left: "50%",
-            transform: `translateX(${init_left_board + 1 * left_variation_unit
-              }px) rotate(180deg)`,
+            transform: `translateX(${
+              init_left_board + 1 * left_variation_unit
+            }px) rotate(180deg)`,
 
             backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_3.png)`,
           }}
@@ -1598,8 +1649,9 @@ function Partida() {
             position: "absolute",
             top: init_top_board - -2 * top_variation_unit,
             left: "50%",
-            transform: `translateX(${init_left_board + 4 * left_variation_unit
-              }px) rotate(180deg)`,
+            transform: `translateX(${
+              init_left_board + 4 * left_variation_unit
+            }px) rotate(180deg)`,
 
             backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_ovejas.png)`,
           }}
@@ -1624,8 +1676,9 @@ function Partida() {
             position: "absolute",
             top: init_top_board - 0 * top_variation_unit,
             left: "50%",
-            transform: `translateX(${init_left_board + 6 * left_variation_unit
-              }px) rotate(120deg)`,
+            transform: `translateX(${
+              init_left_board + 6 * left_variation_unit
+            }px) rotate(120deg)`,
 
             backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_3.png)`,
           }}
@@ -1649,8 +1702,9 @@ function Partida() {
             position: "absolute",
             top: init_top_board - 3 * top_variation_unit,
             left: "50%",
-            transform: `translateX(${init_left_board + -3 * left_variation_unit
-              }px) rotate(0deg)`,
+            transform: `translateX(${
+              init_left_board + -3 * left_variation_unit
+            }px) rotate(0deg)`,
 
             backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_3.png)`,
           }}
@@ -1674,8 +1728,9 @@ function Partida() {
             position: "absolute",
             top: init_top_board - -3 * top_variation_unit,
             left: "50%",
-            transform: `translateX(${init_left_board + -3 * left_variation_unit
-              }px) rotate(-120deg)`,
+            transform: `translateX(${
+              init_left_board + -3 * left_variation_unit
+            }px) rotate(-120deg)`,
 
             backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_3.png)`,
           }}
@@ -1707,10 +1762,11 @@ function Partida() {
                 // miramos las que ya estan construidas y las que podemos construir
                 (building[key][1] !== null || permiso_construccion) && (
                   <button
-                    className={`w-10 flex h-10 ${building[key][1] != null
-                      ? "construccion_partida"
-                      : "construccion_sin_comprar_partida"
-                      }`}
+                    className={`w-10 flex h-10 ${
+                      building[key][1] != null
+                        ? "construccion_partida"
+                        : "construccion_sin_comprar_partida"
+                    }`}
                     style={{
                       position: "absolute",
                       top:
@@ -1718,20 +1774,25 @@ function Partida() {
                         init_top_building_relative_vertical -
                         top_variation_building[index] * top_variation_unit,
                       left: "50%",
-                      transform: `translateX(${init_left_board +
+                      transform: `translateX(${
+                        init_left_board +
                         init_left_building_relative_vertical +
                         left_variation_building[index] * left_variation_unit
-                        }px)`,
+                      }px)`,
                       // id | indiceColumna -> si id === 0[jugador ] -> id === 1 [tipo_construccion]
-                      backgroundImage: `url( ${building[key][1] !== null
-                        ? `${building[key][1] === 1
-                          ? skins_jugadores_poblados[
-                          usuario_to_color[building[key][0]]
-                          ]
-                          : "ciudad"
-                        }`
-                        : `${skins_jugadores_poblados[mi_indice]}`
-                        } )`,
+                      backgroundImage: `url( ${
+                        building[key][1] !== null
+                          ? `${
+                              building[key][1] === 1
+                                ? skins_jugadores_poblados[
+                                    usuario_to_color[building[key][0]]
+                                  ]
+                                : skins_jugadores_ciudades[
+                                    usuario_to_color[building[key][0]]
+                                  ]
+                            }`
+                          : `${skins_jugadores_poblados[mi_indice]}`
+                      } )`,
                     }}
                     onClick={() => {
                       // Si en la casilla hay una aldea, la mejoro a ciudad, si no, construyo una aldea
@@ -1843,10 +1904,11 @@ function Partida() {
 
       <button
         style={{
-          backgroundImage: `url(${turno == mi_id && aldeas_iniciales_colocadas
-            ? "http://localhost:3000/skips/skip_on.png"
-            : "http://localhost:3000/skips/skip_off.png"
-            })`,
+          backgroundImage: `url(${
+            turno == mi_id && aldeas_iniciales_colocadas
+              ? "http://localhost:3000/skips/skip_on.png"
+              : "http://localhost:3000/skips/skip_off.png"
+          })`,
           backgroundSize: "cover",
           position: "absolute",
           right: "80px",
