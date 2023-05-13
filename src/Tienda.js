@@ -35,10 +35,22 @@ export default function Tienda() {
   const [imagen, set_imagen] = React.useState(null);
   const [nummensajes, set_nummensajes] = React.useState(null);
   const [elo, set_elo] = React.useState(null);
+
   const [precio_foto, set_precioFoto] = React.useState([]);
   const [precio_tablero, set_precioTablero] = React.useState([]);
+  const [precio_fichas, set_precioFichas] = React.useState([]);
 
-  const [size_lista_fotos, set_size_lista_fotos] = React.useState(0);
+  const [RespuestaFotoPerfil, set_RespuestaFotoPerfil] = React.useState(null);
+  const [RespuestaSkins, set_RespuestaSkins] = React.useState(null);
+  const [RespuestaFichas, set_RespuestaFichas] = React.useState(null);
+
+  const [PreciosObtenidosFotos, set_PreciosObtenidosFotos] =
+    React.useState(false);
+  const [PreciosObtenidosSkins, set_PreciosObtenidosSkins] =
+    React.useState(false);
+  const [PreciosObtenidosFichas, set_PreciosObtenidosFichas] =
+    React.useState(false);
+
   const navigate = useNavigate();
   const handleBack = () => {
     navigate(-1);
@@ -53,9 +65,12 @@ export default function Tienda() {
     []
   );
 
-  const [skins_mar_compradas, set_skins_mar_compradas] = React.useState([]);
+  const [skins_compradas, set_skins_compradas] = React.useState([]);
+
+  const [fichas_compradas, set_fichas_compradas] = React.useState([]);
 
   const fotos_perfil = [
+    "skin0",
     "skin1",
     "skin2",
     "skin3",
@@ -69,13 +84,13 @@ export default function Tienda() {
     "skin11",
     "skin12",
     "skin13",
-    "skin14",
   ];
 
-  const skins_mar = ["skin1", "skin2", "skin3", "skin4"];
+  const skins_mar = ["skin0", "skin1", "skin2", "skin3"];
+
+  const fichas = ["skin0", "skin1", "skin2", "skin3"];
 
   /* --------------------------- calculamos el tamaño de la ventana --------------------------- */
-  const precio_foto_perfil = "10 $";
 
   const precio_foto_perfil_int = 10;
 
@@ -87,8 +102,6 @@ export default function Tienda() {
     4: { items: 5 },
     5: { items: 6 },
   };
-
-  const precio_fichas = "50 $";
 
   const responsive_fotos_fichas = {
     6: { items: 1 },
@@ -212,8 +225,8 @@ export default function Tienda() {
   //////////////////////////////// FUNCIONES /////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////
 
-  function comprar(precio, nombre_producto) {
-    const url_1 = `${process.env.REACT_APP_URL_BACKEND}/buy_piece_skin?piece_skin_name=${nombre_producto}`;
+  function comprarFotoPerfil(precio, nombre_producto) {
+    const url_1 = `${process.env.REACT_APP_URL_BACKEND}/buy_profile_picture?profile_picture_name=${nombre_producto}`;
 
     fetch(url_1, {
       method: "POST",
@@ -226,10 +239,12 @@ export default function Tienda() {
       res.json().then((data) => {
         console.log("Respuesta del servidor:");
         console.log(data);
-
-        if (data.detail === "Piece skin bought successfully") {
+        set_RespuestaFotoPerfil(data.detail);
+        if (RespuestaFotoPerfil == "User already has this profile picture") {
+          toast.error("Ya tienes esta foto de perfil comprada");
+        } else if (data.detail === "Profile picture bought successfully") {
           set_dinero(dinero - precio);
-
+          toast.success("Foto de perfil comprada");
           set_fotos_perfil_compradas([
             ...fotos_perfil_compradas,
             nombre_producto,
@@ -253,23 +268,25 @@ export default function Tienda() {
       res.json().then((data) => {
         console.log("Respuesta del servidor:");
         console.log(data);
-
-        if (data.detail === "Piece skin bought successfully") {
+        set_RespuestaSkins(data.detail);
+        console.log(RespuestaSkins);
+        if (RespuestaSkins == "User already has this board skin") {
+          toast.error("Ya tienes esta skin comprada");
+        } else if (data.detail === "Board skin bought successfully") {
           set_dinero(dinero - precio);
+          toast.success("Skin del trablero comprada");
 
-          set_fotos_perfil_compradas([
-            ...fotos_perfil_compradas,
-            nombre_producto,
-          ]);
+          set_skins_compradas([...skins_compradas, nombre_producto]);
         }
       });
     });
   }
-  function obtenerPrecio_fotos(nombre_producto, indice) {
-    const url_1 = `${process.env.REACT_APP_URL_BACKEND}/get-profile-picture?profile_picture_name=${nombre_producto}`;
+
+  function comprar_fichas(precio, nombre_producto) {
+    const url_1 = `${process.env.REACT_APP_URL_BACKEND}/buy_piece_skin?piece_skin_name=${nombre_producto}`;
 
     fetch(url_1, {
-      method: "GET",
+      method: "POST",
       headers: {
         accept: "application/json",
         "Content-Type": "application/x-www-form-urlencoded",
@@ -278,38 +295,90 @@ export default function Tienda() {
     }).then((res) => {
       res.json().then((data) => {
         console.log("Respuesta del servidor:");
-        console.log(data.price);
-        set_precioFoto((prevPrecios) => {
-          const nuevosPrecios = [...prevPrecios]; // Copia el array existente
-          nuevosPrecios[indice] = data.price; // Actualiza el valor en el índice especificado
-          return nuevosPrecios; // Devuelve el nuevo array actualizado
-        });
-        return precio_foto;
+        console.log(data);
+        set_RespuestaFichas(data.detail);
+        console.log(RespuestaFichas);
+        if (data.detail == "User already has this piece skin") {
+          toast.error("Ya tienes estas fichas compradas");
+        } else if (data.detail === "Piece skin bought successfully") {
+          set_dinero(dinero - precio);
+          toast.success("Fichas compradas");
+
+          set_fichas_compradas([...fichas_compradas, nombre_producto]);
+        }
       });
     });
   }
+
+  function obtenerPrecio_fotos(nombre_producto, indice) {
+    const url_1 = `${process.env.REACT_APP_URL_BACKEND}/get-profile-picture?profile_picture_name=${nombre_producto}`;
+    if (!PreciosObtenidosFotos) {
+      fetch(url_1, {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${Token}`,
+        },
+      }).then((res) => {
+        res.json().then((data) => {
+          set_precioFoto((prevPrecios) => {
+            const nuevosPrecios = [...prevPrecios]; // Copia el array existente
+            nuevosPrecios[indice] = data.price; // Actualiza el valor en el índice especificado
+            return nuevosPrecios; // Devuelve el nuevo array actualizado
+          });
+          set_PreciosObtenidosFotos(true);
+          return precio_foto;
+        });
+      });
+    }
+  }
   function obtenerPrecio_skins(nombre_producto, indice) {
     const url_1 = `${process.env.REACT_APP_URL_BACKEND}/get-board-skin?board_skin_name=${nombre_producto}`;
-
-    fetch(url_1, {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Bearer ${Token}`,
-      },
-    }).then((res) => {
-      res.json().then((data) => {
-        console.log("Respuesta del servidor:");
-        console.log(data.price);
-        set_precioTablero((prevPrecios) => {
-          const nuevosPrecios = [...prevPrecios]; // Copia el array existente
-          nuevosPrecios[indice] = data.price; // Actualiza el valor en el índice especificado
-          return nuevosPrecios; // Devuelve el nuevo array actualizado
+    if (!PreciosObtenidosSkins) {
+      fetch(url_1, {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${Token}`,
+        },
+      }).then((res) => {
+        res.json().then((data) => {
+          set_PreciosObtenidosSkins(true);
+          set_precioTablero((prevPrecios) => {
+            const nuevosPrecios = [...prevPrecios]; // Copia el array existente
+            nuevosPrecios[indice] = data.price; // Actualiza el valor en el índice especificado
+            return nuevosPrecios; // Devuelve el nuevo array actualizado
+          });
+          return precio_tablero;
         });
-        return precio_foto;
       });
-    });
+    }
+  }
+
+  function obtenerPrecio_fichas(nombre_producto, indice) {
+    const url_1 = `${process.env.REACT_APP_URL_BACKEND}/get-piece-skin?piece_skin_name=${nombre_producto}`;
+    if (!PreciosObtenidosSkins) {
+      fetch(url_1, {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${Token}`,
+        },
+      }).then((res) => {
+        res.json().then((data) => {
+          set_PreciosObtenidosFichas(true);
+          set_precioFichas((prevPrecios) => {
+            const nuevosPrecios = [...prevPrecios]; // Copia el array existente
+            nuevosPrecios[indice] = data.price; // Actualiza el valor en el índice especificado
+            return nuevosPrecios; // Devuelve el nuevo array actualizado
+          });
+          return precio_fichas;
+        });
+      });
+    }
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -322,12 +391,10 @@ export default function Tienda() {
       {
         <Popup
           trigger={
-            fotos_perfil_compradas.includes("skin" + (i)) ? (
+            fotos_perfil_compradas.includes("skin" + i) ? (
               <div>
                 <img
-                  src={
-                    "http://localhost:3000/fotos_perfil/skin" + (i) + ".png"
-                  }
+                  src={"http://localhost:3000/fotos_perfil/skin" + i + ".png"}
                   onDragStart={handleDragStart}
                   role="presentation"
                   className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
@@ -352,9 +419,7 @@ export default function Tienda() {
               </div>
             ) : (
               <img
-                src={
-                  "http://localhost:3000/fotos_perfil/skin" + (i) + ".png"
-                }
+                src={"http://localhost:3000/fotos_perfil/skin" + i + ".png"}
                 onDragStart={handleDragStart}
                 role="presentation"
                 className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
@@ -380,9 +445,7 @@ export default function Tienda() {
               </button>
               {/* Imagen del objeto */}
               <img
-                src={
-                  "http://localhost:3000/fotos_perfil/skin" + (i) + ".png"
-                }
+                src={"http://localhost:3000/fotos_perfil/skin" + i + ".png"}
                 onDragStart={handleDragStart}
                 role="presentation"
                 className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
@@ -392,7 +455,7 @@ export default function Tienda() {
                 <br />
                 <br />
                 <div>
-                  {fotos_perfil_compradas.includes("skin" + (i)) ? (
+                  {fotos_perfil_compradas.includes("skin" + i) ? (
                     <img
                       src={"http://localhost:3000/green_check.png"}
                       alt="Icono"
@@ -400,7 +463,7 @@ export default function Tienda() {
                     />
                   ) : (
                     <div>
-                      {dinero >= precio_foto_perfil_int ? (
+                      {dinero >= precio_foto[i] ? (
                         <p className="text-2xl font-bold">¿Estás seguro?</p>
                       ) : (
                         <img
@@ -416,13 +479,13 @@ export default function Tienda() {
               {/* Boton de comprar */}
               <br /> <br />
               <div className="flex justify-center">
-                {fotos_perfil_compradas.includes("skin" + (i)) ? (
+                {fotos_perfil_compradas.includes("skin" + i) ? (
                   // Texto verde de "compra realizada", en
                   // tamaño de letra mediano y centrado
                   <p className="compra_realizada_tienda">Compra realizada</p>
                 ) : (
                   <div>
-                    {dinero >= precio_foto_perfil_int ? (
+                    {dinero >= precio_foto[i] ? (
                       <button
                         style={{
                           width: "40%",
@@ -445,13 +508,13 @@ export default function Tienda() {
                           overflow: "hidden",
                         }}
                         onClick={() => {
-                          comprar(10, "skin" + (i));
+                          comprarFotoPerfil(10, "skin" + i);
                           set_compra_realizada(true);
                         }}
                       >
                         Confirmar compra:
                         <br />
-                        {obtenerPrecio_fotos("skin" + (i), i)}
+                        {obtenerPrecio_fotos("skin" + i, i)}
                         {precio_foto[i] !== undefined &&
                           `${precio_foto[i]} $`}{" "}
                       </button>
@@ -470,7 +533,7 @@ export default function Tienda() {
 
       {/* Precio del objeto */}
 
-      {obtenerPrecio_fotos("skin" + (i), i)}
+      {obtenerPrecio_fotos("skin" + i, i)}
       {precio_foto[i] !== undefined && `${precio_foto[i]} $`}
     </div>
   ));
@@ -480,10 +543,10 @@ export default function Tienda() {
       {
         <Popup
           trigger={
-            skins_mar_compradas.includes("skin" + (i)) ? (
+            skins_compradas.includes("skin" + i) ? (
               <div>
                 <img
-                  src={"http://localhost:3000/skin_mar/skin" + (i) + ".png"}
+                  src={"http://localhost:3000/skin_mar/skin" + i + ".png"}
                   onDragStart={handleDragStart}
                   role="presentation"
                   className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
@@ -508,7 +571,7 @@ export default function Tienda() {
               </div>
             ) : (
               <img
-                src={"http://localhost:3000/skin_mar/skin" + (i) + ".png"}
+                src={"http://localhost:3000/skin_mar/skin" + i + ".png"}
                 onDragStart={handleDragStart}
                 role="presentation"
                 className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
@@ -534,7 +597,7 @@ export default function Tienda() {
               </button>
               {/* Imagen del objeto */}
               <img
-                src={"http://localhost:3000/skin_mar/skin" + (i) + ".png"}
+                src={"http://localhost:3000/skin_mar/skin" + i + ".png"}
                 onDragStart={handleDragStart}
                 role="presentation"
                 className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
@@ -544,7 +607,7 @@ export default function Tienda() {
                 <br />
                 <br />
                 <div>
-                  {fotos_perfil_compradas.includes("skin" + (i)) ? (
+                  {skins_compradas.includes("skin" + i) ? (
                     <img
                       src={"http://localhost:3000/green_check.png"}
                       alt="Icono"
@@ -552,7 +615,7 @@ export default function Tienda() {
                     />
                   ) : (
                     <div>
-                      {dinero >= precio_foto_perfil_int ? (
+                      {dinero >= precio_tablero[i] ? (
                         <p className="text-2xl font-bold">¿Estás seguro?</p>
                       ) : (
                         <img
@@ -568,13 +631,13 @@ export default function Tienda() {
               {/* Boton de comprar */}
               <br /> <br />
               <div className="flex justify-center">
-                {fotos_perfil_compradas.includes("skin" + (i)) ? (
+                {skins_compradas.includes("skin" + i) ? (
                   // Texto verde de "compra realizada", en
                   // tamaño de letra mediano y centrado
                   <p className="compra_realizada_tienda">Compra realizada</p>
                 ) : (
                   <div>
-                    {dinero >= precio_foto_perfil_int ? (
+                    {dinero >= precio_tablero[i] ? (
                       <button
                         style={{
                           width: "40%",
@@ -597,13 +660,13 @@ export default function Tienda() {
                           overflow: "hidden",
                         }}
                         onClick={() => {
-                          comprar_skin(10, "skin" + (i));
+                          comprar_skin(10, "skin" + i);
                           set_compra_realizada(true);
                         }}
                       >
                         Confirmar compra:
                         <br />
-                        {obtenerPrecio_skins("skin" + (i), i)}
+                        {obtenerPrecio_skins("skin" + i, i)}
                         {precio_tablero[i] !== undefined &&
                           `${precio_tablero[i]} $`}{" "}
                       </button>
@@ -620,8 +683,170 @@ export default function Tienda() {
         </Popup>
       }
       {/* Precio del objeto */}
-      {obtenerPrecio_skins("skin" + (i), i)}
+      {obtenerPrecio_skins("skin" + i, i)}
       {precio_tablero[i] !== undefined && `${precio_tablero[i]} $`}{" "}
+    </div>
+  ));
+
+  const items_fichas = fichas.map((foto, i) => (
+    <div className="slide_tienda">
+      {
+        <Popup
+          trigger={
+            fichas_compradas.includes("skin" + i) ? (
+              <div>
+                <img
+                  src={
+                    "http://localhost:3000/fotos-tienda-urbanizacion/skin" +
+                    i +
+                    ".png"
+                  }
+                  onDragStart={handleDragStart}
+                  role="presentation"
+                  className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
+                  style={{
+                    position: "relative",
+                    zIndex: 1,
+                  }}
+                />
+
+                <img
+                  src="http://localhost:3000/fotos-tienda-urbanizacion/comprado.png"
+                  onDragStart={handleDragStart}
+                  role="presentation"
+                  className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 19,
+                    zIndex: 9999,
+                  }}
+                />
+              </div>
+            ) : (
+              <img
+                src={
+                  "http://localhost:3000/fotos-tienda-urbanizacion/skin" +
+                  i +
+                  ".png"
+                }
+                onDragStart={handleDragStart}
+                role="presentation"
+                className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
+              />
+            )
+          }
+          modal
+          nested
+          arrow={false}
+          contentStyle={{
+            width: "30%",
+            height: "40%",
+
+            border: "5px solid black",
+            borderRadius: "10px",
+          }}
+        >
+          {(close) => (
+            <div className="modal_tienda">
+              {/* Botón para cerrar el pop-up */}
+              <button className="close" onClick={close}>
+                &times;
+              </button>
+              {/* Imagen del objeto */}
+              <img
+                src={
+                  "http://localhost:3000/fotos-tienda-urbanizacion/skin" +
+                  i +
+                  ".png"
+                }
+                onDragStart={handleDragStart}
+                role="presentation"
+                className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
+              />
+              {/* Texto de "¿Estás seguro?" en el centro */}
+              <div className="text-center">
+                <br />
+                <br />
+                <div>
+                  {fichas_compradas.includes("skin" + i) ? (
+                    <img
+                      src={"http://localhost:3000/green_check.png"}
+                      alt="Icono"
+                      className="icono_tienda"
+                    />
+                  ) : (
+                    <div>
+                      {dinero >= precio_fichas[i] ? (
+                        <p className="text-2xl font-bold">¿Estás seguro?</p>
+                      ) : (
+                        <img
+                          src={"http://localhost:3000/red_cross.png"}
+                          alt="Icono"
+                          className="icono_tienda"
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+              {/* Boton de comprar */}
+              <br /> <br />
+              <div className="flex justify-center">
+                {fichas_compradas.includes("skin" + i) ? (
+                  // Texto verde de "compra realizada", en
+                  // tamaño de letra mediano y centrado
+                  <p className="compra_realizada_tienda">Compra realizada</p>
+                ) : (
+                  <div>
+                    {dinero >= precio_fichas[i] ? (
+                      <button
+                        style={{
+                          width: "40%",
+                          height: "100px",
+                          backgroundColor: "#172135",
+                          borderRadius: "30px",
+                          right: "165px",
+                          textAlign: "center",
+
+                          /* Cosas sobre el texto */
+                          color: "white",
+                          fontSize: "20px",
+                          display: "flex",
+                          alignItems: "center",
+                          padding: "5%",
+
+                          position: "absolute",
+
+                          textDecoration: "none",
+                          overflow: "hidden",
+                        }}
+                        onClick={() => {
+                          comprar_fichas(10, "skin" + i);
+                          set_compra_realizada(true);
+                        }}
+                      >
+                        Confirmar compra:
+                        <br />
+                        {obtenerPrecio_fichas("skin" + i, i)}
+                        {precio_fichas[i] !== undefined &&
+                          `${precio_fichas[i]} $`}{" "}
+                      </button>
+                    ) : (
+                      <p className="saldo_insuficiente_tienda">
+                        Saldo insuficiente
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </Popup>
+      }
+      {/* Precio del objeto */}
+      {obtenerPrecio_fichas("skin" + i, i)}
+      {precio_fichas[i] !== undefined && `${precio_fichas[i]} $`}{" "}
     </div>
   ));
 
@@ -888,9 +1113,11 @@ export default function Tienda() {
               cursor: "pointer",
             }}
           />
+          <div style={{ position: "relative", left: "750px", bottom: "120px" }}>
+            <TextComponent dinero={dinero} />
+          </div>
 
           <div className="flex items-center">
-            <TextComponent dinero={dinero} />
             {/* Icono y texto del dinero */}
             <img
               src="http://localhost:3000/dinero.png"
@@ -900,8 +1127,8 @@ export default function Tienda() {
                 margin: "50px",
                 /* El icono está a la izquierda */
                 position: "absolute",
-                top: "0",
-                left: "1400px",
+                left: "1500px",
+                bottom: " 770px"
               }}
               alt="icono_dinero"
             />
@@ -971,6 +1198,34 @@ export default function Tienda() {
               <AliceCarousel
                 mouseTracking
                 items={items_skins_mar}
+                responsive={responsive}
+                controlsStrategy="alternate"
+              />
+            </div>
+
+            <div>
+              {/* Titulo de "fotos de perfil" */}
+              <a
+                style={{
+                  fontSize: "30px",
+                  fontWeight: "bold",
+                  display: "flex",
+                  alignItems: "center",
+                  paddingLeft: "20px",
+                  position: "absolute",
+                  textDecoration: "none",
+                  overflow: "hidden",
+                  top: "700px",
+                  right: "1020px",
+                }}
+              >
+                Fichas
+              </a>
+
+              {/* Slider de fotos de perfil */}
+              <AliceCarousel
+                mouseTracking
+                items={items_fichas}
                 responsive={responsive}
                 controlsStrategy="alternate"
               />
