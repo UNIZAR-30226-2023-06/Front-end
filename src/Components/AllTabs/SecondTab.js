@@ -414,7 +414,7 @@ const SecondTab = (params) => {
                 marginRight: "20px",
               }}
             />
-            {poblados}
+            {params.jugador_datos.num_villages}
           </div>
 
           <br />
@@ -439,7 +439,7 @@ const SecondTab = (params) => {
                 marginRight: "20px",
               }}
             />
-            {ciudades}
+            {params.jugador_datos.num_cities}
           </div>
 
           <br />
@@ -464,7 +464,7 @@ const SecondTab = (params) => {
                 marginRight: "20px",
               }}
             />
-            {carreteras}
+            {params.jugador_datos.num_roads}
           </div>
 
           <br />
