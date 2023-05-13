@@ -37,7 +37,7 @@ function Partida() {
   const [idGanador, setIdGanador] = useState(0);
   const [imgGanador, setImgGanador] = useState("");
 
-  const [id_to_img, setId_to_img] = useState({});
+  const [id_to_img] = useState({});
 
   const [idsOponentes, setIdsOponentes] = useState([]);
   const [imgs_oponentes, setImgs_oponentes] = useState([]);
@@ -133,7 +133,7 @@ function Partida() {
   const [nuevaPosicionLadron, setNuevaPosicionLadron] = useState(87);
   const [colocando_ladron, setColocando_ladron] = useState(false);
   const [ladronYaColocado, setLadronYaColocado] = useState(true);
-  const [eligiendoJugadorRobar, setEligiendoJugadorRobar] = useState(true);
+  const [eligiendoJugadorRobar, setEligiendoJugadorRobar] = useState(false);
   const top_variation_ladron = 27;
   const left_variation_ladron = 27;
 
@@ -288,16 +288,6 @@ function Partida() {
               !ladronYaColocado
             ) {
               setColocando_ladron(true);
-            }
-
-            // Si no es mi turno y la fase que toca pongo colocando_labron a false
-            // aquí y en el global
-            if (
-              data.player_turn !== mi_id ||
-              data.turn_phase !== "TRADING"
-            ) {
-              setColocando_ladron(false);
-              global_info.colocando_ladron = false;
             }
 
             // Log de colocando_ladron
@@ -536,6 +526,12 @@ function Partida() {
   // si la fase actual es distinta a la que se le pasa por parametro
   function detectar_cambio_fase(fase, nuevo_turno) {
     if (fase_actual !== fase || nuevo_turno === mi_id) {
+
+      if (fase !== fase_actual) {
+        setColocando_ladron(false);
+        global_info.colocando_ladron = false;
+      }
+
       setFase_actual(fase);
       if (fase === "RESOURCE_PRODUCTION") {
         if (nuevo_turno === mi_id) {
@@ -951,6 +947,8 @@ function Partida() {
                     .catch((error) => {
                       console.error("Error:", error);
                     });
+
+                    setEligiendoJugadorRobar(false);
                 }
               }
               }
@@ -1044,6 +1042,8 @@ function Partida() {
                     .catch((error) => {
                       console.error("Error:", error);
                     });
+
+                    setEligiendoJugadorRobar(false);
                 }
               }}
             >
@@ -1136,6 +1136,8 @@ function Partida() {
                     .catch((error) => {
                       console.error("Error:", error);
                     });
+
+                    setEligiendoJugadorRobar(false);
                 }
               }}
             >
