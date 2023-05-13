@@ -516,7 +516,7 @@ const SecondTab = (params) => {
             }}
           >
             {/* --------------------------------- cartas de desarrollo ---------------------------------- */}
-            <PopUpCartasDesarrollo turno={params.turno} mi_id={params.mi_id} token={params.jugador_datos.Token} lobby={params.jugador_datos.codigo_partida} />
+            <PopUpCartasDesarrollo turno={params.turno} fase={params.fase} mi_id={params.mi_id} token={params.jugador_datos.Token} lobby={params.jugador_datos.codigo_partida} />
           </div>
 
           <br />

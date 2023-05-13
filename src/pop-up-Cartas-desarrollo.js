@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import "reactjs-popup/dist/index.css";
 import toast from "react-hot-toast";
 
+import { global_info } from "./Partida";
+
 import { useNavigate } from "react-router-dom";
 
 // 1-- Importamos useCookies y jwt_decode
@@ -28,9 +30,15 @@ const PopUpCartasDesarrollo = (params) => {
   };
 
   const popUp2 = (index) => {
-    if (params.turno === params.mi_id) {
+    if (params.turno === params.mi_id && params.fase === "TRADING") {
       setSelectedCardIndex(index);
       setShowConfirmation(true);
+    }
+    else
+    {
+      // Aviso con una toast que solo se pueden usar las cartas en la fase de trading
+      // durante el turno del jugador
+      toast.error("Solo se pueden usar las cartas en la fase de trading durante el turno del jugador");
     }
   };
 
@@ -41,6 +49,7 @@ const PopUpCartasDesarrollo = (params) => {
       toast.error("No dispones de esta carta de desarrollo");
       setShowConfirmation(false);
     } else {
+
       if (
         selectedCardIndex === 0 ||
         selectedCardIndex === 1 ||
@@ -71,8 +80,13 @@ const PopUpCartasDesarrollo = (params) => {
           .catch((error) => {
             console.error("Error:", error);
           });
+
       } else if (selectedCardIndex === 5) {
-        // TODO: usar un caballero
+        // Log
+        console.log("Se ha seleccionado la carta de caballero");
+        
+        global_info.colocando_ladron = true;
+
       } else if (selectedCardIndex === 6) {
         console.log("hola");
         setShowResourceSelection(true);

@@ -41,7 +41,7 @@ const Tabs = ( params ) => {
       </ul>
       
       <div className="outlet">
-        {activeTab === "tab1" ? <FirstTab /> : <SecondTab jugador_datos={params.jugador_datos} mi_id={params.mi_id} turno={params.turno} />}
+        {activeTab === "tab1" ? <FirstTab /> : <SecondTab jugador_datos={params.jugador_datos} fase={params.fase} mi_id={params.mi_id} turno={params.turno} />}
       </div>
 
     </div>

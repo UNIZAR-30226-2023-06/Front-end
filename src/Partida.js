@@ -131,6 +131,7 @@ function Partida() {
   const [posicion_ladron, setPosicion_ladron] = useState(87);
   const [colocando_ladron, setColocando_ladron] = useState(false);
   const [ladronYaColocado, setLadronYaColocado] = useState(true);
+  const [eligiendoJugadorRobar, setEligiendoJugadorRobar] = useState(false);
   const top_variation_ladron = 27;
   const left_variation_ladron = 27;
 
@@ -261,7 +262,9 @@ function Partida() {
             setRoad(data.board.edges);
             setBuilding(data.board.nodes);
 
-            setTiempo_maximo(data.turn_time);
+            // setTiempo_maximo(data.turn_time);
+            setTiempo_maximo(9999999);
+
             detectar_cambio_fase(data.turn_phase, data.player_turn);
             setTurno(data.player_turn);
 
@@ -285,8 +288,19 @@ function Partida() {
               setColocando_ladron(true);
             }
 
+            // Si no es mi turno y la fase que toca pongo colocando_labron a false
+            // aquí y en el global
+            if (
+              data.player_turn !== mi_id ||
+              data.turn_phase !== "TRADING"
+            ) {
+              setColocando_ladron(false);
+              global_info.colocando_ladron = false;
+            }
+
             // Log de colocando_ladron
             console.log("Colocando ladron:", colocando_ladron);
+            console.log("Global info colocando ladron:", global_info.colocando_ladron);
 
             actualizar_dados(data.die_1, data.die_2);
 
@@ -1084,7 +1098,7 @@ function Partida() {
           backgroundColor: "blue",
         }}
       >
-        <Tabs jugador_datos={estado_jugador} turno={turno} mi_id={mi_id}/>
+        <Tabs jugador_datos={estado_jugador} turno={turno} mi_id={mi_id} fase={fase_actual} />
       </div>
 
       {/************************** HEXAGONOS ***************************/}
@@ -1127,6 +1141,14 @@ function Partida() {
                     // Si se está colocando el ladrón, hago la llamada al backend para indicar la nueva posición
                     // del ladrón
                     if (colocando_ladron || global_info.colocando_ladron) {
+
+                      // Desactivo el booleano de colocando_ladron
+                      setColocando_ladron(false);
+                      global_info.colocando_ladron = false;
+
+                      setLadronYaColocado(true);
+                      setEligiendoJugadorRobar(true);
+
                       // log
                       console.log("Intento de mover ladrón");
 
@@ -1134,8 +1156,7 @@ function Partida() {
                       // https://cataninc-back-end-production-4d3e.up.railway.app/game_phases/move_thief?lobby_id=3&stolen_player_id=4&new_thief_position_tile_coord=5
 
                       const url = `${process.env.REACT_APP_URL_BACKEND
-                        }/game_phases/move_thief?lobby_id=${codigo_partida}&stolen_player_id=${usuario_to_color[board[key][1]]
-                        }&new_thief_position_tile_coord=${key}`;
+                        }/game_phases/move_thief?lobby_id=${codigo_partida}&stolen_player_id=${7771}&new_thief_position_tile_coord=${key}`;
 
                       // Petición GET para mover el ladrón
                       fetch(url, {
@@ -1148,12 +1169,6 @@ function Partida() {
                         .then((res) => {
                           res.json().then((data) => {
                             console.log("Intento de mover ladrón:", data);
-
-                            // Desactivo el booleano de colocando_ladron
-                            setColocando_ladron(false);
-                            global_info.colocando_ladron(false);
-
-                            setLadronYaColocado(true);
                           });
                         })
                         .catch((error) => {
