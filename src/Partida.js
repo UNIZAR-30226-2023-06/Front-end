@@ -927,10 +927,9 @@ function Partida() {
               
 
               onClick={() => {
-                const contieneColor = coloresAlrededorLadron.includes(
-                  color_to_codigo(colores_oponentes[0]);
-                  
-                if (eligiendoJugadorRobar) {
+                const contieneColor = coloresAlrededorLadron.includes(color_to_codigo(colores_oponentes[0]));
+                
+                if (contieneColor && eligiendoJugadorRobar) {
                   // Log
                   console.log("Click en jugador 1");
 
@@ -1025,7 +1024,9 @@ function Partida() {
               }}
 
               onClick={() => {
-                if (eligiendoJugadorRobar) {
+                const contieneColor = coloresAlrededorLadron.includes(color_to_codigo(colores_oponentes[1]));
+
+                if (eligiendoJugadorRobar && contieneColor) {
                   // Log
                   console.log("Click en jugador 1");
 
@@ -1119,7 +1120,9 @@ function Partida() {
               }}
 
               onClick={() => {
-                if (eligiendoJugadorRobar) {
+                const contieneColor = coloresAlrededorLadron.includes(color_to_codigo(colores_oponentes[2]));
+
+                if (eligiendoJugadorRobar && contieneColor) {
                   // Log
                   console.log("Click en jugador 1");
 
@@ -1292,8 +1295,7 @@ function Partida() {
 
                       fetch(
                         `http://
-                        ${process.env.REACT_APP_HOST}:${process.env.REACT_APP_PORT}/
-                        get-nodes-around-tile?lobby_id=${lobby_id}&tileCoord=${key}`,
+                        ${process.env.REACT_APP_HOST}:8000/get-nodes-around-tile?lobby_id=${codigo_partida}&tileCoord=${key}`,
                         {
                           method: "GET",
                           headers: {
