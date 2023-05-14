@@ -260,8 +260,8 @@ export default function PrivateHome() {
           // Actualizamos el estado de cosas
           const img =
             data.profile_picture === "default"
-              ? `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/skin1.png`
-              : `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/${data.profile_picture}.png`;
+              ? `/fotos_perfil/skin1.png`
+              : `/fotos_perfil/${data.profile_picture}.png`;
 
           set_dinero(data.coins);
           set_codigo(data.id);
