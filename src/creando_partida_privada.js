@@ -26,7 +26,6 @@ export default function Creando_partida_privada() {
   const [screenSize, setScreenSize] = useState(window.innerWidth);
 
   const navigate = useNavigate();
-  const [dinero, set_dinero] = React.useState(null);
   const [nombre, set_nombre] = React.useState(null);
   const [codigo, set_codigo] = React.useState(null);
   const [imagen, set_imagen] = React.useState(null);
@@ -35,9 +34,7 @@ export default function Creando_partida_privada() {
 
   const [codigo_partida, setCodigo_partida] = useState(null);
 
-  // PARTE DE LO DE LOS USUARIOS ESTO PUEDE ESTAR RELOKO PERO ES LO QUE HAY
-
-  // Nombres de los jugadores en la sala
+  // Nombres de los jugadores en la sala por defecto
   const [nombre_jugador_1, setTexto_jugador1] = useState(
     "Usa el código de la partida para invitar a más jugadores"
   );
@@ -120,7 +117,21 @@ export default function Creando_partida_privada() {
       setMostrar_img_jugador_4(true);
     }
   }
+  /* --------------------------- seguridad  --------------------------- */
 
+  // en caso de que no estemos logueados ve a la página de login
+  useEffect(() => {
+    if (cookies.token === "") {
+      navigate("/login");
+    }
+  }, [cookies.token, navigate]);
+
+  /* --------------------------- cookies  --------------------------- */
+
+  // cargamos los datos de los usuarios y hacemos decode del token
+  const Token = cookies.token;
+  const json_token = jwt_decode(Token);
+  // console.log(json_token);
   /* --------------------------- calculamos el tamaño de la ventana --------------------------- */
 
   // Llamamos cada segundo a actualizar_jugadores
@@ -145,17 +156,16 @@ export default function Creando_partida_privada() {
               // Actualizo los jugadores
               setJugadores(data.game.jugadores);
             });
-          }
-          )
+          })
           .catch((error) => {
             console.error("Error:", error);
-          }
-          );
+          });
       }
     }, 1000);
     return () => clearInterval(interval);
   }, []);
 
+  // Creamos un lobby en caso de que no exista uno
   const url = `${process.env.REACT_APP_URL_BACKEND}/create-lobby`;
   fetch(url, {
     method: "POST",
@@ -175,23 +185,21 @@ export default function Creando_partida_privada() {
           // Si se ha creado correctamente, me uno a la partida
           const url = `${process.env.REACT_APP_URL_BACKEND}/join-lobby?lobby_id=${data.lobby_id}`;
 
-          fetch(url, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${Token}`,
-            },
-          })
-            .then((res) => {
-              res.json().then((data) => {
-                console.log(data);
-              });
-            }
-            )
-            .catch((error) => {
-              console.error("Error:", error);
-            }
-            );
+        //  { fetch(url, {
+        //     method: "POST",
+        //     headers: {
+        //       "Content-Type": "application/json",
+        //       Authorization: `Bearer ${Token}`,
+        //     },
+        //   })
+        //     .then((res) => {
+        //       res.json().then((data) => {
+        //         console.log(data);
+        //       });
+        //     })
+        //     .catch((error) => {
+        //       console.error("Error:", error);
+        //     });}
         }
       });
     })
@@ -214,22 +222,6 @@ export default function Creando_partida_privada() {
       window.removeEventListener("resize", handleResize);
     };
   }, [screenSize]);
-
-  /* --------------------------- seguridad  --------------------------- */
-
-  // en caso de que no estemos logueados ve a la página de login
-  useEffect(() => {
-    if (cookies.token === "") {
-      navigate("/login");
-    }
-  }, [cookies.token, navigate]);
-
-  /* --------------------------- cookies  --------------------------- */
-
-  // cargamos los datos de los usuarios y hacemos decode del token
-  const Token = cookies.token;
-  const json_token = jwt_decode(Token);
-  // console.log(json_token);
 
   /* --------------------------- obtener datos usuario  --------------------------- */
 
@@ -254,7 +246,6 @@ export default function Creando_partida_privada() {
               ? "http://localhost:3000/fotos_perfil/skin1.png"
               : `http://localhost:3000/fotos_perfil/${data.profile_picture}.png`;
 
-          set_dinero(data.coins);
           set_codigo(data.id);
           set_nombre(data.username);
           set_imagen(img);
@@ -316,14 +307,15 @@ export default function Creando_partida_privada() {
         className={`over_SideBaar relative h-full ${
           // si la ventana es pequeña o desplegado falso que no se vea
           screenSize < 720 && !desplegado ? styleSidebarOff : styleSidebarOn
-          }`}
+        }`}
       >
         {/* --------------------------- cruz de cerrar menu --------------------------- */}
         <img
           src="http://localhost:3000/white_cross.png"
           alt="imagen para cerrar la sidebar"
-          className={`hover:cursor-pointer ${screenSize < 720 && desplegado ? styleCruzOn : styleCruzOff
-            }`}
+          className={`hover:cursor-pointer ${
+            screenSize < 720 && desplegado ? styleCruzOn : styleCruzOff
+          }`}
           onClick={() => {
             setDesplegado(false);
           }}
@@ -396,7 +388,7 @@ export default function Creando_partida_privada() {
           <input
             type="number"
             defaultValue={40}
-            min={5}
+            min={30}
             max={120}
             className=" mt-2 w-16 h-12 rounded-full"
           ></input>
@@ -512,8 +504,9 @@ export default function Creando_partida_privada() {
         <img
           src="http://localhost:3000/menu.png"
           alt="menu desplegable, clicka aqui para desplegarlo"
-          className={`hover:cursor-pointer w-8 h-8 m-4 ${screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
-            }`}
+          className={`hover:cursor-pointer w-8 h-8 m-4 ${
+            screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
+          }`}
           onClick={() => {
             setDesplegado(true);
           }}
