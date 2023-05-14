@@ -77,7 +77,6 @@ function Partida() {
   const [partida_empezada, setPartida_empezada] = useState(false);
   const [fase_actual, setFase_actual] = useState("");
 
-  const [usandoCartaCarreteras, setUsandoCartaCarreteras] = useState(false);
   const [cartasCarreteraColocadas, setCartasCarreteraColocadas] = useState(0);
 
   const [skins_jugadores_poblados, setSkins_jugadores_poblados] = useState([]);
@@ -650,13 +649,8 @@ function Partida() {
     }
   }
 
-  // Función que permite colocar 2 carreteras seguidas
-  function carta_carreteras() {
-    setUsandoCartaCarreteras(true);
-  }
-
   function construir_carretera(coordenada) {
-    if (usandoCartaCarreteras) {
+    if (global_info.usandoCartaCarreteras) {
       // Aviso al backend de que ya he colocado lo mío
       fetch(
         `${process.env.REACT_APP_URL_BACKEND}/build-road?edge=${coordenada}`,
@@ -679,8 +673,8 @@ function Partida() {
 
       setCartasCarreteraColocadas(cartasCarreteraColocadas + 1);
 
-      if (cartasCarreteraColocadas === 2) {
-        setUsandoCartaCarreteras(false);
+      if (cartasCarreteraColocadas === 1) {
+        global_info.usandoCartaCarreteras = false;
         setCartasCarreteraColocadas(0);
       }
     } else if (!aldeas_iniciales_colocadas) {
@@ -1345,7 +1339,7 @@ function Partida() {
 
         {Object.entries(road).map(([key, value], index) => {
           var permiso_construccion =
-            puedo_colocar_carretera &&
+            (global_info.usandoCartaCarreteras || puedo_colocar_carretera) &&
             Array.isArray(carretera_legales) &&
             carretera_legales.includes(parseInt(key));
 
@@ -1934,4 +1928,7 @@ export const global_info = {
 
   // Para el uso del ladrón
   colocando_ladron: false,
+
+  // Para la carta de carreteras
+  usandoCartaCarreteras: false,
 };

@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 // 1-- Importamos useCookies y jwt_decode
 import { useCookies } from "react-cookie";
 
+// console.log("Global info: ", global_info);
+
 const PopUpCartasDesarrollo = (params) => {
   const [showPopup, setShowPopup] = useState(false);
   const [shouldShowPopup, setShouldShowPopup] = useState(false);
@@ -20,7 +22,7 @@ const PopUpCartasDesarrollo = (params) => {
   const [selectedResources, setSelectedResources] = useState([]);
   const handleClose = () => {
     setShouldShowPopup(false);
-    params.onClose();
+    // params.onClose();
   };
 
   const handleOpen = () => {
@@ -137,7 +139,7 @@ const PopUpCartasDesarrollo = (params) => {
         setShowResourceSelection(true);
         setShowConfirmation(false);
       } else if (selectedCardIndex === 7) {
-        // TODO: construcción de carreteras
+        global_info.usandoCartaCarreteras = true;
         setShowPopup(false);
         setShouldShowPopup(false);
       } else if (selectedCardIndex === 8) {
@@ -226,8 +228,6 @@ const PopUpCartasDesarrollo = (params) => {
     )
       .then((res) => {
         res.json().then((data) => {
-          console.log("----Informacion del usuario----");
-          console.log(data);
           // aqui se toman los números de las cartas que tenemos
           const newNumeros = [
             data.hand.dev_cards.library,
@@ -241,14 +241,20 @@ const PopUpCartasDesarrollo = (params) => {
             data.hand.dev_cards.invention_progress,
           ];
           setNumeros(newNumeros); // Actualizar el estado con los números obtenidos
-
-          console.log(numeros);
         });
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   }
+
+  // Llamo a getNumCartas cada segundo
+  useEffect(() => {
+    const interval = setInterval(() => {
+      GetNumCartas();
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   function UsarMonopolio(resource) {
     console.log(params.lobby);
@@ -280,7 +286,7 @@ const PopUpCartasDesarrollo = (params) => {
 
   function UsarDescubrimiento() {
     fetch(
-      `${process.env.REACT_APP_URL_BACKEND}//game_phases/use_invention_card?lobby_id=${params.lobby}&resource1=${selectedResources[0]}&resource2=${selectedResources[1]}`,
+      `${process.env.REACT_APP_URL_BACKEND}/game_phases/use_invention_card?lobby_id=${params.lobby}&resource1=${selectedResources[0]}&resource2=${selectedResources[1]}`,
       {
         method: "GET",
         headers: {
@@ -348,23 +354,23 @@ const PopUpCartasDesarrollo = (params) => {
   const recursos = [
     {
       src: "http://localhost:3000/recursos/arcilla.png",
-      text: "arcilla",
+      text: "CLAY",
     },
     {
       src: "http://localhost:3000/recursos/madera.png",
-      text: "madera",
+      text: "WOOD",
     },
     {
       src: "http://localhost:3000/recursos/ovejas.png",
-      text: "ovejas",
+      text: "SHEEP",
     },
     {
       src: "http://localhost:3000/recursos/roca.png",
-      text: "roca",
+      text: "ROCK",
     },
     {
       src: "http://localhost:3000/recursos/trigo.png",
-      text: "trigo",
+      text: "WHEAT",
     },
   ];
 
@@ -514,7 +520,10 @@ const PopUpCartasDesarrollo = (params) => {
                       <div
                         key={index}
                         className="p-2 relative flex flex-col items-center"
-                        onClick={() => handleResourceSelectionClose()}
+                        onClick={() => {
+                          UsarMonopolio(recurso.text);
+                          setShowResourceSelection(false);
+                        }}
                         style={{ cursor: "pointer" }}
                       >
                         <img
@@ -524,6 +533,7 @@ const PopUpCartasDesarrollo = (params) => {
                           style={{ borderRadius: "15%" }}
                           onClick={() => {
                             UsarMonopolio(recurso.text);
+                            setShowResourceSelection(false);
                           }}
                         />
                         <div className="bg-white border border-black rounded mt-2 p-2">
