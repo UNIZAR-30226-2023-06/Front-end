@@ -1,7 +1,7 @@
 version: 1
 commands:
   - name: Install Dependencies
-    command: npm ci
+    command: npm install
 
   - name: Build
     command: npm run build
