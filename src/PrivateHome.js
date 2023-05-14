@@ -147,22 +147,49 @@ export default function PrivateHome() {
       .then((res) => {
         res.json().then((data) => {
           // Actualizamos el estado de cosas
+          // --------------------------------------------------------------------------------------------------------------
 
-          console.log(data);
-          toast((t) => (
-            <span>
-              ¡Tienes una partida en marcha!
-              <button
-                className="bg-cyan-900 hover:bg-cyan-950 text-white font-bold py-2 px-4 rounded"
-                onClick={() => {
-                  console.log("aqui ira la redirección");
-                  navigate("/partida");
-                }}
+          console.log(data.detail);
+          if (data.detail !== "Player not in any lobby") {
+            toast.custom((t) => (
+              <div
+                className={`${
+                  t.visible ? "animate-enter" : "animate-leave"
+                } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
               >
-                Regresar a la partida
-              </button>
-            </span>
-          ));
+                <div className="flex-1 w-0 p-4">
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0 pt-0.5">
+                      <img
+                        className="h-10 w-10 rounded-full"
+                        src="http://localhost:3000/fotos_perfil/skin14.png"
+                        alt=""
+                      />
+                    </div>
+                    <div className="ml-3 flex-1">
+                      <p className="text-sm font-medium text-gray-900">
+                        {nombre}
+                      </p>
+                      <p className="mt-1 text-sm text-gray-500">
+                        ¡Tienes una partida en marcha!
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex border-l border-gray-200">
+                  <button
+                    className="bg-cyan-900 hover:bg-cyan-950 w-24 h-12 mt-4 text-white font-bold rounded"
+                    onClick={() => {
+                      console.log("aqui ira la redirección");
+                      navigate("/partida");
+                    }}
+                  >
+                    Regresar a la partida
+                  </button>
+                </div>
+              </div>
+            ));
+          }
         });
       })
       .catch((error) => {
@@ -499,7 +526,7 @@ export default function PrivateHome() {
             onClick={() => {
               // "borramos" las cookies
               setCookie("token", "", { path: "/" });
-              window.location.href = "http://localhost:3000/login";
+              window.location.href = "http://localhost:3000";
             }}
           >
             {/* imagen log out*/}
