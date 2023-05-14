@@ -536,7 +536,7 @@ export default function PrivateHome() {
             </h1>
           </a>
           {/* --------------------------- Instrucciones --------------------------- */}
-          <a href={`${process.env.REACT_APP_URL_FRONTED}/Instrucciones`} className={styleLinks}>
+          <a href={`/Instrucciones`} className={styleLinks}>
             <img
               alt="profil"
               src={`${process.env.REACT_APP_URL_FRONTED}/libro-abierto.png`}
@@ -801,7 +801,7 @@ export default function PrivateHome() {
         <button
           className="mt-20 w-80 flex h-20 btn_private_home "
           onClick={() => {
-            window.location.href = `${process.env.REACT_APP_URL_FRONTED}/Partida_privada`;
+            window.location.href = `/Partida_privada`;
           }}
         >
           CREAR PARTIDA CON AMIGOS
