@@ -20,7 +20,7 @@ const PopUpCartasDesarrollo = (params) => {
   const [selectedResources, setSelectedResources] = useState([]);
   const handleClose = () => {
     setShouldShowPopup(false);
-    // params.onClose();
+    params.onClose();
   };
 
   const handleOpen = () => {
@@ -81,6 +81,10 @@ const PopUpCartasDesarrollo = (params) => {
             console.error("Error:", error);
           });
 
+        // Cierro la popup
+        setShowPopup(false);
+        setShouldShowPopup(false);
+
       } else if (selectedCardIndex === 5) {
         // Log
         console.log("Se ha seleccionado la carta de caballero");
@@ -112,6 +116,10 @@ const PopUpCartasDesarrollo = (params) => {
 
         global_info.colocando_ladron = true;
 
+        // Cierro la popup
+        setShowPopup(false);
+        setShouldShowPopup(false);
+
         toast.success(' ¡Selecciona a que casilla quieres mover el ladrón!', {
           style: {
             border: '1px solid #713200',
@@ -130,14 +138,12 @@ const PopUpCartasDesarrollo = (params) => {
         setShowConfirmation(false);
       } else if (selectedCardIndex === 7) {
         // TODO: construcción de carreteras
+        setShowPopup(false);
+        setShouldShowPopup(false);
       } else if (selectedCardIndex === 8) {
         setShowResourceSelection2(true);
         setShowConfirmation(false);
       }
-
-      // Cierro la popup
-      setShowPopup(false);
-      setShouldShowPopup(false);
     }
     handleCancel();
   };
@@ -265,6 +271,11 @@ const PopUpCartasDesarrollo = (params) => {
       .catch((error) => {
         console.error("Error:", error);
       });
+
+    setShowPopup(false);
+    setShouldShowPopup(false);
+    setShowResourceSelection(false);
+    setShowResourceSelection2(false);
   }
 
   function UsarDescubrimiento() {
@@ -288,6 +299,11 @@ const PopUpCartasDesarrollo = (params) => {
       .catch((error) => {
         console.error("Error:", error);
       });
+
+    setShowPopup(false);
+    setShouldShowPopup(false);
+    setShowResourceSelection(false);
+    setShowResourceSelection2(false);
   }
 
   const cartas = [
@@ -506,7 +522,9 @@ const PopUpCartasDesarrollo = (params) => {
                           alt={recurso.text}
                           className="w-20 h-auto"
                           style={{ borderRadius: "15%" }}
-                          onClick={UsarMonopolio(recurso.text)}
+                          onClick={() => {
+                            UsarMonopolio(recurso.text);
+                          }}
                         />
                         <div className="bg-white border border-black rounded mt-2 p-2">
                           <span className="text-black">{recurso.text}</span>
