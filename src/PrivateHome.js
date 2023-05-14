@@ -536,7 +536,7 @@ export default function PrivateHome() {
             </h1>
           </a>
           {/* --------------------------- Instrucciones --------------------------- */}
-          <a href={`${process.env.REACT_APP_URL_FRONTED}/Instrucciones`} className={styleLinks}>
+          <a href={`/Instrucciones`} className={styleLinks}>
             <img
               alt="profil"
               src={`${process.env.REACT_APP_URL_FRONTED}/libro-abierto.png`}
