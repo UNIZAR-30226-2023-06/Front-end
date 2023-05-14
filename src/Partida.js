@@ -72,6 +72,7 @@ function Partida() {
   const [jugadores, setJugadores] = useState([]);
 
   const [board, setBoard] = useState({});
+  const [chat, setChat] = useState([]);
 
   const [partida_empezada, setPartida_empezada] = useState(false);
   const [fase_actual, setFase_actual] = useState("");
@@ -88,6 +89,7 @@ function Partida() {
 
   const [colores_oponentes, setColores_oponentes] = useState([]);
   const [mi_color, setMi_color] = useState("");
+  const [coloresJugadores, setColoresJugadores] = useState([]);
 
   const [aldeas_iniciales_colocadas, setAldeas_iniciales_colocadas] =
     useState(false);
@@ -140,6 +142,8 @@ function Partida() {
   const [eligiendoJugadorRobar, setEligiendoJugadorRobar] = useState(false);
   const top_variation_ladron = 27;
   const left_variation_ladron = 27;
+
+  const [aQuienPuedoColocarLadron] = useState([false, false, false]);
 
   const [road, setRoad] = useState({});
 
@@ -281,6 +285,8 @@ function Partida() {
             // setTiempo_maximo(data.turn_time);
             setTiempo_maximo(9999999);
 
+            setChat(data.chat);
+
             detectar_cambio_fase(data.turn_phase, data.player_turn);
             setTurno(data.player_turn);
 
@@ -300,13 +306,6 @@ function Partida() {
             if (global_info.colocando_ladron && !ladronYaColocado) {
               setColocando_ladron(true);
             }
-
-            // Log de colocando_ladron
-            console.log("Colocando ladron:", colocando_ladron);
-            console.log(
-              "Global info colocando ladron:",
-              global_info.colocando_ladron
-            );
 
             actualizar_dados(data.die_1, data.die_2);
 
@@ -329,9 +328,6 @@ function Partida() {
             ) {
               setPuedo_colocar_aldea(true);
             }
-
-            // Log de los colores de los oponentes
-            console.log("Colores de los oponentes:", colores_oponentes);
 
             // Si no es mi turno, desactivo los permisos de construir
             // aldeas y carreteras
@@ -455,6 +451,9 @@ function Partida() {
               // Indico el color de cada jugador
               nuevo_usuario_to_color[color_to_codigo(jugadores[i].color)] = i;
 
+              // Añado el id y el color del jugador al diccionario id_to_color
+              id_to_color[jugadores[i].id] = jugadores[i].color;
+
               id_to_img[jugadores[i].id] =
                 jugadores[i].profile_pic === "default"
                   ? "http://localhost:3000/fotos_perfil/skin1.png"
@@ -553,11 +552,7 @@ function Partida() {
           setShowPopupFaseTirada(true);
           setShowPopupFaseNegociacion(false);
 
-          // Log de ambas fases
           if (fase_actual !== fase) {
-            console.log("Fase actual:", fase_actual);
-            console.log("Fase nueva:", fase);
-
             setLadronYaColocado(false);
           }
         } else {
@@ -781,19 +776,7 @@ function Partida() {
 
   function color_to_hex(color) {
     if (color === "YELLOW") {
-      return "#ffcf40";
-    } else if (color === "BLUE") {
-      return "#006db0";
-    } else if (color === "GREEN") {
-      return "#00a86b";
-    } else {
-      return "#9d2933";
-    }
-  }
-
-  function color_to_hex(color) {
-    if (color === "YELLOW") {
-      return "#ffcf40";
+      return "#FA9820";
     } else if (color === "BLUE") {
       return "#006db0";
     } else if (color === "GREEN") {
@@ -810,6 +793,9 @@ function Partida() {
     null,
     null,
   ]);
+
+  // Diccionario que relaciona el id de un jugador con su color
+  const [id_to_color, setId_to_color] = useState({});
 
   function color_to_codigo(color) {
     if (color === "RED") {
@@ -871,8 +857,6 @@ function Partida() {
           setTiempo(nuevo_tiempo);
 
           if (nuevo_tiempo === 0) {
-            // Log
-            console.log("Se ha acabado el tiempo del turno");
 
             // Aviso al backend de que avance la fase
             avanzar_fase();
@@ -882,9 +866,6 @@ function Partida() {
         if (turno == mi_id) {
           if (ultima_aldea_construida < aldea_que_puedo_construir) {
             setPuedo_colocar_aldea(true);
-
-            // Log
-            console.log("Puedo colocar aldea");
           }
         } else {
           setPuedo_colocar_aldea(false);
@@ -945,11 +926,6 @@ function Partida() {
                 }
 
                 if (definitivamenteTieneColor && eligiendoJugadorRobar) {
-                  // Log
-                  console.log("Click en jugador 1");
-
-                  // log
-                  console.log("Intento de mover ladrón");
 
                   // Ejemplo de url:
                   // https://cataninc-back-end-production-4d3e.up.railway.app/game_phases/move_thief?lobby_id=3&stolen_player_id=4&new_thief_position_tile_coord=5
@@ -1046,11 +1022,6 @@ function Partida() {
                 }
 
                 if (eligiendoJugadorRobar && definitivamenteTieneColor) {
-                  // Log
-                  console.log("Click en jugador 1");
-
-                  // log
-                  console.log("Intento de mover ladrón");
 
                   // Ejemplo de url:
                   // https://cataninc-back-end-production-4d3e.up.railway.app/game_phases/move_thief?lobby_id=3&stolen_player_id=4&new_thief_position_tile_coord=5
@@ -1135,6 +1106,7 @@ function Partida() {
                 // Si eligiendoJugadorRobar está a true, añado un borde blanco
                 // alrededor del jugador con un grosor de 5px
                 border: eligiendoJugadorRobar ? "5px solid white" : "",
+                
               }}
               onClick={() => {
                 let definitivamenteTieneColor = false;
@@ -1147,11 +1119,6 @@ function Partida() {
                 }
 
                 if (eligiendoJugadorRobar && definitivamenteTieneColor) {
-                  // Log
-                  console.log("Click en jugador 1");
-
-                  // log
-                  console.log("Intento de mover ladrón");
 
                   // Ejemplo de url:
                   // https://cataninc-back-end-production-4d3e.up.railway.app/game_phases/move_thief?lobby_id=3&stolen_player_id=4&new_thief_position_tile_coord=5
@@ -1264,6 +1231,8 @@ function Partida() {
           turno={turno}
           mi_id={mi_id}
           fase={fase_actual}
+          chat={chat}
+          usuario_to_color={id_to_color}
         />
       </div>
 
@@ -1303,8 +1272,6 @@ function Partida() {
                     }`,
                   }}
                   onClick={() => {
-                    // log
-                    console.log("Has pulsado el hexágono", key);
 
                     // Si se está colocando el ladrón, hago la llamada al backend para indicar la nueva posición
                     // del ladrón
@@ -1322,12 +1289,6 @@ function Partida() {
                       // Ejemplo url:
                       // http://127.0.0.1:8000/get-nodes-around-tile?lobby_id=1234&tileCoord=122
 
-                      // Log
-                      console.log(
-                        "Acabo de colocar el ladrón en la casilla",
-                        key
-                      );
-
                       fetch(
                         `${process.env.REACT_APP_URL_BACKEND}/get-nodes-around-tile?lobby_id=${codigo_partida}&tileCoord=${key}`,
                         {
@@ -1344,10 +1305,6 @@ function Partida() {
                           });
                         })
                         .catch((err) => {
-                          // Log
-                          console.log(
-                            "Error al obtener los colores alrededor del ladrón"
-                          );
                           console.log(err);
                         });
                     }

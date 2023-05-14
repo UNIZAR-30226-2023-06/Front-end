@@ -16,7 +16,7 @@ const Tabs = ( params ) => {
     setActiveTab("tab2");
   };
 
-  // console.log("Este es tablero del tab: ", params.partida);
+  //console.log("Este es tablero del tab: ", params.usuario_to_color);
   
   return (
     <div className="Tabs_partida">
@@ -41,7 +41,7 @@ const Tabs = ( params ) => {
       </ul>
       
       <div className="outlet">
-        {activeTab === "tab1" ? <FirstTab /> : <SecondTab jugador_datos={params.jugador_datos} fase={params.fase} mi_id={params.mi_id} turno={params.turno} />}
+        {activeTab === "tab1" ? <FirstTab mi_id={params.mi_id} jugador_datos={params.jugador_datos} chat={params.chat} usuario_to_color={params.usuario_to_color} /> : <SecondTab jugador_datos={params.jugador_datos} fase={params.fase} mi_id={params.mi_id} turno={params.turno} />}
       </div>
 
     </div>

@@ -1,13 +1,24 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 
-const FirstTab = () => {
+const FirstTab = ( params ) => {
   /****************************************************************************/
   /******************************** CONSTANTES ********************************/
   /****************************************************************************/
 
-  const [mi_id, setMi_id] = useState(1);
-  const [mi_nombre, setMi_nombre] = useState("ENA");
+  // console.log(" Aqui mostramos el chat que recibimos en el FirstTab: ",params.usuario_to_color);
+
+  function color_to_hex(color) {
+    if (color === "YELLOW") {
+      return "#FA9820";
+    } else if (color === "BLUE") {
+      return "#006db0";
+    } else if (color === "GREEN") {
+      return "#00a86b";
+    } else {
+      return "#9d2933";
+    }
+  }
 
   const [chat, setChat] = useState([
     {
@@ -52,24 +63,23 @@ const FirstTab = () => {
     },
   ]);
 
+
+
   const input = document.getElementById("input");
   const messages = document.getElementById('messages');
-
-  const [pagina_recien_cargada, setPagina_recien_cargada] = useState(true);
 
   /****************************************************************************/
   /******************************* USE EFFECTS ********************************/
   /****************************************************************************/
 
+  // Cada segundo bajo al fondo del chat
   useEffect(() => {
-    if (pagina_recien_cargada) {
-      setPagina_recien_cargada(false);
-    }
-    else {
-      // Hago scroll al final del chat
+    const interval = setInterval(() => {
       messages.scrollTop = messages.scrollHeight;
-    }
-  }, [chat]);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+  
 
   /****************************************************************************/
   /******************************** FUNCIONES *********************************/
@@ -82,17 +92,34 @@ const FirstTab = () => {
   }
 
   function enviar_mensaje_boton() {
-    if (input.value != "") {
+    if (input.value !== "") {
 
-      setChat([
-        ...chat, {
-          usuario: mi_nombre,
-          mensaje: input.value,
-          id: mi_id,
+      // Ejemplo url:
+      // http://localhost:8000/send_chat_message?message=Hola%3F
+
+      const url = `${process.env.REACT_APP_URL_BACKEND}/send_chat_message?message=` + input.value;
+
+      // Peticion POST por fetch
+      fetch(url,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${params.jugador_datos.Token}`,
+          },
         }
-      ]);
-
+      )
+        .then((res) => {
+          res.json().then((data) => {
+            console.log("Intento de colocar aldea:", data);
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+      
       input.value = "";
+      messages.scrollTop = messages.scrollHeight;
 
     }
   }
@@ -123,10 +150,11 @@ const FirstTab = () => {
 
         {/* Chat */}
         {
-          chat.map((mensaje, index) => {
+          params.chat.map((mensaje, index) => {
             return (
               <div style={{
-                backgroundColor: `${mensaje.id == mi_id ? "#949841" : "#164894"}`, // Establecer el color de fondo a blanco
+                // backgroundColor: `${mensaje.id == params.mi_id ? "#949841" : "#164894"}`, // Establecer el color de fondo a blanco
+                backgroundColor: `${color_to_hex(params.usuario_to_color[mensaje.id])}`, // Establecer el color de fondo a blanco
                 color: "white", // Establecer el color del texto a gris
 
                 width: "80%", // Establecer el ancho del cuadrado
@@ -135,18 +163,18 @@ const FirstTab = () => {
                 borderRadius: "15px", // Establecer el radio de las esquinas
                 padding: "10px", // Establecer el padding a 10px
 
-                marginLeft: `${mensaje.id == mi_id ? "20%" : "0"}`,
+                marginLeft: `${mensaje.id == params.mi_id ? "20%" : "0"}`,
                 marginTop: "10px", // Establecer el margen derecho a 10px
               }}>
 
                 <div style={{
                   fontWeight: "bold", // Establecer el grosor de la fuente a "bold"
                 }}>
-                  {mensaje.id == mi_id ? "Tú" : mensaje.usuario}
+                  {mensaje.id == params.mi_id ? "Tú" : mensaje.username}
                 </div>
 
                 <div>
-                  {mensaje.id != 0 && mensaje.mensaje}
+                  {mensaje.id != 0 && mensaje.message}
                 </div>
 
               </div>
