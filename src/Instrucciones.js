@@ -280,7 +280,7 @@ export default function Instrucciones() {
                         onClick={() => {
                             // "borramos" las cookies
                             setCookie("token", "", { path: "/" });
-                            window.location.href = "http://localhost:3000/login";
+                            window.location.href = "http://localhost:3000";
                         }}
                     >
                         {/* imagen log out*/}
