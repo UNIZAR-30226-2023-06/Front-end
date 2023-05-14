@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 
+import { global_info } from "./Partida";
+
 const PopUpFaseNegociacion = (props) => {
   const [showPopup, setShowPopup] = useState(false);
   const [shouldShowPopup, setShouldShowPopup] = useState(false);
@@ -9,6 +11,7 @@ const PopUpFaseNegociacion = (props) => {
   const [oveja, setMiOveja] = useState(0);
   const [trigo, setMiTrigo] = useState(0);
   const [madera, setMiMadera] = useState(0);
+
   // orden: oveja = 1, madera = 2, trigo = 3, piedra = 4, arcilla = 5
   const [countOfrezco, setOfrezco] = useState([0, 0, 0, 0, 0]);
   const [countQuiero, setQuiero] = useState([0, 0, 0, 0, 0]);
@@ -21,17 +24,6 @@ const PopUpFaseNegociacion = (props) => {
     { src: "roca.png", alt: "piedras", value: roca },
     { src: "arcilla.png", alt: "arcilla", value: arcilla },
   ];
-
-  // useEffect(() => {
-  //   if (props.show) {
-  //     setShouldShowPopup(true);
-  //     setShowPopup(true);
-
-  //   } else {
-  //     setShowPopup(false);
-  //     setShouldShowPopup(false);
-  //   }
-  // }, [props.show]);
 
   const handleClose = () => {
     setShouldShowPopup(false);
@@ -227,6 +219,13 @@ const PopUpFaseNegociacion = (props) => {
                 <button
                   class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-4 px-6 border border-gray-400 rounded shadow ml-2"
                   style={{ fontSize: "30px", marginLeft: "20px" }}
+                  onClick={() => {
+                    global_info.eligiendoOponenteIntercambiar = true;
+                    
+                    // Cierro el popup
+                    setShouldShowPopup(false);
+                    setShowPopup(false);
+                  }}
                 >
                   Realizar Oferta
                 </button>
