@@ -183,7 +183,37 @@ export default function Tienda() {
         console.error("Error:", error);
       });
 
-    // Fetch para obtener qué skins tiene compradas el usuario
+    // Fetch para obtener qué fotos de perfil tiene compradas el usuario
+    fetch(`${process.env.REACT_APP_URL_BACKEND}/list-profile-pictures`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Bearer ${Token}`,
+      },
+    }).then((res) => {
+      res.json().then((data) => {
+        console.log("Skins compradas:");
+        console.log(data);
+        set_fotos_perfil_compradas(data.profile_pictures);
+      });
+    });
+
+        // Fetch para obtener qué skins del tablero tiene compradas el usuario
+        fetch(`${process.env.REACT_APP_URL_BACKEND}/list-board-skins`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${Token}`,
+          },
+        }).then((res) => {
+          res.json().then((data) => {
+            console.log("Skins compradas:");
+            console.log(data);
+            set_skins_compradas(data.board_skins);
+          });
+        });
+
+            // Fetch para obtener qué fichas tiene compradas el usuario
     fetch(`${process.env.REACT_APP_URL_BACKEND}/list-piece-skins`, {
       method: "GET",
       headers: {
@@ -194,7 +224,7 @@ export default function Tienda() {
       res.json().then((data) => {
         console.log("Skins compradas:");
         console.log(data);
-        set_fotos_perfil_compradas(data.piece_skins);
+        set_fichas_compradas(data.piece_skins);
       });
     });
   }, [json_token.id]);

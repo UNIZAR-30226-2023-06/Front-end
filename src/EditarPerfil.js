@@ -31,6 +31,8 @@ export default function EditarPerfil() {
   const [nombre, set_nombre] = React.useState(null);
   const [codigo, set_codigo] = React.useState(null);
   const [imagen, set_imagen] = React.useState(null);
+  const [skin, set_skin] = React.useState(null);
+  const [ficha, set_ficha] = React.useState(null);
   const [nummensajes, set_nummensajes] = React.useState(null);
   const [elo, set_elo] = React.useState(null);
   const navigate = useNavigate();
@@ -48,6 +50,8 @@ export default function EditarPerfil() {
   };
 
   const fotos_perfil = [];
+  const skins = [];
+  const fichas = [];
 
   /* --------------------------- calculamos el tamaño de la ventana --------------------------- */
 
@@ -103,13 +107,22 @@ export default function EditarPerfil() {
           // Actualizamos el estado de cosas
           const img =
             data.profile_picture === "default"
-              ? "http://localhost:3000/fotos_perfil/skin1.png"
+              ? "http://localhost:3000/fotos_perfil/skin0.png"
               : `http://localhost:3000/fotos_perfil/${data.profile_picture}.png`;
-
+          const skin_tablero =
+            data.selected_grid_skin === "default"
+              ? "http://localhost:3000/skin_mar/skin0.png"
+              : `http://localhost:3000/skin_mar/${data.selected_grid_skin}.png`;
+          const fich =
+            data.selected_pieces_skin === "default"
+              ? "http://localhost:3000/fotos-tienda-urbanizacion/skin0.png"
+              : `http://localhost:3000/fotos-tienda-urbanizacion/${data.selected_pieces_skin}.png`;
           set_dinero(data.coins);
           set_codigo(data.id);
           set_nombre(data.username);
           set_imagen(img);
+          set_skin(skin_tablero);
+          set_ficha(fich);
           set_elo(data.elo);
         });
       })
@@ -165,11 +178,72 @@ export default function EditarPerfil() {
           if (objeto !== "default") {
             fotos_perfil.push(objeto);
           }
-        })  
+        })
       );
     }
   }
+
+  fetch(`${process.env.REACT_APP_URL_BACKEND}/list-board-skins`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: `Bearer ${Token}`,
+    },
+  })
+    .then((res) => {
+      res.json().then(async (data) => {
+        await filterBoardSkins(data);
+        mapeoSkins();
+      });
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+  async function filterBoardSkins(data) {
+    // asegurarnos de que data está definido antes de continuar
+    if (data && data.board_skins) {
+      await Promise.all(
+        data.board_skins.map(async (objeto) => {
+          if (objeto !== "default") {
+            skins.push(objeto);
+          }
+        })
+      );
+    }
+  }
+
+  fetch(`${process.env.REACT_APP_URL_BACKEND}/list-piece-skins`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: `Bearer ${Token}`,
+    },
+  })
+    .then((res) => {
+      res.json().then(async (data) => {
+        await filterPieceSkins(data);
+        mapeoFichas();
+      });
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+  async function filterPieceSkins(data) {
+    // asegurarnos de que data está definido antes de continuar
+    if (data && data.piece_skins) {
+      await Promise.all(
+        data.piece_skins.map(async (objeto) => {
+          if (objeto !== "default") {
+            fichas.push(objeto);
+          }
+        })
+      );
+    }
+  }
+
   var items_fotos_perfil = [];
+  var items_skin = [];
+  var items_fichas = [];
 
   async function mapeoFotos() {
     items_fotos_perfil = fotos_perfil.map((foto, i) => (
@@ -184,6 +258,74 @@ export default function EditarPerfil() {
             const name = event.target.name;
             fetch(
               `${process.env.REACT_APP_URL_BACKEND}/change-profile-picture?new_profile_picture=${name}`,
+              {
+                method: "POST",
+                headers: {
+                  accept: "application/json",
+                  "Content-Type": "application/x-www-form-urlencoded",
+                  Authorization: `Bearer ${Token}`,
+                },
+              }
+            );
+            toast.loading("cargando");
+            const intervalId = setInterval(() => {
+              window.location.reload();
+            }, 5000);
+
+            return () => clearInterval(intervalId);
+          }}
+        />
+      </div>
+    ));
+  }
+
+  async function mapeoSkins() {
+    items_skin = skins.map((foto, i) => (
+      <div className="slide_tienda">
+        <img
+          src={"http://localhost:3000/skin_mar/" + foto + ".png"}
+          className="rounded-full bg-cyan-900 hover:cursor-pointer mt-4"
+          name={foto}
+          onClick={(event) => {
+            console.log("aaaaaaaaaaaaaaaaaaaaaaaaa");
+            console.log(foto);
+            const name = event.target.name;
+            fetch(
+              `${process.env.REACT_APP_URL_BACKEND}/change-grid-skin?new_grid_skin=${name}`,
+              {
+                method: "POST",
+                headers: {
+                  accept: "application/json",
+                  "Content-Type": "application/x-www-form-urlencoded",
+                  Authorization: `Bearer ${Token}`,
+                },
+              }
+            );
+            toast.loading("cargando");
+            const intervalId = setInterval(() => {
+              window.location.reload();
+            }, 5000);
+
+            return () => clearInterval(intervalId);
+          }}
+        />
+      </div>
+    ));
+  }
+
+  async function mapeoFichas() {
+    items_fichas = fichas.map((foto, i) => (
+      <div className="slide_tienda">
+        <img
+          src={"http://localhost:3000/fotos-tienda-urbanizacion/" + foto + ".png"}
+          className="rounded-full bg-cyan-900 hover:cursor-pointer mt-4"
+          name={foto}
+          onClick={(event) => {
+            console.log("aaaaaaaaaaaaaaaaaaaaaaaaa");
+            console.log(foto);
+            const name = event.target.name;
+            fetch(
+              `${process.env.REACT_APP_URL_BACKEND}/change-pieces-skin?new_pieces_skin=${name}`,
               {
                 method: "POST",
                 headers: {
@@ -475,6 +617,76 @@ export default function EditarPerfil() {
               <AliceCarousel
                 mouseTracking
                 items={items_fotos_perfil}
+                responsive={responsive}
+                controlsStrategy="alternate"
+              />
+            </div>
+          )}
+        </Popup>
+      </div>
+
+      <div>
+        <Popup
+          trigger={
+            /************ LO QUE VA AQUI ES LO QUE SACA LA POPUP ************/
+            <div>
+              <img
+                alt="profil"
+                src={skin}
+                className={`ml-10 object-cover rounded-full h-60 w-60 mt-9 bg-cyan-900 hover:cursor-pointer`}
+              />
+            </div>
+          }
+          modal
+          nested
+          arrow={false}
+          contentStyle={{
+            width: "60%",
+            height: "45%",
+            border: "5px solid black",
+            borderRadius: "10px",
+          }}
+        >
+          {(close) => (
+            /************ LO QUE VA AQUI ES LO QUE HAY DENTRO DE LA POP UP ************/
+            <div className="justify-center gap-10 mt-8 mx-2 ml-2">
+              <AliceCarousel
+                mouseTracking
+                items={items_skin}
+                responsive={responsive}
+                controlsStrategy="alternate"
+              />
+            </div>
+          )}
+        </Popup>
+
+        <Popup
+          trigger={
+            /************ LO QUE VA AQUI ES LO QUE SACA LA POPUP ************/
+            <div>
+              <img
+                alt="profil"
+                src={ficha}
+                className={`ml-10 object-cover rounded-full h-60 w-60 mt-9 bg-cyan-900 hover:cursor-pointer`}
+              />
+            </div>
+          }
+          modal
+          nested
+          arrow={false}
+          contentStyle={{
+            width: "60%",
+            height: "45%",
+            border: "5px solid black",
+            borderRadius: "10px",
+          }}
+        >
+          {(close) => (
+            /************ LO QUE VA AQUI ES LO QUE HAY DENTRO DE LA POP UP ************/
+            <div className="justify-center gap-10 mt-8 mx-2 ml-2">
+              <AliceCarousel
+                mouseTracking
+                items={items_fichas}
                 responsive={responsive}
                 controlsStrategy="alternate"
               />
