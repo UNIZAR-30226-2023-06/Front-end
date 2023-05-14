@@ -801,7 +801,7 @@ export default function PrivateHome() {
         <button
           className="mt-20 w-80 flex h-20 btn_private_home "
           onClick={() => {
-            window.location.href = `${process.env.REACT_APP_URL_FRONTED}/Partida_privada`;
+            window.location.href = `/Partida_privada`;
           }}
         >
           CREAR PARTIDA CON AMIGOS
