@@ -107,7 +107,7 @@ const PopUpFaseNegociacion = (props) => {
   return (
     <>
       <img
-        src="http://localhost:3000/iconos-no-recursos/comerciar-jugadores.png"
+        src={`${process.env.REACT_APP_URL_FRONTED}/iconos-no-recursos/comerciar-jugadores.png`}
         alt="Abrir Popup"
         className="cursor-pointer"
         onClick={handleOpen}
@@ -131,7 +131,7 @@ const PopUpFaseNegociacion = (props) => {
           >
             <h1 className="text-3xl mt-2">FASE DE NEGOCIACION</h1>
             <img
-              src="http://localhost:3000/white_cross.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/white_cross.png`}
               alt="close"
               className="absolute top-0 right-0 cursor-pointer mt-3 mr-3"
               style={{ width: "50px", height: "50px" }}
@@ -150,7 +150,7 @@ const PopUpFaseNegociacion = (props) => {
                 >
                   <div className="mr-2">
                     <img
-                      src={`http://localhost:3000/recursos/${resource.src}`}
+                      src={`${process.env.REACT_APP_URL_FRONTED}/recursos/${resource.src}`}
                       alt={resource.alt}
                       style={{ width: "65px", height: "65px" }}
                     />
@@ -177,7 +177,7 @@ const PopUpFaseNegociacion = (props) => {
                   <div key={`quiero-${index}`}>
                     <div className="flex flex-row w-200 h-150 ml-30 rounded-13 justify-center mt-4 mb-12 ml-2">
                       <img
-                        src={`http://localhost:3000/recursos/${resource.src}`}
+                        src={`${process.env.REACT_APP_URL_FRONTED}/recursos/${resource.src}`}
                         alt={resource.alt}
                         className="w-14 h-14"
                       />
@@ -203,7 +203,7 @@ const PopUpFaseNegociacion = (props) => {
                   <div key={`ofrezco-${index}`}>
                     <div className="flex flex-row w-200 h-150 ml-30 rounded-13 justify-center mt-4 mb-4 ml-2">
                       <img
-                        src={`http://localhost:3000/recursos/${resource.src}`}
+                        src={`${process.env.REACT_APP_URL_FRONTED}/recursos/${resource.src}`}
                         alt={resource.alt}
                         className="w-14 h-14"
                       />

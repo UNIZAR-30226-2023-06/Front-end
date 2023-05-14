@@ -59,7 +59,7 @@ const PopUpRecursosRecibidos = (props) => {
               RECURSOS RECIBIDOS
             </h1>{" "}
             <img
-              src="http://localhost:3000/white_cross.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/white_cross.png`}
               alt="close"
               className="absolute top-0 right-0 cursor-pointer mt-3 mr-3"
               style={{ width: "50px", height: "50px" }}
@@ -68,7 +68,7 @@ const PopUpRecursosRecibidos = (props) => {
             <div style={containerStyle}>
               <div style={{ display: "flex", alignItems: "center" , marginTop: "20px"}}>
                 <img
-                  src="http://localhost:3000/oveja.png"
+                  src={`${process.env.REACT_APP_URL_FRONTED}/oveja.png`}
                   alt="Imagen 1"
                   style={{ height: "150px", width: "150px" }}
                 />
@@ -87,7 +87,7 @@ const PopUpRecursosRecibidos = (props) => {
 
               <div style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
                 <img
-                  src="http://localhost:3000/troncos.png"
+                  src={`${process.env.REACT_APP_URL_FRONTED}/troncos.png`}
                   alt="Imagen 1"
                   style={{ height: "150px", width: "150px" }}
                 />
@@ -106,7 +106,7 @@ const PopUpRecursosRecibidos = (props) => {
 
               <div style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
                 <img
-                  src="http://localhost:3000/cebada.png"
+                  src={`${process.env.REACT_APP_URL_FRONTED}/cebada.png`}
                   alt="Imagen 1"
                   style={{ height: "150px", width: "150px" }}
                 />
@@ -126,7 +126,7 @@ const PopUpRecursosRecibidos = (props) => {
             <div style={containerStyle}>
               <div style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
                 <img
-                  src="http://localhost:3000/arcilla.png"
+                  src={`${process.env.REACT_APP_URL_FRONTED}/arcilla.png`}
                   alt="Imagen 1"
                   style={{ height: "150px", width: "150px" }}
                 />
@@ -145,7 +145,7 @@ const PopUpRecursosRecibidos = (props) => {
 
               <div style={{ display: "flex", alignItems: "center", marginTop: "20px" }}>
                 <img
-                  src="http://localhost:3000/piedras.png"
+                  src={`${process.env.REACT_APP_URL_FRONTED}/piedras.png`}
                   alt="Imagen 1"
                   style={{ height: "150px", width: "150px" }}
                 />

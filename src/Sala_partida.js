@@ -67,8 +67,8 @@ function Sala_partida() {
     }
 
     const jugadores = [
-        {img: "http://localhost:3000/jugadores.png", nombre: "Ayelen#1234"},
-        {img: "http://localhost:3000/jugadores.png", nombre: "Loreto#1234"},
+        {img: `${process.env.REACT_APP_URL_FRONTED}/jugadores.png`, nombre: "Ayelen#1234"},
+        {img: `${process.env.REACT_APP_URL_FRONTED}/jugadores.png`, nombre: "Loreto#1234"},
         {img: null, nombre: null},
         {img: null, nombre: null}
     ];

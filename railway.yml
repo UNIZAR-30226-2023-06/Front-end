@@ -1,0 +1,9 @@
+version: 1
+commands:
+  - name: Install Dependencies
+    command: npm ci
+
+  - name: Build
+    command: npm run build
+
+start: npm start

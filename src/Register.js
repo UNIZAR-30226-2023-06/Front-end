@@ -70,7 +70,7 @@ export default function Registro() {
           <a href="/login">
             <img
               alt="flecha retroceder a página anterior"
-              src="http://localhost:3000/flechaMenu.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/flechaMenu.png`}
               className={`relative cursor-pointer  
         right-3 top-90 w-7 p-1 border-cyan-900 ${!open}`}
               onClick={() => setOpen(!open)}

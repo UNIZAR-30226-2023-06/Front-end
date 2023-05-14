@@ -168,8 +168,8 @@ export default function Tienda() {
 
           const img =
             data.profile_picture === "default"
-              ? "http://localhost:3000/fotos_perfil/skin1.png"
-              : `http://localhost:3000/fotos_perfil/${data.profile_picture}.png`;
+              ? `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/skin1.png`
+              : `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/${data.profile_picture}.png`;
 
           set_dinero(data.coins);
           set_codigo(data.id);
@@ -424,7 +424,7 @@ export default function Tienda() {
             fotos_perfil_compradas.includes("skin" + i) ? (
               <div>
                 <img
-                  src={"http://localhost:3000/fotos_perfil/skin" + i + ".png"}
+                  src={`${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/skin` + i + ".png"}
                   onDragStart={handleDragStart}
                   role="presentation"
                   className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
@@ -435,7 +435,7 @@ export default function Tienda() {
                 />
 
                 <img
-                  src="http://localhost:3000/fotos_perfil/comprado.png"
+                  src={`${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/comprado.png`}
                   onDragStart={handleDragStart}
                   role="presentation"
                   className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
@@ -449,7 +449,7 @@ export default function Tienda() {
               </div>
             ) : (
               <img
-                src={"http://localhost:3000/fotos_perfil/skin" + i + ".png"}
+                src={`${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/skin` + i + ".png"}
                 onDragStart={handleDragStart}
                 role="presentation"
                 className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
@@ -475,7 +475,7 @@ export default function Tienda() {
               </button>
               {/* Imagen del objeto */}
               <img
-                src={"http://localhost:3000/fotos_perfil/skin" + i + ".png"}
+                src={`${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/skin` + i + ".png"}
                 onDragStart={handleDragStart}
                 role="presentation"
                 className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
@@ -487,7 +487,7 @@ export default function Tienda() {
                 <div>
                   {fotos_perfil_compradas.includes("skin" + i) ? (
                     <img
-                      src={"http://localhost:3000/green_check.png"}
+                      src={`${process.env.REACT_APP_URL_FRONTED}/green_check.png`}
                       alt="Icono"
                       className="icono_tienda"
                     />
@@ -497,7 +497,7 @@ export default function Tienda() {
                         <p className="text-2xl font-bold">¿Estás seguro?</p>
                       ) : (
                         <img
-                          src={"http://localhost:3000/red_cross.png"}
+                          src={`${process.env.REACT_APP_URL_FRONTED}/red_cross.png`}
                           alt="Icono"
                           className="icono_tienda"
                         />
@@ -576,7 +576,7 @@ export default function Tienda() {
             skins_compradas.includes("skin" + i) ? (
               <div>
                 <img
-                  src={"http://localhost:3000/skin_mar/skin" + i + ".png"}
+                  src={`${process.env.REACT_APP_URL_FRONTED}/skin_mar/skin` + i + ".png"}
                   onDragStart={handleDragStart}
                   role="presentation"
                   className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
@@ -587,7 +587,7 @@ export default function Tienda() {
                 />
 
                 <img
-                  src="http://localhost:3000/skin_mar/comprado.png"
+                  src={`${process.env.REACT_APP_URL_FRONTED}/skin_mar/comprado.png`}
                   onDragStart={handleDragStart}
                   role="presentation"
                   className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
@@ -601,7 +601,7 @@ export default function Tienda() {
               </div>
             ) : (
               <img
-                src={"http://localhost:3000/skin_mar/skin" + i + ".png"}
+                src={`${process.env.REACT_APP_URL_FRONTED}/skin_mar/skin` + i + ".png"}
                 onDragStart={handleDragStart}
                 role="presentation"
                 className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
@@ -627,7 +627,7 @@ export default function Tienda() {
               </button>
               {/* Imagen del objeto */}
               <img
-                src={"http://localhost:3000/skin_mar/skin" + i + ".png"}
+                src={`${process.env.REACT_APP_URL_FRONTED}/skin_mar/skin` + i + ".png"}
                 onDragStart={handleDragStart}
                 role="presentation"
                 className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
@@ -639,7 +639,7 @@ export default function Tienda() {
                 <div>
                   {skins_compradas.includes("skin" + i) ? (
                     <img
-                      src={"http://localhost:3000/green_check.png"}
+                      src={`${process.env.REACT_APP_URL_FRONTED}/green_check.png`}
                       alt="Icono"
                       className="icono_tienda"
                     />
@@ -649,7 +649,7 @@ export default function Tienda() {
                         <p className="text-2xl font-bold">¿Estás seguro?</p>
                       ) : (
                         <img
-                          src={"http://localhost:3000/red_cross.png"}
+                          src={`${process.env.REACT_APP_URL_FRONTED}/red_cross.png`}
                           alt="Icono"
                           className="icono_tienda"
                         />
@@ -727,7 +727,7 @@ export default function Tienda() {
               <div>
                 <img
                   src={
-                    "http://localhost:3000/fotos-tienda-urbanizacion/skin" +
+                    `${process.env.REACT_APP_URL_FRONTED}/fotos-tienda-urbanizacion/skin` +
                     i +
                     ".png"
                   }
@@ -741,7 +741,7 @@ export default function Tienda() {
                 />
 
                 <img
-                  src="http://localhost:3000/fotos-tienda-urbanizacion/comprado.png"
+                  src={`${process.env.REACT_APP_URL_FRONTED}/fotos-tienda-urbanizacion/comprado.png`}
                   onDragStart={handleDragStart}
                   role="presentation"
                   className="mx-auto object-cover rounded-full h-28 w-28 mt-9 h-10 w-10 mx-auto object-cover mt-9 rounded-full duration-300 justify-center align-middle"
@@ -756,7 +756,7 @@ export default function Tienda() {
             ) : (
               <img
                 src={
-                  "http://localhost:3000/fotos-tienda-urbanizacion/skin" +
+                  `${process.env.REACT_APP_URL_FRONTED}/fotos-tienda-urbanizacion/skin` +
                   i +
                   ".png"
                 }
@@ -786,7 +786,7 @@ export default function Tienda() {
               {/* Imagen del objeto */}
               <img
                 src={
-                  "http://localhost:3000/fotos-tienda-urbanizacion/skin" +
+                  `${process.env.REACT_APP_URL_FRONTED}/fotos-tienda-urbanizacion/skin` +
                   i +
                   ".png"
                 }
@@ -801,7 +801,7 @@ export default function Tienda() {
                 <div>
                   {fichas_compradas.includes("skin" + i) ? (
                     <img
-                      src={"http://localhost:3000/green_check.png"}
+                      src={`${process.env.REACT_APP_URL_FRONTED}/green_check.png`}
                       alt="Icono"
                       className="icono_tienda"
                     />
@@ -811,7 +811,7 @@ export default function Tienda() {
                         <p className="text-2xl font-bold">¿Estás seguro?</p>
                       ) : (
                         <img
-                          src={"http://localhost:3000/red_cross.png"}
+                          src={`${process.env.REACT_APP_URL_FRONTED}/red_cross.png`}
                           alt="Icono"
                           className="icono_tienda"
                         />
@@ -896,7 +896,7 @@ export default function Tienda() {
       >
         {/* --------------------------- cruz de cerrar menu --------------------------- */}
         <img
-          src="http://localhost:3000/white_cross.png"
+          src={`${process.env.REACT_APP_URL_FRONTED}/white_cross.png`}
           alt="imagen para cerrar la sidebar"
           className={`hover:cursor-pointer ${
             screenSize < 720 && desplegado ? styleCruzOn : styleCruzOff
@@ -938,22 +938,22 @@ export default function Tienda() {
 
             <img
               alt="profil"
-              src="http://localhost:3000/white_dinero.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/white_dinero.png`}
               className={`w-6 h-6 ml-2`}
             />
           </h1>
         </div>
         <ul className="flex flex-col w-full items-start py-6 px-4 gap-2">
           {/* --------------------------- volver al home --------------------------- */}
-          <a href="http://localhost:3000/home" className={styleLinks}>
+          <a href={`${process.env.REACT_APP_URL_FRONTED}/home`} className={styleLinks}>
             <img
               alt="profil"
-              src="http://localhost:3000/home.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/home.png`}
               className={`object-cover h-7 w-7`}
             />
 
             <h1
-              href="http://localhost:3000/editarPerfil"
+              href={`${process.env.REACT_APP_URL_FRONTED}/editarPerfil`}
               variant={Link}
               className={`text-white origin-center content-center font-medium text-xl`}
             >
@@ -961,15 +961,15 @@ export default function Tienda() {
             </h1>
           </a>
           {/* --------------------------- editar perfil --------------------------- */}
-          <a href="http://localhost:3000/editarPerfil" className={styleLinks}>
+          <a href={`${process.env.REACT_APP_URL_FRONTED}/editarPerfil`} className={styleLinks}>
             <img
               alt="profil"
-              src="http://localhost:3000/editProfile.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/editProfile.png`}
               className={`object-cover h-7 w-7`}
             />
 
             <h1
-              href="http://localhost:3000/editarPerfil"
+              href={`${process.env.REACT_APP_URL_FRONTED}/editarPerfil`}
               variant={Link}
               className={`text-white origin-center content-center font-medium text-xl`}
             >
@@ -977,11 +977,11 @@ export default function Tienda() {
             </h1>
           </a>
           {/* --------------------------- amigos ---------------------------*/}
-          <a href="http://localhost:3000/amigosT" className={styleLinks}>
+          <a href={`${process.env.REACT_APP_URL_FRONTED}/amigosT`} className={styleLinks}>
             {/* imagen amigos*/}
             <img
               alt="profil"
-              src="http://localhost:3000/friends.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/friends.png`}
               className={`object-cover h-7 w-7}`}
             />
             {nummensajes > 0 && (
@@ -1003,15 +1003,15 @@ export default function Tienda() {
             </h1>
           </a>
           {/* --------------------------- tienda --------------------------- */}
-          <a href="http://localhost:3000/tienda" className={styleLinks}>
+          <a href={`${process.env.REACT_APP_URL_FRONTED}/tienda`} className={styleLinks}>
             <img
               alt="profil"
-              src="http://localhost:3000/shopping-cart.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/shopping-cart.png`}
               className={`object-cover h-7 w-7`}
             />
 
             <h1
-              href="http://localhost:3000/editarPerfil"
+              href={`${process.env.REACT_APP_URL_FRONTED}/editarPerfil`}
               variant={Link}
               className={`text-white origin-center content-center font-medium text-xl`}
             >
@@ -1019,15 +1019,15 @@ export default function Tienda() {
             </h1>
           </a>
           {/* --------------------------- Instrucciones --------------------------- */}
-          <a href="http://localhost:3000/Instrucciones" className={styleLinks}>
+          <a href={`${process.env.REACT_APP_URL_FRONTED}/Instrucciones`} className={styleLinks}>
             <img
               alt="profil"
-              src="http://localhost:3000/libro-abierto.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/libro-abierto.png`}
               className={`object-cover h-7 w-7`}
             />
 
             <h1
-              href="http://localhost:3000/Instrucciones"
+              href={`${process.env.REACT_APP_URL_FRONTED}/Instrucciones`}
               variant={Link}
               className={`text-white origin-center content-center font-medium text-xl`}
             >
@@ -1041,13 +1041,13 @@ export default function Tienda() {
             onClick={() => {
               // "borramos" las cookies
               setCookie("token", "", { path: "/" });
-              window.location.href = "http://localhost:3000";
+              window.location.href=`${process.env.REACT_APP_URL_FRONTED}`;
             }}
           >
             {/* imagen log out*/}
             <img
               alt="profil"
-              src="http://localhost:3000/logout.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/logout.png`}
               className={`object-cover h-7 w-7`}
             />
 
@@ -1107,7 +1107,7 @@ export default function Tienda() {
             />
             <button className="px-4 py-2 rounded-full bg-cyan-900 hover:bg-slate-900 text-white w-12 h-10">
               <img
-                src="http://localhost:3000/add-friend.png"
+                src={`${process.env.REACT_APP_URL_FRONTED}/add-friend.png`}
                 alt="boton de añadir amigos"
               />
             </button>
@@ -1116,7 +1116,7 @@ export default function Tienda() {
       </div>
       {/* --------------------------- menu plegado --------------------------- */}
       <img
-        src="http://localhost:3000/menu.png"
+        src={`${process.env.REACT_APP_URL_FRONTED}/menu.png`}
         alt="menu desplegable, clicka aqui para desplegarlo"
         className={`hover:cursor-pointer w-8 h-8 m-4 ${
           screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
@@ -1133,7 +1133,7 @@ export default function Tienda() {
         >
           {/* Flecha de retroceso */}
           <img
-            src="http://localhost:3000/flecha_retroceso.png"
+            src={`${process.env.REACT_APP_URL_FRONTED}/flecha_retroceso.png`}
             onClick={handleBack}
             alt="flecha_retroceso"
             style={{
@@ -1150,7 +1150,7 @@ export default function Tienda() {
           <div className="flex items-center">
             {/* Icono y texto del dinero */}
             <img
-              src="http://localhost:3000/dinero.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/dinero.png`}
               style={{
                 width: "80px",
                 height: "80px",

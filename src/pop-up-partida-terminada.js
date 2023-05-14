@@ -39,7 +39,7 @@ const PopUpFaseTirada = (props) => {
                             <button
                                 onClick={() => {
                                     // Regreso al menú home
-                                    window.location.href = "http://localhost:3000/home";
+                                    window.location.href = `${process.env.REACT_APP_URL_FRONTED}/home`;
                                 }}
                                 class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-4 px-6 border border-gray-400 rounded shadow ml-2"
                                 style={{ fontSize: "30px", marginLeft: "20px" }}

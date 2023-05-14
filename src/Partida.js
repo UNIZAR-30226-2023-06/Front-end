@@ -98,11 +98,11 @@ function Partida() {
   const [ultima_aldea_construida, setUltima_aldea_construida] = useState(0);
 
   const [img_dado_1, setImg_dado_1] = useState(
-    "http://localhost:3000/dados/dado_1.png"
+    `${process.env.REACT_APP_URL_FRONTED}/dados/dado_1.png`
   );
 
   const [img_dado_2, setImg_dado_2] = useState(
-    "http://localhost:3000/dados/dado_2.png"
+    `${process.env.REACT_APP_URL_FRONTED}/dados/dado_2.png`
   );
 
   const [casas_legales, setCasas_legales] = useState([]);
@@ -113,12 +113,12 @@ function Partida() {
 
   const ficha_con_id = [
     null,
-    "http://localhost:3000/casillas/madera.jpg",
-    "http://localhost:3000/casillas/arcilla.jpg",
-    "http://localhost:3000/casillas/ovejas.jpg",
-    "http://localhost:3000/casillas/roca.jpg",
-    "http://localhost:3000/casillas/trigo.jpg",
-    "http://localhost:3000/casillas/desierto.jpg",
+    `${process.env.REACT_APP_URL_FRONTED}/casillas/madera.jpg`,
+    `${process.env.REACT_APP_URL_FRONTED}/casillas/arcilla.jpg`,
+    `${process.env.REACT_APP_URL_FRONTED}/casillas/ovejas.jpg`,
+    `${process.env.REACT_APP_URL_FRONTED}/casillas/roca.jpg`,
+    `${process.env.REACT_APP_URL_FRONTED}/casillas/trigo.jpg`,
+    `${process.env.REACT_APP_URL_FRONTED}/casillas/desierto.jpg`,
   ];
 
   const init_top_board = 340;
@@ -198,12 +198,12 @@ function Partida() {
   const init_top_building_relative_vertical = 10;
   const init_left_building_relative_vertical = -348;
 
-  const img_salir = "http://localhost:3000/salir.png";
-  const img_corona = "http://localhost:3000/corona.png";
-  const img_caballero_negro = "http://localhost:3000/caballero_negro.png";
-  const img_caballero_gris = "http://localhost:3000/caballero_gris.png";
-  const img_camino_negro = "http://localhost:3000/camino_negro.png";
-  const img_camino_gris = "http://localhost:3000/camino_gris.png";
+  const img_salir = `${process.env.REACT_APP_URL_FRONTED}/salir.png`;
+  const img_corona = `${process.env.REACT_APP_URL_FRONTED}/corona.png`;
+  const img_caballero_negro = `${process.env.REACT_APP_URL_FRONTED}/caballero_negro.png`;
+  const img_caballero_gris = `${process.env.REACT_APP_URL_FRONTED}/caballero_gris.png`;
+  const img_camino_negro = `${process.env.REACT_APP_URL_FRONTED}/camino_negro.png`;
+  const img_camino_gris = `${process.env.REACT_APP_URL_FRONTED}/camino_gris.png`;
 
   // sacamos los datos para saber si hay actualizaciones
   useQuery(
@@ -382,8 +382,8 @@ function Partida() {
             for (let i = 0; i < lista_oponentes.length; i++) {
               const nueva_img_oponente =
                 lista_oponentes[i].profile_pic === "default"
-                  ? "http://localhost:3000/fotos_perfil/skin1.png"
-                  : `http://localhost:3000/fotos_perfil/${lista_oponentes[i].profile_pic}.png`;
+                  ? `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/skin1.png`
+                  : `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/${lista_oponentes[i].profile_pic}.png`;
 
               nueva_lista_imgs_oponentes = [
                 ...nueva_lista_imgs_oponentes,
@@ -429,7 +429,7 @@ function Partida() {
             // Obtenemos de todos los jugadores sus skins y sus colores
             for (let i = 0; i < jugadores.length; i++) {
               const url_skin_poblado =
-                "http://localhost:3000/poblado/" +
+                `${process.env.REACT_APP_URL_FRONTED}/poblado/` +
                 jugadores[i].color +
                 "/" +
                 jugadores[i].selected_pieces_skin +
@@ -437,13 +437,13 @@ function Partida() {
               array_skins_jugadores_poblados[i] = url_skin_poblado;
 
               const url_skin_carretera =
-                "http://localhost:3000/carreteras/" +
+                `${process.env.REACT_APP_URL_FRONTED}/carreteras/` +
                 jugadores[i].color +
                 "/default.png";
               array_skins_jugadores_carreteras[i] = url_skin_carretera;
 
               const url_skin_ciudad =
-                "http://localhost:3000/ciudad/" +
+                `${process.env.REACT_APP_URL_FRONTED}/ciudad/` +
                 jugadores[i].color +
                 "/" +
                 jugadores[i].selected_pieces_skin +
@@ -464,8 +464,8 @@ function Partida() {
 
               id_to_img[jugadores[i].id] =
                 jugadores[i].profile_pic === "default"
-                  ? "http://localhost:3000/fotos_perfil/skin1.png"
-                  : `http://localhost:3000/fotos_perfil/${lista_oponentes[i].profile_pic}.png`;
+                  ? `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/skin1.png`
+                  : `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/${lista_oponentes[i].profile_pic}.png`;
             }
 
             setSkins_jugadores_poblados(array_skins_jugadores_poblados);
@@ -770,10 +770,10 @@ function Partida() {
     }
 
     // Actualizo las imagenes de los dadso con los números pasados por parámetro
-    const nuevaImagen = `http://localhost:3000/dados/dado_${die1}.png`;
+    const nuevaImagen = `${process.env.REACT_APP_URL_FRONTED}/dados/dado_${die1}.png`;
     setImg_dado_1(nuevaImagen);
 
-    const nuevaImagen2 = `http://localhost:3000/dados/dado_${die2}.png`;
+    const nuevaImagen2 = `${process.env.REACT_APP_URL_FRONTED}/dados/dado_${die2}.png`;
     setImg_dado_2(nuevaImagen2);
   }
 
@@ -893,8 +893,8 @@ function Partida() {
   return (
     <div
       style={{
-        //backgroundImage: `url(http://localhost:3000/fondo_mar.jpg)`,
-        backgroundImage: `url(http://localhost:3000/skin_mar/${skinMarFondo}.png)`,
+        //backgroundImage: `url(`${process.env.REACT_APP_URL_FRONTED}/fondo_mar.jpg)`,
+        backgroundImage: `url(${process.env.REACT_APP_URL_FRONTED}/skin_mar/${skinMarFondo}.png)`,
         backgroundSize: "cover",
 
         height: "100vh",
@@ -1202,7 +1202,7 @@ function Partida() {
             className="icono_salir"
             alt="salir"
             onClick={() =>
-              (window.location.href = "http://localhost:3000/home")
+              (window.location.href = `${process.env.REACT_APP_URL_FRONTED}/home`)
             }
           />
         </div>
@@ -1321,7 +1321,7 @@ function Partida() {
               {/* NOTA: NO CAMBIAR EL == POR ===, SI NO NO FUNCIONA */}
               {key == posicion_ladron && (
                 <img
-                  src={"http://localhost:3000/ladron.png"}
+                  src={`${process.env.REACT_APP_URL_FRONTED}/ladron.png`}
                   alt="ladron"
                   style={{
                     position: "absolute",
@@ -1479,7 +1479,7 @@ function Partida() {
               init_left_board + -5 * left_variation_unit
             }px) rotate(-60deg)`,
 
-            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_arcilla.png)`,
+            backgroundImage: `url(${process.env.REACT_APP_URL_FRONTED}/casillas/puertos/puerto_arcilla.png)`,
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
@@ -1508,7 +1508,7 @@ function Partida() {
               init_left_board + -5 * left_variation_unit
             }px) rotate(-60deg)`,
 
-            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_madera.png)`,
+            backgroundImage: `url(${process.env.REACT_APP_URL_FRONTED}/casillas/puertos/puerto_madera.png)`,
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
@@ -1535,7 +1535,7 @@ function Partida() {
               init_left_board + 1 * left_variation_unit
             }px) rotate(60deg)`,
 
-            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_trigo.png)`,
+            backgroundImage: `url(${process.env.REACT_APP_URL_FRONTED}/casillas/puertos/puerto_trigo.png)`,
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
@@ -1562,7 +1562,7 @@ function Partida() {
               init_left_board + 4 * left_variation_unit
             }px) rotate(60deg)`,
 
-            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_roca.png)`,
+            backgroundImage: `url(${process.env.REACT_APP_URL_FRONTED}/casillas/puertos/puerto_roca.png)`,
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
@@ -1589,7 +1589,7 @@ function Partida() {
               init_left_board + 1 * left_variation_unit
             }px) rotate(180deg)`,
 
-            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_3.png)`,
+            backgroundImage: `url(${process.env.REACT_APP_URL_FRONTED}/casillas/puertos/puerto_3.png)`,
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
@@ -1615,7 +1615,7 @@ function Partida() {
               init_left_board + 4 * left_variation_unit
             }px) rotate(180deg)`,
 
-            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_ovejas.png)`,
+            backgroundImage: `url(${process.env.REACT_APP_URL_FRONTED}/casillas/puertos/puerto_ovejas.png)`,
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
@@ -1642,7 +1642,7 @@ function Partida() {
               init_left_board + 6 * left_variation_unit
             }px) rotate(120deg)`,
 
-            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_3.png)`,
+            backgroundImage: `url(${process.env.REACT_APP_URL_FRONTED}/casillas/puertos/puerto_3.png)`,
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
@@ -1668,7 +1668,7 @@ function Partida() {
               init_left_board + -3 * left_variation_unit
             }px) rotate(0deg)`,
 
-            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_3.png)`,
+            backgroundImage: `url(${process.env.REACT_APP_URL_FRONTED}/casillas/puertos/puerto_3.png)`,
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
@@ -1694,7 +1694,7 @@ function Partida() {
               init_left_board + -3 * left_variation_unit
             }px) rotate(-120deg)`,
 
-            backgroundImage: `url(http://localhost:3000/casillas/puertos/puerto_3.png)`,
+            backgroundImage: `url(${process.env.REACT_APP_URL_FRONTED}/casillas/puertos/puerto_3.png)`,
           }}
           onClick={() => {
             if (turno == mi_id && fase_actual === "TRADING") {
@@ -1838,7 +1838,7 @@ function Partida() {
               // carta_carreteras();
             }}
           >
-            <img src="http://localhost:3000/iconos-no-recursos/comerciar-banco.png" />
+            <img src={`${process.env.REACT_APP_URL_FRONTED}/iconos-no-recursos/comerciar-banco.png`} />
           </button>
         </div>
       )}
@@ -1868,8 +1868,8 @@ function Partida() {
         style={{
           backgroundImage: `url(${
             turno == mi_id && aldeas_iniciales_colocadas
-              ? "http://localhost:3000/skips/skip_on.png"
-              : "http://localhost:3000/skips/skip_off.png"
+              ? `${process.env.REACT_APP_URL_FRONTED}/skips/skip_on.png`
+              : `${process.env.REACT_APP_URL_FRONTED}/skips/skip_off.png`
           })`,
           backgroundSize: "cover",
           position: "absolute",
