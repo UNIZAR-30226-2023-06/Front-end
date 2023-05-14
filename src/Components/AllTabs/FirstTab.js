@@ -73,12 +73,12 @@ const FirstTab = ( params ) => {
   /****************************************************************************/
 
   // Cada segundo bajo al fondo del chat
-  useEffect(() => {
-    const interval = setInterval(() => {
-      messages.scrollTop = messages.scrollHeight;
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     messages.scrollTop = messages.scrollHeight;
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // }, []);
   
 
   /****************************************************************************/
