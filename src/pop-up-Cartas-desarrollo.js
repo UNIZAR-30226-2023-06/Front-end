@@ -215,7 +215,6 @@ const PopUpCartasDesarrollo = (params) => {
   }
 
   function GetNumCartas() {
-    console.log(params.lobby);
     fetch(
       `${process.env.REACT_APP_URL_BACKEND}/game_phases/get_player_state?lobby_id=${params.lobby}`,
       {

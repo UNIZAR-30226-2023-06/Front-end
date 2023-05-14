@@ -301,6 +301,15 @@ function Partida() {
               setColocando_ladron(true);
             }
 
+            // Si no es mi turno o la fase de RESOURCE_PRODUCTION, pongo el booleano
+            // ladronYaColocado a false
+            if (
+              data.player_turn !== mi_id ||
+              data.turn_phase !== "RESOURCE_PRODUCTION"
+            ) {
+              setLadronYaColocado(false);
+            }
+
             // Si recibo del global_info que se está colocando el ladron, lo pongo a true
             if (global_info.colocando_ladron && !ladronYaColocado) {
               setColocando_ladron(true);
