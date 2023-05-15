@@ -95,7 +95,7 @@ export default function Login() {
           rel="noopener noreferrer"
           className="w-full text-sm text-right py-2.5 text-cyan-900 decoration-cyan-900 underline underline-offset-2"
         >
-          Recuperar Contraseña
+          Obtener nueva contraseña
         </Link>
         <button
           type="submit"
