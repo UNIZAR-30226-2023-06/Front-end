@@ -26,7 +26,6 @@ export default function EditarPerfil() {
   const styleCruzOff = "transition-all duration-900 hidden";
   const styleLinks = "gap-3 mt-2 ml-1 flex flex-grow relative ";
   const [screenSize, setScreenSize] = useState(window.innerWidth);
-
   const [dinero, set_dinero] = React.useState(null);
   const [nombre, set_nombre] = React.useState(null);
   const [codigo, set_codigo] = React.useState(null);
@@ -36,7 +35,8 @@ export default function EditarPerfil() {
   const [nummensajes, set_nummensajes] = React.useState(null);
   const [elo, set_elo] = React.useState(null);
   const navigate = useNavigate();
-
+  const [inputValue, setInputValue] = useState("");
+  const [error, setError] = useState("");
   const [cookies, setCookie] = useCookies(["token"]); // Agregamos removeCookie
 
   const responsive = {
@@ -317,7 +317,9 @@ export default function EditarPerfil() {
     items_fichas = fichas.map((foto, i) => (
       <div className="slide_tienda">
         <img
-          src={"http://localhost:3000/fotos-tienda-urbanizacion/" + foto + ".png"}
+          src={
+            "http://localhost:3000/fotos-tienda-urbanizacion/" + foto + ".png"
+          }
           className="rounded-full bg-cyan-900 hover:cursor-pointer mt-4"
           name={foto}
           onClick={(event) => {
@@ -346,6 +348,24 @@ export default function EditarPerfil() {
       </div>
     ));
   }
+
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleNameChange = () => {
+    if (inputValue.trim() === "") {
+      setError("Debes ingresar un nombre");
+      return;
+    }
+
+    // Aquí puedes realizar las acciones necesarias para cambiar el nombre
+    // por ejemplo, enviar una solicitud al servidor, actualizar la variable `name`, etc.
+
+    // Reiniciar los valores del campo de texto y del mensaje de error
+    setInputValue("");
+    setError("");
+  };
 
   return (
     /* --------------------------- fondo de las montañas --------------------------- */
@@ -588,112 +608,155 @@ export default function EditarPerfil() {
           setDesplegado(true);
         }}
       />
-      {/* --------------------------- pagina ---------------------------*/}
-      <div>
-        <Popup
-          trigger={
-            /************ LO QUE VA AQUI ES LO QUE SACA LA POPUP ************/
-            <div>
-              <img
-                alt="profil"
-                src={imagen}
-                className={`ml-10 object-cover rounded-full h-60 w-60 mt-9 bg-cyan-900 hover:cursor-pointer`}
-              />
-            </div>
-          }
-          modal
-          nested
-          arrow={false}
-          contentStyle={{
-            width: "60%",
-            height: "45%",
-            border: "5px solid black",
-            borderRadius: "10px",
-          }}
-        >
-          {(close) => (
-            /************ LO QUE VA AQUI ES LO QUE HAY DENTRO DE LA POP UP ************/
-            <div className="justify-center gap-10 mt-8 mx-2 ml-2">
-              <AliceCarousel
-                mouseTracking
-                items={items_fotos_perfil}
-                responsive={responsive}
-                controlsStrategy="alternate"
-              />
-            </div>
-          )}
-        </Popup>
-      </div>
 
-      <div>
-        <Popup
-          trigger={
-            /************ LO QUE VA AQUI ES LO QUE SACA LA POPUP ************/
-            <div>
-              <img
-                alt="profil"
-                src={skin}
-                className={`ml-10 object-cover rounded-full h-60 w-60 mt-9 bg-cyan-900 hover:cursor-pointer`}
-              />
-            </div>
-          }
-          modal
-          nested
-          arrow={false}
-          contentStyle={{
-            width: "60%",
-            height: "45%",
-            border: "5px solid black",
-            borderRadius: "10px",
-          }}
+      <h1 className="m-14">
+        <div
+          className="bg-cyan-900/60 rounded-lg p-4 inline-flex flex-col items-center h-4/5"
+          style={{ minHeight: "800px", minWidth: "1290px" }}
         >
-          {(close) => (
-            /************ LO QUE VA AQUI ES LO QUE HAY DENTRO DE LA POP UP ************/
-            <div className="justify-center gap-10 mt-8 mx-2 ml-2">
-              <AliceCarousel
-                mouseTracking
-                items={items_skin}
-                responsive={responsive}
-                controlsStrategy="alternate"
-              />
+          {" "}
+          <div
+            className="overflow-y-scroll opacity-95 bg-cyan-900 rounded-xl shadow-xl"
+            style={{
+              width: "1200px",
+              height: "calc(100% - 200px)",
+              overflow: "auto",
+              position: "relative",
+              margin: "20px",
+            }}
+          >
+            {/* --------------------------- pagina ---------------------------*/}
+            <div>
+              <Popup
+                trigger={
+                  /************ LO QUE VA AQUI ES LO QUE SACA LA POPUP ************/
+                  <div className="flex items-center">
+                    <img
+                      alt="profil"
+                      src={imagen}
+                      className={`ml-10 object-cover rounded-full h-60 w-60 mt-9 bg-cyan-900 hover:cursor-pointer`}
+                    />
+                    <div className="ml-5">
+                      <h1 className="text-white font-medium text-xl mb-2">
+                        Foto de perfil
+                      </h1>
+                    </div>
+                  </div>
+                }
+                modal
+                nested
+                arrow={false}
+                contentStyle={{
+                  width: "60%",
+                  height: "45%",
+                  border: "5px solid black",
+                  borderRadius: "10px",
+                }}
+              >
+                {(close) => (
+                  /************ LO QUE VA AQUI ES LO QUE HAY DENTRO DE LA POP UP ************/
+                  <div className="justify-center gap-10 mt-8 mx-2 ml-2">
+                    <AliceCarousel
+                      mouseTracking
+                      items={items_fotos_perfil}
+                      responsive={responsive}
+                      controlsStrategy="alternate"
+                    />
+                  </div>
+                )}
+              </Popup>
             </div>
-          )}
-        </Popup>
 
-        <Popup
-          trigger={
-            /************ LO QUE VA AQUI ES LO QUE SACA LA POPUP ************/
             <div>
-              <img
-                alt="profil"
-                src={ficha}
-                className={`ml-10 object-cover rounded-full h-60 w-60 mt-9 bg-cyan-900 hover:cursor-pointer`}
+              <h1 className="text-white  font-medium text-xl text-center mr-10 mt-5">
+                Cambio de nombre
+              </h1>
+              <input
+                type="text"
+                value={inputValue}
+                onChange={handleInputChange}
+                placeholder={`Tu nombre actual: ${nombre}`}
+                className="mb-4"
               />
+              {error && <p>{error}</p>}
             </div>
-          }
-          modal
-          nested
-          arrow={false}
-          contentStyle={{
-            width: "60%",
-            height: "45%",
-            border: "5px solid black",
-            borderRadius: "10px",
-          }}
-        >
-          {(close) => (
-            /************ LO QUE VA AQUI ES LO QUE HAY DENTRO DE LA POP UP ************/
-            <div className="justify-center gap-10 mt-8 mx-2 ml-2">
-              <AliceCarousel
-                mouseTracking
-                items={items_fichas}
-                responsive={responsive}
-                controlsStrategy="alternate"
-              />
-            </div>
-          )}
-        </Popup>
-      </div>
+            <button
+              onClick={handleNameChange}
+              className="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
+            >
+              Cambiar nombre
+            </button>
+
+            <Popup
+              trigger={
+                /************ LO QUE VA AQUI ES LO QUE SACA LA POPUP ************/
+                <div>
+                  <img
+                    alt="profil"
+                    src={skin}
+                    className={`ml-10 object-cover rounded-full h-60 w-60 mt-9 bg-cyan-900 hover:cursor-pointer`}
+                  />
+                </div>
+              }
+              modal
+              nested
+              arrow={false}
+              contentStyle={{
+                width: "60%",
+                height: "45%",
+                border: "5px solid black",
+                borderRadius: "10px",
+              }}
+            >
+              {(close) => (
+                /************ LO QUE VA AQUI ES LO QUE HAY DENTRO DE LA POP UP ************/
+                <div className="justify-center gap-10 mt-8 mx-2 ml-2">
+                  <AliceCarousel
+                    mouseTracking
+                    items={items_skin}
+                    responsive={responsive}
+                    controlsStrategy="alternate"
+                  />
+                </div>
+              )}
+            </Popup>
+
+            <Popup
+              trigger={
+                /************ LO QUE VA AQUI ES LO QUE SACA LA POPUP ************/
+                <div>
+                  <img
+                    alt="profil"
+                    src={ficha}
+                    className={`ml-10 object-cover rounded-full h-60 w-60 mt-9 bg-cyan-900 hover:cursor-pointer`}
+                  />
+                </div>
+              }
+              modal
+              nested
+              arrow={false}
+              contentStyle={{
+                width: "60%",
+                height: "45%",
+                border: "5px solid black",
+                borderRadius: "10px",
+              }}
+            >
+              {(close) => (
+                /************ LO QUE VA AQUI ES LO QUE HAY DENTRO DE LA POP UP ************/
+                <div className="justify-center gap-10 mt-8 mx-2 ml-2">
+                  <AliceCarousel
+                    mouseTracking
+                    items={items_fichas}
+                    responsive={responsive}
+                    controlsStrategy="alternate"
+                  />
+                </div>
+              )}
+            </Popup>
+          </div>
+        </div>
+      </h1>
     </div>
   );
 }
