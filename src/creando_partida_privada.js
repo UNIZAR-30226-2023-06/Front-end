@@ -83,10 +83,8 @@ export default function Creando_partida_privada() {
   const [lobby, setLobby] = useState(0);
   const [lobbyCreado, setLobbyCreado] = useState(false);
 
-  const [partida, setPartida] = useState(null);
-
   // ----------------------- creamos un lobby si no esta creado -----------------------------------
-  const {} = useQuery(
+  const { } = useQuery(
     ["get-create-lobby"],
     async () => {
       const res = await fetch(
@@ -161,7 +159,7 @@ export default function Creando_partida_privada() {
     ["get-state-game"],
     async () => {
       const res = await fetch(
-        `${process.env.REACT_APP_URL_BACKEND}/game_phases/get_game_state?lobby_id=${codigo}`,
+        `${process.env.REACT_APP_URL_BACKEND}/get-lobby-from-player`,
         {
           method: "GET",
           headers: {
@@ -170,75 +168,105 @@ export default function Creando_partida_privada() {
           },
         }
       )
-      .then((res_2) => {
-        res_2.json().then((data) => {
-          // console.log("JSON de la partida: ", data);
-          setPartida(data);
+        .then((res) => {
+          res.json().then((data) => {
+            console.log("JSON de la partida: ", data);
+            setJugadores(data.game.jugadores);
+            setLobby(data.id);
+            actualizar_jugadores();
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
         });
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      }
-      );
+      return 0;
     },
     {
-      refetchInterval: 1000,
+      refetchInterval: 2000,
 
       // codigo debe ser distinto de 0
       enabled: codigo !== 0,
     }
   );
 
+  function unirseSalaPrivada(e) {
+    console.log(e);
+    console.log("nos unimos al lobby: ",e);
+    fetch(`${process.env.REACT_APP_URL_BACKEND}/join-lobby?lobby_id=${e}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Bearer ${Token}`,
+      },
+    })
+      .then((res) => {
+        res.json().then((data) => {
+          if (res.status === 404) {
+            // error al entrar en el lobby
+            toast.error("No existe el lobby introducido");
+          } else if (data.detail === "Lobby joined") {
+            console.log("partida aceptada");
+          
+            // Me redirijo a la partida con href
+            window.location.href = `${process.env.REACT_APP_URL_FRONTED}/partida`;
+          } else {
+            toast.error("ya estas en un lobby :(");
+          }
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+
   // ------------------------------------------- actualizamos a los jugadores ------------------------
 
   function actualizar_jugadores() {
-    // Pongo el nombre de los jugadores en la sala
-    if (jugadores[0].nombre === null) {
-      setTexto_jugador1(
-        "Usa el código de la partida para invitar a más jugadores"
-      );
-      setTamano_texto_jugador_1("19px");
-      setMostrar_img_jugador_1(false);
-    } else {
-      setTexto_jugador1(jugadores[0].nombre);
-      setTamano_texto_jugador_1("");
-      setMostrar_img_jugador_1(true);
+    // Recorro los jugadores que hay y actualizo todo
+    for (let i = 0; i < jugadores.length; i++) {
+      if (i == 0) {
+        setTexto_jugador1("#" + jugadores[0].id.toString());
+        setTamano_texto_jugador_1("");
+        setMostrar_img_jugador_1(true);
+      }
+      if (i == 1) {
+        setTexto_jugador2("#" + jugadores[1].id.toString());
+        setTamano_texto_jugador_2("");
+        setMostrar_img_jugador_2(true);
+      }
+      if (i == 2) {
+        setTexto_jugador3("#" + jugadores[2].id.toString());
+        setTamano_texto_jugador_3("");
+        setMostrar_img_jugador_3(true);
+      }
+      if (i == 3) {
+        setTexto_jugador4("#" + jugadores[3].id.toString());
+        setTamano_texto_jugador_4("");
+        setMostrar_img_jugador_4(true);
+      }
     }
 
-    if (jugadores[1].nombre === null) {
-      setTexto_jugador2(
-        "Usa el código de la partida para invitar a más jugadores"
-      );
-      setTamano_texto_jugador_2("19px");
-      setMostrar_img_jugador_2(false);
-    } else {
-      setTexto_jugador2(jugadores[1].nombre);
-      setTamano_texto_jugador_2("");
-      setMostrar_img_jugador_2(true);
-    }
-
-    if (jugadores[2].nombre === null) {
-      setTexto_jugador3(
-        "Usa el código de la partida para invitar a más jugadores"
-      );
-      setTamano_texto_jugador_3("19px");
-      setMostrar_img_jugador_3(false);
-    } else {
-      setTexto_jugador3(jugadores[2].nombre);
-      setTamano_texto_jugador_3("");
-      setMostrar_img_jugador_3(true);
-    }
-
-    if (jugadores[3].nombre === null) {
-      setTexto_jugador4(
-        "Usa el código de la partida para invitar a más jugadores"
-      );
-      setTamano_texto_jugador_4("19px");
-      setMostrar_img_jugador_4(false);
-    } else {
-      setTexto_jugador4(jugadores[3].nombre);
-      setTamano_texto_jugador_4("");
-      setMostrar_img_jugador_4(true);
+    for (let i = jugadores.length; i < 4; i++) {
+      if (i == 0) {
+        setTexto_jugador1("Usa el código de la partida para invitar a más jugadores");
+        setTamano_texto_jugador_1("19px");
+        setMostrar_img_jugador_1(false);
+      }
+      if (i == 1) {
+        setTexto_jugador2("Usa el código de la partida para invitar a más jugadores");
+        setTamano_texto_jugador_2("19px");
+        setMostrar_img_jugador_2(false);
+      }
+      if (i == 2) {
+        setTexto_jugador3("Usa el código de la partida para invitar a más jugadores");
+        setTamano_texto_jugador_3("19px");
+        setMostrar_img_jugador_3(false);
+      }
+      if (i == 3) {
+        setTexto_jugador4("Usa el código de la partida para invitar a más jugadores");
+        setTamano_texto_jugador_4("19px");
+        setMostrar_img_jugador_4(false);
+      }
     }
   }
   /* --------------------------- seguridad  --------------------------- */
@@ -310,7 +338,7 @@ export default function Creando_partida_privada() {
         .catch((error) => {
           console.error("Error:", error);
         });
-      
+
     } else {
       // ponemos el ladron a false 
       fetch(
@@ -345,7 +373,7 @@ export default function Creando_partida_privada() {
 
       // Ejemplo de url: 
       // `${process.env.REACT_APP_URL_BACKEND}/set-time-per-turn?Lobyb_id=${lobby}&time=${tiempo_de_turno}`
-      
+
       console.log("tiempo de turno ", tiempo_de_turno);
       fetch(
         `${process.env.REACT_APP_URL_BACKEND}/set-time-per-turn?Lobyb_id=${lobby}&time=${tiempo_de_turno}`,
@@ -368,20 +396,98 @@ export default function Creando_partida_privada() {
     }
   }, [tiempo_de_turno]);
 
+  // ---------------------------------------  para que se actualicen los puntos de victoria  ------------------------------------
+
+  // Actualizamos el valor de los puntos de victoria cuando cambia
+  useEffect(() => {
+    if (tiempo_de_turno !== null) {
+
+      // Ejemplo de url: 
+      // `${process.env.REACT_APP_URL_BACKEND}/set-time-per-turn?Lobyb_id=${lobby}&time=${puntos_de_victoria}`
+
+      fetch(
+        `${process.env.REACT_APP_URL_BACKEND}/set-points-to-win?Lobyb_id=${lobby}&points=${puntos_de_victoria}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            // Authorization: `Bearer ${Token}`,
+          },
+        }
+      )
+        .then((res) => {
+          res.json().then((data) => {
+            console.log(data.detail);
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  }, [puntos_de_victoria]);
+
+  // ---------------------------------------  para que se actualicen el numerp de jugadores  ------------------------------------
+
+  // Actualizamos el número de jugadores cuando cambia
 
   useEffect(() => {
-    console.log(
-      "El nuevo valor del puntos_de_victoria es: ",
-      puntos_de_victoria
-    );
-    console.log(
-      "El nuevo valor del numero_de_jugadores es: ",
-      numero_de_jugadores
-    );
+    if (numero_de_jugadores !== null) {
+      console.log("numero de jugadores ", numero_de_jugadores);
+
+      // Ejemplo de url:
+      // http://localhost:8000/set-max-players?Lobyb_id=1234&max_players=1234
+
+      fetch(
+        `${process.env.REACT_APP_URL_BACKEND}/set-max-players?Lobyb_id=${lobby}&max_players=${numero_de_jugadores}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            // Authorization: `Bearer ${Token}`,
+          },
+        }
+      )
+        .then((res) => {
+          res.json().then((data) => {
+            console.log(data.detail);
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  }, [numero_de_jugadores]);
+
+  // ---------------------------------------  para que se actualicen el mapa ------------------------------------
+
+
+  useEffect(() => {
     console.log("El nuevo valor del tablero_aleatorio es: ", tablero_aleatorio);
+
+    // Ejemplo de url:
+    // http://localhost:8000/set-board?Lobyb_id=1234&board=default
+
+    fetch(
+      `${process.env.REACT_APP_URL_BACKEND}/set-board?Lobyb_id=${lobby}&board=${tablero_aleatorio ? "random" : "default"}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          // Authorization: `Bearer ${Token}`,
+        },
+      }
+    )
+      .then((res) => {
+        res.json().then((data) => {
+          console.log(data.detail);
+        });
+      }
+      )
+      .catch((error) => {
+        console.error("Error:", error);
+      }
+      );
   }, [
-    puntos_de_victoria,
-    numero_de_jugadores,
     tablero_aleatorio,
     lobby,
   ]);
@@ -439,10 +545,9 @@ export default function Creando_partida_privada() {
   }, [json_token.id]);
 
   // ---------------------- si el lider sala del crear borramos la sala ----------------------------------
-  function borrarSala () {
+  function borrarSala() {
     fetch(
-      `${process.env.REACT_APP_URL_BACKEND}/delete-lobby?lobby_id=${
-        lobby
+      `${process.env.REACT_APP_URL_BACKEND}/delete-lobby?lobby_id=${lobby
       }`,
       {
         method: "DELETE",
@@ -454,8 +559,6 @@ export default function Creando_partida_privada() {
     )
       .then((res) => {
         res.json().then((data) => {
-          console.log("-----------------", data);
-
         });
       })
       .catch((error) => {
@@ -471,15 +574,14 @@ export default function Creando_partida_privada() {
         className={`over_SideBaar relative h-full ${
           // si la ventana es pequeña o desplegado falso que no se vea
           screenSize < 720 && !desplegado ? styleSidebarOff : styleSidebarOn
-        }`}
+          }`}
       >
         {/* --------------------------- cruz de cerrar menu --------------------------- */}
         <img
           src={`${process.env.REACT_APP_URL_FRONTED}/white_cross.png`}
           alt="imagen para cerrar la sidebar"
-          className={`hover:cursor-pointer ${
-            screenSize < 720 && desplegado ? styleCruzOn : styleCruzOff
-          }`}
+          className={`hover:cursor-pointer ${screenSize < 720 && desplegado ? styleCruzOn : styleCruzOff
+            }`}
           onClick={() => {
             setDesplegado(false);
           }}
@@ -692,9 +794,8 @@ export default function Creando_partida_privada() {
         <img
           src={`${process.env.REACT_APP_URL_FRONTED}/menu.png`}
           alt="menu desplegable, clicka aqui para desplegarlo"
-          className={`hover:cursor-pointer w-8 h-8 m-4 ${
-            screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
-          }`}
+          className={`hover:cursor-pointer w-8 h-8 m-4 ${screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
+            }`}
           onClick={() => {
             setDesplegado(true);
           }}
@@ -702,54 +803,91 @@ export default function Creando_partida_privada() {
         {/* --------------------------- botones centrales ---------------------------*/}
       </div>
       {/* mostramos el id de la sala */}
-      <h1 className="flex my-8 mx-auto justify-center text-6xl">
-        {" "}
-        Id de la sala: <b> {lobby} </b>{" "}
+      <h1 className="flex my-8 mx-auto text-6xl">
+        Id de la sala: <b> {lobby} </b>
       </h1>
 
-      <div className="estilo">
-        <a className="jugador_1" style={{ fontSize: tamano_texto_jugador_1 }}>
-          {nombre_jugador_1}
-          {mostrar_img_jugador_1 && (
-            <img
-              src={jugadores[0].img}
-              className="icono_jugador"
-              alt="icono_jugadores"
-            />
-          )}
-        </a>
+      <div className="flex m-auto">
+        {numero_de_jugadores >= 1 && <a className="jugador_1" style={{ fontSize: tamano_texto_jugador_1 }}>
+          <div className="flex m-auto gap-8 ml-4">
+            {mostrar_img_jugador_1 && (
+              <img
+                src={`${process.env.REACT_APP_URL_FRONTED}/dragones/shocked.png`}
+                style={{
+                  width: "65px",
+                  height: "65px",
+                }}
+                alt="icono_jugadores"
+                className="rounded-full bg-white"
+              />
+            )}
+            {nombre_jugador_1}
+          </div>
+        </a>}
 
-        <a className="jugador_2" style={{ fontSize: tamano_texto_jugador_2 }}>
-          {nombre_jugador_2}
+        {numero_de_jugadores >= 2 && <a className="jugador_2" style={{ fontSize: tamano_texto_jugador_2 }}>
+
           {mostrar_img_jugador_2 && (
             <img
-              src={jugadores[1].img}
-              className="icono_jugador"
+            src={`${process.env.REACT_APP_URL_FRONTED}/dragones/hello.png`}
               alt="icono_jugadores"
+              style={{
+                width: "65px",
+                height: "65px",
+              }}
+              className="rounded-full bg-white"
             />
           )}
-        </a>
-        <a className="jugador_3" style={{ fontSize: tamano_texto_jugador_3 }}>
-          {nombre_jugador_3}
+          <span className="mt-6">
+          {nombre_jugador_2}
+          </span>
+
+        </a>}
+
+        {numero_de_jugadores >= 3 && <a className="jugador_3" style={{ fontSize: tamano_texto_jugador_3 }}>
+
           {mostrar_img_jugador_3 && (
             <img
-              src={jugadores[2].img}
-              className="icono_jugador"
+            src={`${process.env.REACT_APP_URL_FRONTED}/dragones/peace.png`}
+              style={{
+                width: "65px",
+                height: "65px",
+              }}
               alt="icono_jugadores"
+              className="rounded-full bg-white"
             />
           )}
-        </a>
-        <a className="jugador_4" style={{ fontSize: tamano_texto_jugador_4 }}>
-          {nombre_jugador_4}
+          {nombre_jugador_3}
+
+        </a>}
+
+        {numero_de_jugadores >= 4 && <a className="jugador_4" style={{ fontSize: tamano_texto_jugador_4 }}>
+
           {mostrar_img_jugador_4 && (
             <img
-              src={jugadores[3].img}
-              className="icono_jugador"
+            src={`${process.env.REACT_APP_URL_FRONTED}/dragones/boring.png`}
+              style={{
+                width: "65px",
+                height: "65px",
+              }}
               alt="icono_jugadores"
+              className="rounded-full bg-white"
             />
           )}
-        </a>
+          {nombre_jugador_4}
+
+        </a>}
       </div>
+
+      {/* Boton para iniciar la partida */}
+      {jugadores.length == numero_de_jugadores && <button
+        className="flex text-6xl m-auto bg-cyan-900 hover:bg-cyan-700 text-white font-bold py-4 px-4 rounded-full absolute left-0 right-0 bottom-10 w-[440px]"
+        onClick={() => {
+          unirseSalaPrivada(codigo);
+        }}
+      >
+        Iniciar partida
+      </button>}
     </div>
   );
 }
