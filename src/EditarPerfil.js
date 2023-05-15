@@ -249,7 +249,7 @@ export default function EditarPerfil() {
     items_fotos_perfil = fotos_perfil.map((foto, i) => (
       <div className="slide_tienda">
         <img
-          src={`${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/" + foto + ".png`}
+          src={`${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/` + foto + `.png`}
           className="rounded-full bg-cyan-900 hover:cursor-pointer mt-4"
           name={foto}
           onClick={(event) => {
@@ -283,7 +283,7 @@ export default function EditarPerfil() {
     items_skin = skins.map((foto, i) => (
       <div className="slide_tienda">
         <img
-          src={`${process.env.REACT_APP_URL_FRONTED}/skin_mar/" + foto + ".png`}
+          src={`${process.env.REACT_APP_URL_FRONTED}/skin_mar/` + foto + `.png`}
           className="rounded-full bg-cyan-900 hover:cursor-pointer mt-4"
           name={foto}
           onClick={(event) => {
@@ -317,7 +317,7 @@ export default function EditarPerfil() {
     items_fichas = fichas.map((foto, i) => (
       <div className="slide_tienda">
         <img
-          src={`${process.env.REACT_APP_URL_FRONTED}/fotos-tienda-urbanizacion/" + foto + ".png`}
+          src={`${process.env.REACT_APP_URL_FRONTED}/fotos-tienda-urbanizacion/` + foto + `.png`}
           className="rounded-full bg-cyan-900 hover:cursor-pointer mt-4"
           name={foto}
           onClick={(event) => {
