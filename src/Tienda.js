@@ -86,7 +86,7 @@ export default function Tienda() {
     "skin13",
   ];
 
-  const skins_mar = ["skin0", "skin1", "skin2", "skin3"];
+  const skins_mar = ["skin0", "skin1", "skin2", "skin3", "skin4", "skin5", "skin6"];
 
   const fichas = ["skin0", "skin1", "skin2", "skin3"];
 
