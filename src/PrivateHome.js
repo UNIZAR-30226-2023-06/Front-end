@@ -26,9 +26,13 @@ export default function PrivateHome() {
   /* --------------------------- variables --------------------------- */
 
   const [desplegado, setDesplegado] = useState(true);
-  // true = spinner | false = bboton de aceptar o rechazar partida
+  // true = spinner | false = boton de aceptar o rechazar partida
   const [spinner_aceptar, set_spinner_aceptar] = useState(true);
+  // true = spinner | false = introducir código
+  const [spinner_partida_privada, setSpinner_partida_privada] = useState(false);
   const [buscandoPatida, set_buscandoPartida] = React.useState(false);
+  const [partidaEmpezada_privada, setPartidaEmpezada_privada] =
+    React.useState(false);
   const [partidaEmpezada, set_partidaEmpezada] = React.useState(false);
   const [meSaliYo, set_meSaliYo] = React.useState(false);
 
@@ -135,6 +139,47 @@ export default function PrivateHome() {
     }
   );
 
+  // esto es comprobar si la partida a comenzado pero para el caso de las partidas privadas
+  // se ha decidido duplicar código para que sea más sencillo de leer y de trabajar, además de aseurarse
+  // de que asi no se chafan funcionalidades y lo que ya iba sigue funcionando
+  const {} = useQuery(
+    //console.log("se esta ejecutando el segundo ")
+    ["get-lobby-from-player-private"],
+    async () => {
+      const res = await fetch(
+        `${process.env.REACT_APP_URL_BACKEND}/get-lobby-from-player`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${Token}`,
+          },
+        }
+      );
+      const data2 = await res.json();
+      console.log(data2);
+      if (data2.game_has_started) {
+        // el juego ha empezado asi que vamos al tablero!
+        console.log(data2.game_has_started);
+        window.location.href = `${process.env.REACT_APP_URL_FRONTED}/partida`;
+        setPartidaEmpezada_privada(false);
+      } else if (data2.detail === "Player not in any lobby") {
+        // el creador de la sala la ha borrado
+        console.log("La sala ya no existe porque el lider la ha borrado");
+        // queremos que se vuelva a poder introducir el código de una partida
+        setSpinner_partida_privada(false);
+        // ademas dejamos de ver si la partida ha comenzado
+        setPartidaEmpezada_privada(false);
+      }
+      return data2;
+    },
+    {
+      refetchInterval: 1000,
+      refetchUntil: (data) => data !== null,
+      enabled: partidaEmpezada_privada,
+    }
+  );
+
   // ¿Tenemos una partida en marcha?
 
   useEffect(() => {
@@ -149,9 +194,10 @@ export default function PrivateHome() {
         res.json().then((data) => {
           // Actualizamos el estado de cosas
           // --------------------------------------------------------------------------------------------------------------
-
-          console.log(data.detail);
-          if (data.detail !== "Player not in any lobby") {
+          if (
+            data.detail !== "Player not in any lobby" &&
+            data.game_has_started
+          ) {
             toast.custom((t) => (
               <div
                 className={`${
@@ -198,7 +244,7 @@ export default function PrivateHome() {
       });
   }, []);
 
-  /* --------------------------- canimacion spinner --------------------------- */
+  /* --------------------------- animacion spinner --------------------------- */
   const Spinner = () => {
     return (
       <div className="flex justify-center items-center">
@@ -280,6 +326,7 @@ export default function PrivateHome() {
 
   function cancelar_busqueda() {
     set_buscandoPartida(false);
+    setSpinner_partida_privada(false);
     fetch(`${process.env.REACT_APP_URL_BACKEND}/leave-lobby`, {
       method: "POST",
       headers: {
@@ -373,6 +420,7 @@ export default function PrivateHome() {
   /* ----------------------------- gestion de unirse a una sala privada ------------------------- */
   function unirseSalaPrivada(e) {
     console.log(e);
+    console.log("nos unimos al lobby: ",e);
     fetch(`${process.env.REACT_APP_URL_BACKEND}/join-lobby?lobby_id=${e}`, {
       method: "POST",
       headers: {
@@ -382,16 +430,19 @@ export default function PrivateHome() {
     })
       .then((res) => {
         res.json().then((data) => {
-          if ("Lobby joined" !== data.detail) {
+          if (res.status === 404) {
             // error al entrar en el lobby
             toast.error("No existe el lobby introducido");
-          } else if (true) {
-            // hay que mirar no hay conflicto que si no se lia
-          } else {
+          } else if (data.detail === "Lobby joined") {
             // ya estamos dentro del lobby
             toast.success(`Código introducido: ${e}`);
             // decimos que estamos listos :)
             onAceptarPartida();
+            console.log("partida aceptada");
+            setSpinner_partida_privada(true);
+            setPartidaEmpezada_privada(true);
+          } else {
+            toast.error("ya estas en un lobby :(");
           }
         });
       })
@@ -747,7 +798,7 @@ export default function PrivateHome() {
                 UNIRSE CON CÓDIGO
               </button>
             }
-            //onClose={() => cancelar_busqueda()}
+            onClose={() => cancelar_busqueda()}
             modal
             nested
             arrow={false}
@@ -789,7 +840,11 @@ export default function PrivateHome() {
                     unirseSalaPrivada(lobbyPrivado);
                   }}
                 >
-                  <div className="flex flex-col">
+                  <div
+                    className={`flex flex-col ${
+                      spinner_partida_privada ? "hidden" : ""
+                    }`}
+                  >
                     <input
                       id="idPartidaPrivada"
                       type="text"
@@ -806,6 +861,17 @@ export default function PrivateHome() {
                     >
                       ENTRAR EN SALA
                     </button>
+                  </div>
+                  <div
+                    className={` ${spinner_partida_privada ? "" : "hidden"}`}
+                  >
+                    <h1 className="flex justify-center items-center mt-6 text-2xl">
+                      ⚔ ¡Esperando a que el lider
+                    </h1>
+                    <h1 className="flex justify-center items-center mt-2 text-2xl">
+                      empiece la partida! ⚔
+                    </h1>
+                    <Spinner />
                   </div>
                 </form>
               </div>

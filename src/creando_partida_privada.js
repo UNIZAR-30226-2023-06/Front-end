@@ -62,8 +62,14 @@ export default function Creando_partida_privada() {
   const [mostrar_img_jugador_4, setMostrar_img_jugador_4] = useState(false);
 
   const [jugadores, setJugadores] = useState([
-    { img: `${process.env.REACT_APP_URL_FRONTED}/jugadores.png`, nombre: "Ayelen#1234" },
-    { img: `${process.env.REACT_APP_URL_FRONTED}/jugadores.png`, nombre: "Loreto#1234" },
+    {
+      img: `${process.env.REACT_APP_URL_FRONTED}/jugadores.png`,
+      nombre: "Ayelen#1234",
+    },
+    {
+      img: `${process.env.REACT_APP_URL_FRONTED}/jugadores.png`,
+      nombre: "Loreto#1234",
+    },
     { img: null, nombre: null },
     { img: null, nombre: null },
   ]);
@@ -76,6 +82,8 @@ export default function Creando_partida_privada() {
   const [tablero_aleatorio, setTablero_aleatorio] = useState(false);
   const [lobby, setLobby] = useState(0);
   const [lobbyCreado, setLobbyCreado] = useState(false);
+
+  const [partida, setPartida] = useState(null);
 
   // ----------------------- creamos un lobby si no esta creado -----------------------------------
   const {} = useQuery(
@@ -107,9 +115,9 @@ export default function Creando_partida_privada() {
               console.log(data.lobby_id);
               setLobby(data.lobby_id);
               // ya tenemos el lobby asi que ahora entramos en el
-
+              setLobbyCreado(true);
               fetch(
-                `${process.env.REACT_APP_URL_BACKEND}/join-lobby?lobby_id=${lobby}`,
+                `${process.env.REACT_APP_URL_BACKEND}/join-lobby?lobby_id=${data.lobby_id}`,
                 {
                   method: "POST",
                   headers: {
@@ -120,6 +128,7 @@ export default function Creando_partida_privada() {
               )
                 .then((res) => {
                   res.json().then((data) => {
+                    console.log("------------------------------------------------");
                     console.log(data.detail);
                   });
                 })
@@ -142,6 +151,41 @@ export default function Creando_partida_privada() {
     {
       refetchInterval: 1000,
       enabled: !lobbyCreado,
+    }
+  );
+
+  // Cada segundo, hago un fetch al backend para obtener el estado de la partida
+
+  // ------------------------------------------- obtener el estado de la partida -----------------------------------
+  useQuery(
+    ["get-state-game"],
+    async () => {
+      const res = await fetch(
+        `${process.env.REACT_APP_URL_BACKEND}/game_phases/get_game_state?lobby_id=${codigo}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${Token}`,
+          },
+        }
+      )
+      .then((res_2) => {
+        res_2.json().then((data) => {
+          // console.log("JSON de la partida: ", data);
+          setPartida(data);
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      }
+      );
+    },
+    {
+      refetchInterval: 1000,
+
+      // codigo debe ser distinto de 0
+      enabled: codigo !== 0,
     }
   );
 
@@ -247,22 +291,97 @@ export default function Creando_partida_privada() {
 
   // ---------------------------------------  para que se actualicen los valores  ------------------------------------
   useEffect(() => {
+    if (ladron) {
+      console.log(lobby);
+      fetch(
+        `${process.env.REACT_APP_URL_BACKEND}/enable-thief?Lobyb_id=${lobby}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${Token}`,
+          },
+        }
+      )
+        .then((res) => {
+          res.json().then((data) => {
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+      
+    } else {
+      // ponemos el ladron a false 
+      fetch(
+        `${process.env.REACT_APP_URL_BACKEND}/disable-thief?Lobyb_id=${lobby}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${Token}`,
+          },
+        }
+      )
+        .then((res) => {
+          res.json().then((data) => {
+            console.log(data.detail);
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+
+    }
+  }, [
+    ladron,
+  ]);
+
+  // ---------------------------------------  para que se actualice el tiempo de turno  ------------------------------------
+
+  // Actualizamos el valor del tiempo cuando cambia
+  useEffect(() => {
+    if (tiempo_de_turno !== null) {
+
+      // Ejemplo de url: 
+      // `${process.env.REACT_APP_URL_BACKEND}/set-time-per-turn?Lobyb_id=${lobby}&time=${tiempo_de_turno}`
+      
+      console.log("tiempo de turno ", tiempo_de_turno);
+      fetch(
+        `${process.env.REACT_APP_URL_BACKEND}/set-time-per-turn?Lobyb_id=${lobby}&time=${tiempo_de_turno}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            // Authorization: `Bearer ${Token}`,
+          },
+        }
+      )
+        .then((res) => {
+          res.json().then((data) => {
+            console.log(data.detail);
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  }, [tiempo_de_turno]);
+
+
+  useEffect(() => {
     console.log(
       "El nuevo valor del puntos_de_victoria es: ",
       puntos_de_victoria
     );
-    console.log("El nuevo valor del tiempo_de_turno es: ", tiempo_de_turno);
     console.log(
       "El nuevo valor del numero_de_jugadores es: ",
       numero_de_jugadores
     );
-    console.log("El nuevo valor del ladron es: ", ladron);
     console.log("El nuevo valor del tablero_aleatorio es: ", tablero_aleatorio);
   }, [
     puntos_de_victoria,
-    tiempo_de_turno,
     numero_de_jugadores,
-    ladron,
     tablero_aleatorio,
     lobby,
   ]);
@@ -318,6 +437,31 @@ export default function Creando_partida_privada() {
         console.error("Error:", error);
       });
   }, [json_token.id]);
+
+  // ---------------------- si el lider sala del crear borramos la sala ----------------------------------
+  function borrarSala () {
+    fetch(
+      `${process.env.REACT_APP_URL_BACKEND}/delete-lobby?lobby_id=${
+        lobby
+      }`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          //Authorization: `Bearer ${Token}`,
+        },
+      }
+    )
+      .then((res) => {
+        res.json().then((data) => {
+          console.log("-----------------", data);
+
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
 
   return (
     /* --------------------------- fondo de las montañas --------------------------- */
@@ -538,6 +682,7 @@ export default function Creando_partida_privada() {
             href={`${process.env.REACT_APP_URL_FRONTED}/editarPerfil`}
             variant={Link}
             className={`text-white origin-center content-center font-medium text-xl`}
+            onClick={borrarSala}
           >
             ❌ Cancelar partida privada
           </h1>
