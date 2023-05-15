@@ -6,4 +6,7 @@ commands:
   - name: Build
     command: npm run build
 
-start: npm start
+  - name: Start
+    command: npx serve -s build
+
+#start: npm start
