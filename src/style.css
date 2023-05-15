@@ -325,7 +325,7 @@ h2 span:nth-of-type(7) {
 }
 
 .jugador_1 {
-  background-color: #e9d209;
+  background-color: #FA9820;
   border-radius: 15px;
 
   width: 20%;
@@ -351,7 +351,7 @@ h2 span:nth-of-type(7) {
 }
 
 .jugador_2 {
-  background-color: #3dd456;
+  background-color: #00a86b;
   border-radius: 15px;
 
   width: 20%;
@@ -366,10 +366,9 @@ h2 span:nth-of-type(7) {
   /* Cosas sobre el texto */
   font-size: 40px;
   font-weight: bold;
+  padding-left: 20px;
   display: flex;
   align-items: center;
-  padding-left: 20px;
-
   position: absolute;
 
   text-decoration: none;
@@ -377,7 +376,7 @@ h2 span:nth-of-type(7) {
 }
 
 .jugador_3 {
-  background-color: #e9091c;
+  background-color: #9d2933;
   border-radius: 15px;
 
   width: 20%;
@@ -403,7 +402,7 @@ h2 span:nth-of-type(7) {
 }
 
 .jugador_4 {
-  background-color: #e4e6e4;
+  background-color: #006db0;
   border-radius: 15px;
 
   width: 20%;
