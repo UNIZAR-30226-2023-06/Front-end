@@ -260,8 +260,8 @@ export default function PrivateHome() {
           // Actualizamos el estado de cosas
           const img =
             data.profile_picture === "default"
-              ? `https://catanic-web.up.railway.app/fotos_perfil/skin1.png`
-              : `/fotos_perfil/${data.profile_picture}.png`;
+              ? `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/skin1.png`
+              : `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/${data.profile_picture}.png`;
 
           set_dinero(data.coins);
           set_codigo(data.id);
@@ -383,16 +383,15 @@ export default function PrivateHome() {
       .then((res) => {
         res.json().then((data) => {
           if ("Lobby joined" !== data.detail) {
-            // error al entrar en el lobby 
+            // error al entrar en el lobby
             toast.error("No existe el lobby introducido");
-          }  else if(true) {
-              // hay que mirar no hay conflicto que si no se lia 
-          }
-          else {
-            // ya estamos dentro del lobby 
+          } else if (true) {
+            // hay que mirar no hay conflicto que si no se lia
+          } else {
+            // ya estamos dentro del lobby
             toast.success(`Código introducido: ${e}`);
             // decimos que estamos listos :)
-            onAceptarPartida(); 
+            onAceptarPartida();
           }
         });
       })
@@ -462,7 +461,10 @@ export default function PrivateHome() {
         </div>
         <ul className="flex flex-col w-full items-start py-6 px-4 gap-2">
           {/* --------------------------- volver al home --------------------------- */}
-          <a href={`${process.env.REACT_APP_URL_FRONTED}/home`} className={styleLinks}>
+          <a
+            href={`${process.env.REACT_APP_URL_FRONTED}/home`}
+            className={styleLinks}
+          >
             <img
               alt="profil"
               src={`${process.env.REACT_APP_URL_FRONTED}/home.png`}
@@ -478,7 +480,10 @@ export default function PrivateHome() {
             </h1>
           </a>
           {/* --------------------------- editar perfil --------------------------- */}
-          <a href={`${process.env.REACT_APP_URL_FRONTED}/editarPerfil`} className={styleLinks}>
+          <a
+            href={`${process.env.REACT_APP_URL_FRONTED}/editarPerfil`}
+            className={styleLinks}
+          >
             <img
               alt="profil"
               src={`${process.env.REACT_APP_URL_FRONTED}/editProfile.png`}
@@ -494,7 +499,10 @@ export default function PrivateHome() {
             </h1>
           </a>
           {/* --------------------------- amigos ---------------------------*/}
-          <a href={`${process.env.REACT_APP_URL_FRONTED}/amigosT`} className={styleLinks}>
+          <a
+            href={`${process.env.REACT_APP_URL_FRONTED}/amigosT`}
+            className={styleLinks}
+          >
             {/* imagen amigos*/}
             <img
               alt="profil"
@@ -520,7 +528,10 @@ export default function PrivateHome() {
             </h1>
           </a>
           {/* --------------------------- tienda --------------------------- */}
-          <a href={`${process.env.REACT_APP_URL_FRONTED}/tienda`} className={styleLinks}>
+          <a
+            href={`${process.env.REACT_APP_URL_FRONTED}/tienda`}
+            className={styleLinks}
+          >
             <img
               alt="profil"
               src={`${process.env.REACT_APP_URL_FRONTED}/shopping-cart.png`}
@@ -536,7 +547,10 @@ export default function PrivateHome() {
             </h1>
           </a>
           {/* --------------------------- Instrucciones --------------------------- */}
-          <a href={`/Instrucciones`} className={styleLinks}>
+          <a
+            href={`${process.env.REACT_APP_URL_FRONTED}/Instrucciones`}
+            className={styleLinks}
+          >
             <img
               alt="profil"
               src={`${process.env.REACT_APP_URL_FRONTED}/libro-abierto.png`}
@@ -801,7 +815,7 @@ export default function PrivateHome() {
         <button
           className="mt-20 w-80 flex h-20 btn_private_home "
           onClick={() => {
-            window.location.href = `/Partida_privada`;
+            window.location.href = `${process.env.REACT_APP_URL_FRONTED}/Partida_privada`;
           }}
         >
           CREAR PARTIDA CON AMIGOS
