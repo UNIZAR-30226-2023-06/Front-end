@@ -314,7 +314,7 @@ export default function Creando_partida_privada() {
 
   // ---------------------------------------  para que se actualicen los valores  ------------------------------------
   useEffect(() => {
-    if (ladron) {
+    if (!ladron) {
       console.log(lobby);
       fetch(
         `${process.env.REACT_APP_URL_BACKEND}/enable-thief?Lobyb_id=${lobby}`,
@@ -335,7 +335,6 @@ export default function Creando_partida_privada() {
         });
 
     } else {
-      // ponemos el ladron a false 
       fetch(
         `${process.env.REACT_APP_URL_BACKEND}/disable-thief?Lobyb_id=${lobby}`,
         {
@@ -710,7 +709,7 @@ export default function Creando_partida_privada() {
             variant={Link}
             className={`text-white origin-center content-center font-medium text-xl`}
           >
-            Ladrón
+            Quitar ladrón
           </h1>
           <label
             for="toggleFour1"

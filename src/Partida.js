@@ -113,6 +113,8 @@ function Partida() {
   const [coloresAlrededorLadron, setColoresAlrededorLadron] = useState([]);
   const [indicesAlrededorLadron, setIndicesAlrededorLadron] = useState([]);
 
+  const [ladronHabilitado, setLadronHabilitado] = useState(true);
+
   const ficha_con_id = [
     null,
     `${process.env.REACT_APP_URL_FRONTED}/casillas/madera.jpg`,
@@ -231,29 +233,6 @@ function Partida() {
             const maximo_jugadores = data.max_players;
             setMaxJugadores(data.max_players);
 
-            // Si un jugador ya ha conseguido 10 puntos, detengo las iteraciones
-            // if (data.player_0.victory_points >= 10) {
-            //   setPartidaTerminada(true);
-            //   setNombreGanador(data.player_0.name);
-            //   setIdGanador(data.player_0.id);
-            //   setImgGanador(id_to_img[data.player_0.id]);
-            // } else if (data.player_1.victory_points >= 10) {
-            //   setPartidaTerminada(true);
-            //   setNombreGanador(data.player_1.name);
-            //   setIdGanador(data.player_1.id);
-            //   setImgGanador(id_to_img[data.player_1.id]);
-            // } else if (data.player_2.victory_points >= 10) {
-            //   setPartidaTerminada(true);
-            //   setNombreGanador(data.player_2.name);
-            //   setIdGanador(data.player_2.id);
-            //   setImgGanador(id_to_img[data.player_2.id]);
-            // } else if (data.player_3.victory_points >= 10) {
-            //   setPartidaTerminada(true);
-            //   setNombreGanador(data.player_3.name);
-            //   setIdGanador(data.player_3.id);
-            //   setImgGanador(id_to_img[data.player_3.id]);
-            // }
-
             for (let i = 0; i < maximo_jugadores; i++) {
               if (data[`player_${i}`].victory_points >= data.victory_points_to_win) {
                 setPartidaTerminada(true);
@@ -263,12 +242,6 @@ function Partida() {
               }
             }
 
-            // const nuevos_jugadores = [
-            //   data.player_0,
-            //   data.player_1,
-            //   data.player_2,
-            //   data.player_3,
-            // ];
             let nuevos_jugadores = [];
             for (let i = 0; i < maximo_jugadores; i++) {
               let player = "player_" + i;
@@ -311,6 +284,8 @@ function Partida() {
             detectar_cambio_fase(data.turn_phase, data.player_turn);
             setTurno(data.player_turn);
 
+            setLadronHabilitado(data.thief_enabled);
+
             // Si la suma de los dos dados es 7, activo el booleano de colocando_ladron
             // También debe ser mi turno, la fase de RESOURCE_PRODUCTION y que el ladron
             // no haya sido colocado ya
@@ -318,7 +293,8 @@ function Partida() {
               data.die_1 + data.die_2 === 7 &&
               data.player_turn === mi_id &&
               data.turn_phase === "RESOURCE_PRODUCTION" &&
-              !ladronYaColocado
+              !ladronYaColocado &&
+              data.thief_enabled
             ) {
               setColocando_ladron(true);
             }
@@ -333,7 +309,7 @@ function Partida() {
             }
 
             // Si recibo del global_info que se está colocando el ladron, lo pongo a true
-            if (global_info.colocando_ladron && !ladronYaColocado) {
+            if (global_info.colocando_ladron && !ladronYaColocado && data.thief_enabled) {
               setColocando_ladron(true);
             }
 
@@ -401,8 +377,6 @@ function Partida() {
             let nuevos_colores_oponentes = [];
             let nuevos_ids_oponentes = [];
 
-              console.log("El maximo de jugardores es: ", lista_oponentes);
-
             for (let i = 0; i < maximo_jugadores - 1; i++) {
               const nueva_img_oponente =
                 lista_oponentes[i].profile_pic === "default"
@@ -437,7 +411,7 @@ function Partida() {
                 lista_oponentes[i].id,
               ];
             }
-            console.log("Hola :X");
+
             setImgs_oponentes(nueva_lista_imgs_oponentes);
             setPuntos_victoria_oponentes(nueva_lista_puntos_victoria_oponentes);
             setBono_caballeros_oponentes(nueva_lista_bono_caballeros_oponentes);
@@ -1341,7 +1315,7 @@ function Partida() {
 
               {/* Ladrón */}
               {/* NOTA: NO CAMBIAR EL == POR ===, SI NO NO FUNCIONA */}
-              {key == posicion_ladron && (
+              {key == posicion_ladron && ladronHabilitado && (
                 <img
                   src={`${process.env.REACT_APP_URL_FRONTED}/ladron.png`}
                   alt="ladron"
