@@ -418,6 +418,7 @@ export default function PrivateHome() {
   }
 
   /* ----------------------------- gestion de unirse a una sala privada ------------------------- */
+  
   function unirseSalaPrivada(e) {
     console.log(e);
     console.log("nos unimos al lobby: ",e);
@@ -704,7 +705,7 @@ export default function PrivateHome() {
           screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
         }`}
         onClick={() => {
-          setDesplegado(true);
+          setDesplegado(true); 
         }}
       />
       {/* --------------------------- botones centrales ---------------------------*/}
