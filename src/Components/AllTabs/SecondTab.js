@@ -128,7 +128,7 @@ const SecondTab = (params) => {
           }}
         >
           <img
-            src="http://localhost:3000/recursos/madera.png"
+            src={`${process.env.REACT_APP_URL_FRONTED}/recursos/madera.png`}
             alt="madera"
             width="30"
             height="30"
@@ -179,7 +179,7 @@ const SecondTab = (params) => {
           }}
         >
           <img
-            src="http://localhost:3000/recursos/arcilla.png"
+            src={`${process.env.REACT_APP_URL_FRONTED}/recursos/arcilla.png`}
             alt="madera"
             width="30"
             height="30"
@@ -240,7 +240,7 @@ const SecondTab = (params) => {
           }}
         >
           <img
-            src="http://localhost:3000/recursos/ovejas.png"
+            src={`${process.env.REACT_APP_URL_FRONTED}/recursos/ovejas.png`}
             alt="madera"
             width="30"
             height="30"
@@ -291,7 +291,7 @@ const SecondTab = (params) => {
           }}
         >
           <img
-            src="http://localhost:3000/recursos/trigo.png"
+            src={`${process.env.REACT_APP_URL_FRONTED}/recursos/trigo.png`}
             alt="madera"
             width="30"
             height="30"
@@ -347,7 +347,7 @@ const SecondTab = (params) => {
         }}
       >
         <img
-          src="http://localhost:3000/recursos/roca.png"
+          src={`${process.env.REACT_APP_URL_FRONTED}/recursos/roca.png`}
           alt="madera"
           width="30"
           height="30"
@@ -406,7 +406,7 @@ const SecondTab = (params) => {
             }}
           >
             <img
-              src="http://localhost:3000/iconos-no-recursos/poblado.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/iconos-no-recursos/poblado.png`}
               alt="madera"
               width="30"
               height="30"
@@ -431,7 +431,7 @@ const SecondTab = (params) => {
             }}
           >
             <img
-              src="http://localhost:3000/iconos-no-recursos/ciudad.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/iconos-no-recursos/ciudad.png`}
               alt="madera"
               width="30"
               height="30"
@@ -456,7 +456,7 @@ const SecondTab = (params) => {
             }}
           >
             <img
-              src="http://localhost:3000/iconos-no-recursos/carretera.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/iconos-no-recursos/carretera.png`}
               alt="madera"
               width="30"
               height="30"
@@ -481,7 +481,7 @@ const SecondTab = (params) => {
             }}
           >
             <img
-              src="http://localhost:3000/iconos-no-recursos/caballero.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/iconos-no-recursos/caballero.png`}
               alt="madera"
               width="30"
               height="30"
@@ -533,7 +533,7 @@ const SecondTab = (params) => {
             }}
           >
             <img
-              src="http://localhost:3000/iconos-no-recursos/punto_victoria.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/iconos-no-recursos/punto_victoria.png`}
               alt="madera"
               width="30"
               height="30"

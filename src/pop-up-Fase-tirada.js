@@ -22,12 +22,12 @@ const PopUpFaseTirada = (props) => {
   // };
 
   const Dados = [
-    "http://localhost:3000/dados/dado_1.png",
-    "http://localhost:3000/dados/dado_2.png",
-    "http://localhost:3000/dados/dado_3.png",
-    "http://localhost:3000/dados/dado_4.png",
-    "http://localhost:3000/dados/dado_5.png",
-    "http://localhost:3000/dados/dado_6.png",
+    `${process.env.REACT_APP_URL_FRONTED}/dados/dado_1.png`,
+    `${process.env.REACT_APP_URL_FRONTED}/dados/dado_2.png`,
+    `${process.env.REACT_APP_URL_FRONTED}/dados/dado_3.png`,
+    `${process.env.REACT_APP_URL_FRONTED}/dados/dado_4.png`,
+    `${process.env.REACT_APP_URL_FRONTED}/dados/dado_5.png`,
+    `${process.env.REACT_APP_URL_FRONTED}/dados/dado_6.png`,
   ];
 
   useEffect(() => {
@@ -120,7 +120,7 @@ const PopUpFaseTirada = (props) => {
             <div style={containerStyle}>
               {showDiceImage ? (
                 <img
-                  src="http://localhost:3000/dados.png"
+                  src={`${process.env.REACT_APP_URL_FRONTED}/dados.png`}
                   alt="Imagen 1"
                   style={{ height: "200px", width: "200px", marginTop: "70px" }}
                 />
@@ -178,7 +178,7 @@ const PopUpFaseTirada = (props) => {
                         }}
                       >
                         <img
-                          src="http://localhost:3000/oveja.png"
+                          src={`${process.env.REACT_APP_URL_FRONTED}/oveja.png`}
                           alt="Imagen 1"
                           style={{ height: "50px", width: "50px" }}
                         />
@@ -202,7 +202,7 @@ const PopUpFaseTirada = (props) => {
                         }}
                       >
                         <img
-                          src="http://localhost:3000/troncos.png"
+                          src={`${process.env.REACT_APP_URL_FRONTED}/troncos.png`}
                           alt="Imagen 1"
                           style={{ height: "50px", width: "50px" }}
                         />
@@ -226,7 +226,7 @@ const PopUpFaseTirada = (props) => {
                         }}
                       >
                         <img
-                          src="http://localhost:3000/cebada.png"
+                          src={`${process.env.REACT_APP_URL_FRONTED}/cebada.png`}
                           alt="Imagen 1"
                           style={{ height: "50px", width: "50px" }}
                         />
@@ -251,7 +251,7 @@ const PopUpFaseTirada = (props) => {
                         }}
                       >
                         <img
-                          src="http://localhost:3000/arcilla.png"
+                          src={`${process.env.REACT_APP_URL_FRONTED}/arcilla.png`}
                           alt="Imagen 1"
                           style={{ height: "50px", width: "50px" }}
                         />
@@ -275,7 +275,7 @@ const PopUpFaseTirada = (props) => {
                         }}
                       >
                         <img
-                          src="http://localhost:3000/piedras.png"
+                          src={`${process.env.REACT_APP_URL_FRONTED}/piedras.png`}
                           alt="Imagen 1"
                           style={{ height: "50px", width: "50px" }}
                         />

@@ -26,9 +26,13 @@ export default function PrivateHome() {
   /* --------------------------- variables --------------------------- */
 
   const [desplegado, setDesplegado] = useState(true);
-  // true = spinner | false = bboton de aceptar o rechazar partida
+  // true = spinner | false = boton de aceptar o rechazar partida
   const [spinner_aceptar, set_spinner_aceptar] = useState(true);
+  // true = spinner | false = introducir código
+  const [spinner_partida_privada, setSpinner_partida_privada] = useState(false);
   const [buscandoPatida, set_buscandoPartida] = React.useState(false);
+  const [partidaEmpezada_privada, setPartidaEmpezada_privada] =
+    React.useState(false);
   const [partidaEmpezada, set_partidaEmpezada] = React.useState(false);
   const [meSaliYo, set_meSaliYo] = React.useState(false);
 
@@ -39,6 +43,7 @@ export default function PrivateHome() {
   const [codigo, set_codigo] = React.useState(null);
   const [imagen, set_imagen] = React.useState(null);
   const [lobby, set_lobby] = React.useState(null);
+  const [lobbyPrivado, setLobbyPrivado] = React.useState(0);
   const [nummensajes, set_nummensajes] = React.useState(null);
   const [elo, set_elo] = React.useState(null);
   const navigate = useNavigate();
@@ -105,7 +110,7 @@ export default function PrivateHome() {
       console.log(data2);
       if (data2.game_has_started) {
         // el juego ha empezado asi que vamos al tablero!
-        window.location.href = "http://localhost:3000/partida";
+        window.location.href = `${process.env.REACT_APP_URL_FRONTED}/partida`;
         set_partidaEmpezada(false);
       } else if (data2.detail === "Player not in any lobby") {
         // alguien ha rechazado la partida
@@ -134,6 +139,47 @@ export default function PrivateHome() {
     }
   );
 
+  // esto es comprobar si la partida a comenzado pero para el caso de las partidas privadas
+  // se ha decidido duplicar código para que sea más sencillo de leer y de trabajar, además de aseurarse
+  // de que asi no se chafan funcionalidades y lo que ya iba sigue funcionando
+  const {} = useQuery(
+    //console.log("se esta ejecutando el segundo ")
+    ["get-lobby-from-player-private"],
+    async () => {
+      const res = await fetch(
+        `${process.env.REACT_APP_URL_BACKEND}/get-lobby-from-player`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${Token}`,
+          },
+        }
+      );
+      const data2 = await res.json();
+      console.log(data2);
+      if (data2.game_has_started) {
+        // el juego ha empezado asi que vamos al tablero!
+        console.log(data2.game_has_started);
+        window.location.href = `${process.env.REACT_APP_URL_FRONTED}/partida`;
+        setPartidaEmpezada_privada(false);
+      } else if (data2.detail === "Player not in any lobby") {
+        // el creador de la sala la ha borrado
+        console.log("La sala ya no existe porque el lider la ha borrado");
+        // queremos que se vuelva a poder introducir el código de una partida
+        setSpinner_partida_privada(false);
+        // ademas dejamos de ver si la partida ha comenzado
+        setPartidaEmpezada_privada(false);
+      }
+      return data2;
+    },
+    {
+      refetchInterval: 1000,
+      refetchUntil: (data) => data !== null,
+      enabled: partidaEmpezada_privada,
+    }
+  );
+
   // ¿Tenemos una partida en marcha?
 
   useEffect(() => {
@@ -148,9 +194,10 @@ export default function PrivateHome() {
         res.json().then((data) => {
           // Actualizamos el estado de cosas
           // --------------------------------------------------------------------------------------------------------------
-
-          console.log(data.detail);
-          if (data.detail !== "Player not in any lobby") {
+          if (
+            data.detail !== "Player not in any lobby" &&
+            data.game_has_started
+          ) {
             toast.custom((t) => (
               <div
                 className={`${
@@ -162,7 +209,7 @@ export default function PrivateHome() {
                     <div className="flex-shrink-0 pt-0.5">
                       <img
                         className="h-10 w-10 rounded-full"
-                        src="http://localhost:3000/fotos_perfil/skin14.png"
+                        src={`${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/skin14.png`}
                         alt=""
                       />
                     </div>
@@ -197,7 +244,7 @@ export default function PrivateHome() {
       });
   }, []);
 
-  /* --------------------------- canimacion spinner --------------------------- */
+  /* --------------------------- animacion spinner --------------------------- */
   const Spinner = () => {
     return (
       <div className="flex justify-center items-center">
@@ -259,8 +306,8 @@ export default function PrivateHome() {
           // Actualizamos el estado de cosas
           const img =
             data.profile_picture === "default"
-              ? "http://localhost:3000/fotos_perfil/skin1.png"
-              : `http://localhost:3000/fotos_perfil/${data.profile_picture}.png`;
+              ? `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/skin1.png`
+              : `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/${data.profile_picture}.png`;
 
           set_dinero(data.coins);
           set_codigo(data.id);
@@ -279,6 +326,7 @@ export default function PrivateHome() {
 
   function cancelar_busqueda() {
     set_buscandoPartida(false);
+    setSpinner_partida_privada(false);
     fetch(`${process.env.REACT_APP_URL_BACKEND}/leave-lobby`, {
       method: "POST",
       headers: {
@@ -369,6 +417,40 @@ export default function PrivateHome() {
     console.log("has llegado a tu destino ");
   }
 
+  /* ----------------------------- gestion de unirse a una sala privada ------------------------- */
+  function unirseSalaPrivada(e) {
+    console.log(e);
+    console.log("nos unimos al lobby: ",e);
+    fetch(`${process.env.REACT_APP_URL_BACKEND}/join-lobby?lobby_id=${e}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Bearer ${Token}`,
+      },
+    })
+      .then((res) => {
+        res.json().then((data) => {
+          if (res.status === 404) {
+            // error al entrar en el lobby
+            toast.error("No existe el lobby introducido");
+          } else if (data.detail === "Lobby joined") {
+            // ya estamos dentro del lobby
+            toast.success(`Código introducido: ${e}`);
+            // decimos que estamos listos :)
+            onAceptarPartida();
+            console.log("partida aceptada");
+            setSpinner_partida_privada(true);
+            setPartidaEmpezada_privada(true);
+          } else {
+            toast.error("ya estas en un lobby :(");
+          }
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+
   return (
     /* --------------------------- fondo de las montañas --------------------------- */
     <div className="w-full h-full flex imagenCustomPrivateHome">
@@ -381,7 +463,7 @@ export default function PrivateHome() {
       >
         {/* --------------------------- cruz de cerrar menu --------------------------- */}
         <img
-          src="http://localhost:3000/white_cross.png"
+          src={`${process.env.REACT_APP_URL_FRONTED}/white_cross.png`}
           alt="imagen para cerrar la sidebar"
           className={`hover:cursor-pointer ${
             screenSize < 720 && desplegado ? styleCruzOn : styleCruzOff
@@ -423,22 +505,25 @@ export default function PrivateHome() {
 
             <img
               alt="profil"
-              src="http://localhost:3000/white_dinero.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/white_dinero.png`}
               className={`w-6 h-6 ml-2`}
             />
           </h1>
         </div>
         <ul className="flex flex-col w-full items-start py-6 px-4 gap-2">
           {/* --------------------------- volver al home --------------------------- */}
-          <a href="http://localhost:3000/home" className={styleLinks}>
+          <a
+            href={`${process.env.REACT_APP_URL_FRONTED}/home`}
+            className={styleLinks}
+          >
             <img
               alt="profil"
-              src="http://localhost:3000/home.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/home.png`}
               className={`object-cover h-7 w-7`}
             />
 
             <h1
-              href="http://localhost:3000/editarPerfil"
+              href={`${process.env.REACT_APP_URL_FRONTED}/editarPerfil`}
               variant={Link}
               className={`text-white origin-center content-center font-medium text-xl`}
             >
@@ -446,15 +531,18 @@ export default function PrivateHome() {
             </h1>
           </a>
           {/* --------------------------- editar perfil --------------------------- */}
-          <a href="http://localhost:3000/editarPerfil" className={styleLinks}>
+          <a
+            href={`${process.env.REACT_APP_URL_FRONTED}/editarPerfil`}
+            className={styleLinks}
+          >
             <img
               alt="profil"
-              src="http://localhost:3000/editProfile.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/editProfile.png`}
               className={`object-cover h-7 w-7`}
             />
 
             <h1
-              href="http://localhost:3000/editarPerfil"
+              href={`${process.env.REACT_APP_URL_FRONTED}/editarPerfil`}
               variant={Link}
               className={`text-white origin-center content-center font-medium text-xl`}
             >
@@ -462,11 +550,14 @@ export default function PrivateHome() {
             </h1>
           </a>
           {/* --------------------------- amigos ---------------------------*/}
-          <a href="http://localhost:3000/amigosT" className={styleLinks}>
+          <a
+            href={`${process.env.REACT_APP_URL_FRONTED}/amigosT`}
+            className={styleLinks}
+          >
             {/* imagen amigos*/}
             <img
               alt="profil"
-              src="http://localhost:3000/friends.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/friends.png`}
               className={`object-cover h-7 w-7}`}
             />
             {nummensajes > 0 && (
@@ -488,15 +579,18 @@ export default function PrivateHome() {
             </h1>
           </a>
           {/* --------------------------- tienda --------------------------- */}
-          <a href="http://localhost:3000/tienda" className={styleLinks}>
+          <a
+            href={`${process.env.REACT_APP_URL_FRONTED}/tienda`}
+            className={styleLinks}
+          >
             <img
               alt="profil"
-              src="http://localhost:3000/shopping-cart.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/shopping-cart.png`}
               className={`object-cover h-7 w-7`}
             />
 
             <h1
-              href="http://localhost:3000/editarPerfil"
+              href={`${process.env.REACT_APP_URL_FRONTED}/editarPerfil`}
               variant={Link}
               className={`text-white origin-center content-center font-medium text-xl`}
             >
@@ -504,15 +598,18 @@ export default function PrivateHome() {
             </h1>
           </a>
           {/* --------------------------- Instrucciones --------------------------- */}
-          <a href="http://localhost:3000/Instrucciones" className={styleLinks}>
+          <a
+            href={`${process.env.REACT_APP_URL_FRONTED}/Instrucciones`}
+            className={styleLinks}
+          >
             <img
               alt="profil"
-              src="http://localhost:3000/libro-abierto.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/libro-abierto.png`}
               className={`object-cover h-7 w-7`}
             />
 
             <h1
-              href="http://localhost:3000/Instrucciones"
+              href={`${process.env.REACT_APP_URL_FRONTED}/Instrucciones`}
               variant={Link}
               className={`text-white origin-center content-center font-medium text-xl`}
             >
@@ -526,13 +623,13 @@ export default function PrivateHome() {
             onClick={() => {
               // "borramos" las cookies
               setCookie("token", "", { path: "/" });
-              window.location.href = "http://localhost:3000";
+              window.location.href = `${process.env.REACT_APP_URL_FRONTED}`;
             }}
           >
             {/* imagen log out*/}
             <img
               alt="profil"
-              src="http://localhost:3000/logout.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/logout.png`}
               className={`object-cover h-7 w-7`}
             />
 
@@ -592,7 +689,7 @@ export default function PrivateHome() {
             />
             <button className="px-4 py-2 rounded-full bg-cyan-900 hover:bg-slate-900 text-white w-12 h-10">
               <img
-                src="http://localhost:3000/add-friend.png"
+                src={`${process.env.REACT_APP_URL_FRONTED}/add-friend.png`}
                 alt="boton de añadir amigos"
               />
             </button>
@@ -601,7 +698,7 @@ export default function PrivateHome() {
       </div>
       {/* --------------------------- menu plegado --------------------------- */}
       <img
-        src="http://localhost:3000/menu.png"
+        src={`${process.env.REACT_APP_URL_FRONTED}/menu.png`}
         alt="menu desplegable, clicka aqui para desplegarlo"
         className={`hover:cursor-pointer w-8 h-8 m-4 ${
           screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
@@ -701,6 +798,7 @@ export default function PrivateHome() {
                 UNIRSE CON CÓDIGO
               </button>
             }
+            onClose={() => cancelar_busqueda()}
             modal
             nested
             arrow={false}
@@ -737,20 +835,25 @@ export default function PrivateHome() {
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
-                    toast.error("esto de momento es postu que no hace nada :)");
-                    toast.success(
-                      `Código introducido: ${e.target.idPartidaPrivada.value}`
-                    );
                     // comprobamos que la sala existe, y si es asi entonces vamos al lobby privado
+                    // en canto entramos en el lobby estamos readis para la partida
+                    unirseSalaPrivada(lobbyPrivado);
                   }}
                 >
-                  <div className="flex flex-col">
+                  <div
+                    className={`flex flex-col ${
+                      spinner_partida_privada ? "hidden" : ""
+                    }`}
+                  >
                     <input
                       id="idPartidaPrivada"
                       type="text"
                       placeholder="introduzca aqui el código de la sala privada, ej: 2345"
                       className="w-full border border-transparent border-b-black/25 bg-transparent focus:outline-none h-8 sm:h-10"
                       required
+                      onChange={(e) => {
+                        setLobbyPrivado(e.target.value);
+                      }}
                     />
                     <button
                       type="submit"
@@ -758,6 +861,17 @@ export default function PrivateHome() {
                     >
                       ENTRAR EN SALA
                     </button>
+                  </div>
+                  <div
+                    className={` ${spinner_partida_privada ? "" : "hidden"}`}
+                  >
+                    <h1 className="flex justify-center items-center mt-6 text-2xl">
+                      ⚔ ¡Esperando a que el lider
+                    </h1>
+                    <h1 className="flex justify-center items-center mt-2 text-2xl">
+                      empiece la partida! ⚔
+                    </h1>
+                    <Spinner />
                   </div>
                 </form>
               </div>
@@ -767,7 +881,7 @@ export default function PrivateHome() {
         <button
           className="mt-20 w-80 flex h-20 btn_private_home "
           onClick={() => {
-            window.location.href = "http://localhost:3000/Partida_privada";
+            window.location.href = `${process.env.REACT_APP_URL_FRONTED}/Partida_privada`;
           }}
         >
           CREAR PARTIDA CON AMIGOS

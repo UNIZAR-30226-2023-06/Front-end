@@ -85,10 +85,10 @@ function Sala_partida() {
       <code>
         {index.nombre}#{index.id}
       </code>
-      <img src="http://localhost:3000/jugadores.png" className="icono_jugadores" alt="icono_jugadores"/>
-      <img src="http://localhost:3000/ladron.png" className="icono_ladron" alt="icono_ladron"/>
-      <img src="http://localhost:3000/puntos_victoria.png" className="icono_puntos_victoria" alt="icono_puntos_victoria"/>
-      <img src="http://localhost:3000/tiempo_turno.png" className="icono_tiempo_turno" alt="icono_tiempo_turno"/>
+      <img src={`${process.env.REACT_APP_URL_FRONTED}/jugadores.png`} className="icono_jugadores" alt="icono_jugadores"/>
+      <img src={`${process.env.REACT_APP_URL_FRONTED}/ladron.png`} className="icono_ladron" alt="icono_ladron"/>
+      <img src={`${process.env.REACT_APP_URL_FRONTED}/puntos_victoria.png`} className="icono_puntos_victoria" alt="icono_puntos_victoria"/>
+      <img src={`${process.env.REACT_APP_URL_FRONTED}/tiempo_turno.png` }className="icono_tiempo_turno" alt="icono_tiempo_turno"/>
       <p className="num_jugadores">
         {index.num_jugadores}
       </p>
@@ -107,7 +107,7 @@ function Sala_partida() {
   return (
     <div className="estilo">
       {/* Flecha de retroceso */}
-      <img src="http://localhost:3000/flecha_retroceso.png" className="icono_retroceso" onClick={handleBack} alt="flecha_retroceso"/>
+      <img src={`${process.env.REACT_APP_URL_FRONTED}/flecha_retroceso.png`} className="icono_retroceso" onClick={handleBack} alt="flecha_retroceso"/>
 
       {/* Caja de texto para filtrar los resultados */}
       <input type="text" id="search-box" placeholder="      Codigo partida" onChange={(e) => setSearchTerm(e.target.value)} className="input_text"/>

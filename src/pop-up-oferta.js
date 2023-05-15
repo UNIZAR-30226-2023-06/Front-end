@@ -47,7 +47,7 @@ const PopUpOferta = (props) => {
           >
             <h1 className="text-3xl mt-2">OFERTA DE /*NOMBRE JUGADOR*/</h1>
             <img
-              src="http://localhost:3000/white_cross.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/white_cross.png`}
               alt="close"
               className="absolute top-0 right-0 cursor-pointer mt-3 mr-3"
               style={{ width: "50px", height: "50px" }}
@@ -64,7 +64,7 @@ const PopUpOferta = (props) => {
               >
                 <div className="mr-2">
                   <img
-                    src="http://localhost:3000/oveja.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/oveja.png`}
                     alt="oveja"
                     style={{ width: "65px", height: "65px" }}
                   />
@@ -77,7 +77,7 @@ const PopUpOferta = (props) => {
               >
                 <div className="mr-2">
                   <img
-                    src="http://localhost:3000/troncos.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/troncos.png`}
                     alt="troncos"
                     style={{ width: "65px", height: "65px" }}
                   />
@@ -90,7 +90,7 @@ const PopUpOferta = (props) => {
               >
                 <div className="mr-2">
                   <img
-                    src="http://localhost:3000/cebada.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/cebada.png`}
                     alt="cebada"
                     style={{ width: "65px", height: "65px" }}
                   />
@@ -103,7 +103,7 @@ const PopUpOferta = (props) => {
               >
                 <div className="mr-2">
                   <img
-                    src="http://localhost:3000/piedras.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/piedras.png`}
                     alt="piedras"
                     style={{ width: "65px", height: "65px" }}
                   />
@@ -116,7 +116,7 @@ const PopUpOferta = (props) => {
               >
                 <div className="mr-2">
                   <img
-                    src="http://localhost:3000/arcilla.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/arcilla.png`}
                     alt="arcilla"
                     style={{ width: "65px", height: "65px" }}
                   />
@@ -154,7 +154,7 @@ const PopUpOferta = (props) => {
                   }}
                 >
                   <img
-                    src="http://localhost:3000/oveja.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/oveja.png`}
                     alt="oveja"
                     style={{ width: "50px", height: "50px", marginTop: "22px" }}
                   />
@@ -175,7 +175,7 @@ const PopUpOferta = (props) => {
                   }}
                 >
                   <img
-                    src="http://localhost:3000/troncos.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/troncos.png`}
                     alt="oveja"
                     style={{ width: "50px", height: "50px", marginTop: "22px" }}
                   />
@@ -196,7 +196,7 @@ const PopUpOferta = (props) => {
                   }}
                 >
                   <img
-                    src="http://localhost:3000/cebada.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/cebada.png`}
                     alt="oveja"
                     style={{ width: "50px", height: "50px", marginTop: "22px" }}
                   />
@@ -217,7 +217,7 @@ const PopUpOferta = (props) => {
                   }}
                 >
                   <img
-                    src="http://localhost:3000/piedras.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/piedras.png`}
                     alt="oveja"
                     style={{ width: "50px", height: "50px", marginTop: "22px" }}
                   />
@@ -238,7 +238,7 @@ const PopUpOferta = (props) => {
                   }}
                 >
                   <img
-                    src="http://localhost:3000/arcilla.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/arcilla.png`}
                     alt="oveja"
                     style={{ width: "50px", height: "50px", marginTop: "22px" }}
                   />
@@ -266,7 +266,7 @@ const PopUpOferta = (props) => {
                   }}
                 >
                   <img
-                    src="http://localhost:3000/oveja.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/oveja.png`}
                     alt="oveja"
                     style={{ width: "50px", height: "50px", marginTop: "22px" }}
                   />
@@ -287,7 +287,7 @@ const PopUpOferta = (props) => {
                   }}
                 >
                   <img
-                    src="http://localhost:3000/troncos.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/troncos.png`}
                     alt="oveja"
                     style={{ width: "50px", height: "50px", marginTop: "22px" }}
                   />
@@ -308,7 +308,7 @@ const PopUpOferta = (props) => {
                   }}
                 >
                   <img
-                    src="http://localhost:3000/cebada.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/cebada.png`}
                     alt="oveja"
                     style={{ width: "50px", height: "50px", marginTop: "22px" }}
                   />
@@ -329,7 +329,7 @@ const PopUpOferta = (props) => {
                   }}
                 >
                   <img
-                    src="http://localhost:3000/piedras.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/piedras.png`}
                     alt="oveja"
                     style={{ width: "50px", height: "50px", marginTop: "22px" }}
                   />
@@ -350,7 +350,7 @@ const PopUpOferta = (props) => {
                   }}
                 >
                   <img
-                    src="http://localhost:3000/arcilla.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/arcilla.png`}
                     alt="oveja"
                     style={{ width: "50px", height: "50px", marginTop: "22px" }}
                   />

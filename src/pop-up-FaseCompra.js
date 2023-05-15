@@ -114,7 +114,7 @@ const PopUpFaseCompra = (props) => {
     <>
       {" "}
       <img
-        src="http://localhost:3000/tabla-de-costes.png"
+        src={`${process.env.REACT_APP_URL_FRONTED}/tabla-de-costes.png`}
         alt="Abrir Popup"
         className="cursor-pointer"
         onClick={handleOpen}
@@ -136,7 +136,7 @@ const PopUpFaseCompra = (props) => {
           >
             <h1 className="text-3xl mt-2">FASE DE COMPRA Y CONSTRUCCION</h1>
             <img
-              src="http://localhost:3000/white_cross.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/white_cross.png`}
               alt="close"
               className="absolute top-0 right-0 cursor-pointer mt-3 mr-3"
               style={{ width: "50px", height: "50px" }}
@@ -157,7 +157,7 @@ const PopUpFaseCompra = (props) => {
               >
                 <div className="mr-2">
                   <img
-                    src="http://localhost:3000/oveja.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/oveja.png`}
                     alt="oveja"
                     style={{ width: "65px", height: "65px" }}
                   />
@@ -170,7 +170,7 @@ const PopUpFaseCompra = (props) => {
               >
                 <div className="mr-2">
                   <img
-                    src="http://localhost:3000/troncos.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/troncos.png`}
                     alt="troncos"
                     style={{ width: "65px", height: "65px" }}
                   />
@@ -183,7 +183,7 @@ const PopUpFaseCompra = (props) => {
               >
                 <div className="mr-2">
                   <img
-                    src="http://localhost:3000/cebada.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/cebada.png`}
                     alt="cebada"
                     style={{ width: "65px", height: "65px" }}
                   />
@@ -196,7 +196,7 @@ const PopUpFaseCompra = (props) => {
               >
                 <div className="mr-2">
                   <img
-                    src="http://localhost:3000/piedras.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/piedras.png`}
                     alt="piedras"
                     style={{ width: "65px", height: "65px" }}
                   />
@@ -209,7 +209,7 @@ const PopUpFaseCompra = (props) => {
               >
                 <div className="mr-2">
                   <img
-                    src="http://localhost:3000/arcilla.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/arcilla.png`}
                     alt="arcilla"
                     style={{ width: "65px", height: "65px" }}
                   />
@@ -225,7 +225,7 @@ const PopUpFaseCompra = (props) => {
                 >
                   <div class="rounded-lg overflow-hidden">
                     <img
-                      src="http://localhost:3000/iconos-no-recursos/poblado.png"
+                      src={`${process.env.REACT_APP_URL_FRONTED}/iconos-no-recursos/poblado.png`}
                       alt="Foto 1"
                       style={{ height: "150px", width: "150px" }}
                     />
@@ -246,7 +246,7 @@ const PopUpFaseCompra = (props) => {
 
                 <div class="rounded-lg overflow-hidden ml-4">
                   <img
-                    src="http://localhost:3000/iconos-no-recursos/ciudad.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/iconos-no-recursos/ciudad.png`}
                     alt="Foto 2"
                     style={{ height: "150px", width: "150px" }}
                   />
@@ -267,7 +267,7 @@ const PopUpFaseCompra = (props) => {
               <div class="flex">
                 <div className="rounded-lg overflow-hidden">
                   <img
-                    src="http://localhost:3000/iconos-no-recursos/carretera.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/iconos-no-recursos/carretera.png`}
                     alt="Foto 3"
                     style={{ height: "150px", width: "150px" }}
                   />
@@ -286,7 +286,7 @@ const PopUpFaseCompra = (props) => {
                 </div>
                 <div className="rounded-lg overflow-hidden">
                   <img
-                    src="http://localhost:3000/iconos-no-recursos/carta-de-desarrollo.png"
+                    src={`${process.env.REACT_APP_URL_FRONTED}/iconos-no-recursos/carta-de-desarrollo.png`}
                     alt="Foto 4"
                     style={{
                       height: "150px",
@@ -314,7 +314,7 @@ const PopUpFaseCompra = (props) => {
             {props.children}
           </div>
           <img
-            src="http://localhost:3000/tabla-de-costes.png"
+            src={`${process.env.REACT_APP_URL_FRONTED}/tabla-de-costes.png`}
             alt="Foto 4"
             style={{
               height: "600px",

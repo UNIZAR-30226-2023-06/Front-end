@@ -313,62 +313,62 @@ const PopUpCartasDesarrollo = (params) => {
 
   const cartas = [
     {
-      src: "http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-1.png",
+      src: `${process.env.REACT_APP_URL_FRONTED}/cartas-desarrollo/carta-de-desarrollo-1.png`,
       alt: "Imagen 1",
     },
     {
-      src: "http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-2.png",
+      src: `${process.env.REACT_APP_URL_FRONTED}/cartas-desarrollo/carta-de-desarrollo-2.png`,
       alt: "Imagen 2",
     },
     {
-      src: "http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-3.png",
+      src: `${process.env.REACT_APP_URL_FRONTED}/cartas-desarrollo/carta-de-desarrollo-3.png`,
       alt: "Imagen 3",
     },
     {
-      src: "http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-4.png",
+      src: `${process.env.REACT_APP_URL_FRONTED}/cartas-desarrollo/carta-de-desarrollo-4.png`,
       alt: "Imagen 4",
     },
     {
-      src: "http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-5.png",
+      src: `${process.env.REACT_APP_URL_FRONTED}/cartas-desarrollo/carta-de-desarrollo-5.png`,
       alt: "Imagen 5",
     },
     {
-      src: "http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-6.png",
+      src: `${process.env.REACT_APP_URL_FRONTED}/cartas-desarrollo/carta-de-desarrollo-6.png`,
       alt: "Imagen 6",
     },
     {
-      src: "http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-7.png",
+      src: `${process.env.REACT_APP_URL_FRONTED}/cartas-desarrollo/carta-de-desarrollo-7.png`,
       alt: "Imagen 7",
     },
     {
-      src: "http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-8.png",
+      src: `${process.env.REACT_APP_URL_FRONTED}/cartas-desarrollo/carta-de-desarrollo-8.png`,
       alt: "Imagen 8",
     },
     {
-      src: "http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-9.png",
+      src: `${process.env.REACT_APP_URL_FRONTED}/cartas-desarrollo/carta-de-desarrollo-9.png`,
       alt: "Imagen 9",
     },
   ];
 
   const recursos = [
     {
-      src: "http://localhost:3000/recursos/arcilla.png",
+      src: `${process.env.REACT_APP_URL_FRONTED}/recursos/arcilla.png`,
       text: "CLAY",
     },
     {
-      src: "http://localhost:3000/recursos/madera.png",
+      src: `${process.env.REACT_APP_URL_FRONTED}/recursos/madera.png`,
       text: "WOOD",
     },
     {
-      src: "http://localhost:3000/recursos/ovejas.png",
+      src: `${process.env.REACT_APP_URL_FRONTED}/recursos/ovejas.png`,
       text: "SHEEP",
     },
     {
-      src: "http://localhost:3000/recursos/roca.png",
+      src: `${process.env.REACT_APP_URL_FRONTED}/recursos/roca.png`,
       text: "ROCK",
     },
     {
-      src: "http://localhost:3000/recursos/trigo.png",
+      src: `${process.env.REACT_APP_URL_FRONTED}/recursos/trigo.png`,
       text: "WHEAT",
     },
   ];
@@ -387,7 +387,7 @@ const PopUpCartasDesarrollo = (params) => {
         onClick={handleOpen}
       >
         <img
-          src="http://localhost:3000/cartas-desarrollo/carta-de-desarrollo-oculta.png"
+          src={`${process.env.REACT_APP_URL_FRONTED}/cartas-desarrollo/carta-de-desarrollo-oculta.png`}
           alt="Imagen"
           style={{ width: "100%", height: "100%" }}
         />
@@ -428,7 +428,7 @@ const PopUpCartasDesarrollo = (params) => {
               CARTAS DE DESARROLLO
             </h1>{" "}
             <img
-              src="http://localhost:3000/white_cross.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/white_cross.png`}
               alt="close"
               className="absolute top-0 right-0 cursor-pointer mt-3 mr-3"
               style={{ width: "50px", height: "50px" }}
@@ -482,7 +482,7 @@ const PopUpCartasDesarrollo = (params) => {
                   <h1 className="text-lg text-white absolute top-8 left-12 w-full h-full flex">
                     COMPRAR CARTA
                   </h1>
-                  <img src="http://localhost:3000/cartas-desarrollo/comprar-cartas-desarrollo.png"></img>
+                  <img src={`${process.env.REACT_APP_URL_FRONTED}/cartas-desarrollo/comprar-cartas-desarrollo.png`}></img>
                 </button>
               </div>
             </div>

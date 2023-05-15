@@ -95,8 +95,8 @@ export default function Amigos_pendientes() {
             for (let i = 0; i < nRequests; i++) {
               const imagen =
                 data.friend_requests[i].profile_picture === "default"
-                  ? "http://localhost:3000/fotos_perfil/skin1.png"
-                  : `http://localhost:3000/fotos_perfil/skin${data.friend_requests[i].profile_picture}.png`;
+                  ? `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/skin1.png`
+                  : `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/skin${data.friend_requests[i].profile_picture}.png`;
               const codigo = data.friend_requests[i].requester_id;
               const name = data.friend_requests[i].requester_name;
 
@@ -251,8 +251,8 @@ export default function Amigos_pendientes() {
         // Actualizamos el estado de cosas
         const img =
           data.profile_picture === "default"
-            ? "http://localhost:3000/fotos_perfil/skin1.png"
-            : `http://localhost:3000/fotos_perfil/${data.profile_picture}.png`;
+            ? `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/skin1.png`
+            : `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/${data.profile_picture}.png`;
 
         set_dinero(data.coins);
         set_codigo(data.id);
@@ -348,7 +348,7 @@ export default function Amigos_pendientes() {
       >
         {/* --------------------------- cruz de cerrar menu --------------------------- */}
         <img
-          src="http://localhost:3000/white_cross.png"
+          src={`${process.env.REACT_APP_URL_FRONTED}/white_cross.png`}
           alt="imagen para cerrar la sidebar"
           className={`hover:cursor-pointer ${
             screenSize < 720 && desplegado ? styleCruzOn : styleCruzOff
@@ -390,22 +390,22 @@ export default function Amigos_pendientes() {
 
             <img
               alt="profil"
-              src="http://localhost:3000/white_dinero.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/white_dinero.png`}
               className={`w-6 h-6 ml-2`}
             />
           </h1>
         </div>
         <ul className="flex flex-col w-full items-start py-6 px-4 gap-2 ">
           {/* --------------------------- volver al home --------------------------- */}
-          <a href="http://localhost:3000/home" className={styleLinks}>
+          <a href={`${process.env.REACT_APP_URL_FRONTED}/home`} className={styleLinks}>
             <img
               alt="profil"
-              src="http://localhost:3000/home.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/home.png`}
               className={`object-cover h-7 w-7`}
             />
 
             <h1
-              href="http://localhost:3000/editarPerfil"
+              href={`${process.env.REACT_APP_URL_FRONTED}/editarPerfil`}
               variant={Link}
               className={`text-white origin-center content-center font-medium text-xl`}
             >
@@ -413,15 +413,15 @@ export default function Amigos_pendientes() {
             </h1>
           </a>
           {/* --------------------------- editar perfil --------------------------- */}
-          <a href="http://localhost:3000/editarPerfil" className={styleLinks}>
+          <a href={`${process.env.REACT_APP_URL_FRONTED}/editarPerfil`} className={styleLinks}>
             <img
               alt="profil"
-              src="http://localhost:3000/editProfile.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/editProfile.png`}
               className={`object-cover h-7 w-7`}
             />
 
             <h1
-              href="http://localhost:3000/editarPerfil"
+              href={`${process.env.REACT_APP_URL_FRONTED}/editarPerfil`}
               variant={Link}
               className={`text-white origin-center content-center font-medium text-xl`}
             >
@@ -429,11 +429,11 @@ export default function Amigos_pendientes() {
             </h1>
           </a>
           {/* --------------------------- amigos ---------------------------*/}
-          <a href="http://localhost:3000/amigosT" className={styleLinks}>
+          <a href={`${process.env.REACT_APP_URL_FRONTED}/amigosT`} className={styleLinks}>
             {/* imagen amigos*/}
             <img
               alt="profil"
-              src="http://localhost:3000/friends.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/friends.png`}
               className={`object-cover h-7 w-7}`}
             />
             {nummensajes > 0 && (
@@ -455,15 +455,15 @@ export default function Amigos_pendientes() {
             </h1>
           </a>
           {/* --------------------------- tienda --------------------------- */}
-          <a href="http://localhost:3000/tienda" className={styleLinks}>
+          <a href={`${process.env.REACT_APP_URL_FRONTED}/tienda`} className={styleLinks}>
             <img
               alt="profil"
-              src="http://localhost:3000/shopping-cart.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/shopping-cart.png`}
               className={`object-cover h-7 w-7`}
             />
 
             <h1
-              href="http://localhost:3000/editarPerfil"
+              href={`${process.env.REACT_APP_URL_FRONTED}/editarPerfil`}
               variant={Link}
               className={`text-white origin-center content-center font-medium text-xl`}
             >
@@ -471,15 +471,15 @@ export default function Amigos_pendientes() {
             </h1>
           </a>
           {/* --------------------------- Instrucciones --------------------------- */}
-          <a href="http://localhost:3000/Instrucciones" className={styleLinks}>
+          <a href={`${process.env.REACT_APP_URL_FRONTED}/Instrucciones`} className={styleLinks}>
             <img
               alt="profil"
-              src="http://localhost:3000/libro-abierto.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/libro-abierto.png`}
               className={`object-cover h-7 w-7`}
             />
 
             <h1
-              href="http://localhost:3000/Instrucciones"
+              href={`${process.env.REACT_APP_URL_FRONTED}/Instrucciones`}
               variant={Link}
               className={`text-white origin-center content-center font-medium text-xl`}
             >
@@ -493,13 +493,13 @@ export default function Amigos_pendientes() {
             onClick={() => {
               // "borramos" las cookies
               setCookie("token", "", { path: "/" });
-              window.location.href = "http://localhost:3000";
+              window.location.href = `${process.env.REACT_APP_URL_FRONTED}`;
             }}
           >
             {/* imagen log out*/}
             <img
               alt="profil"
-              src="http://localhost:3000/logout.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/logout.png`}
               className={`object-cover h-7 w-7`}
             />
 
@@ -559,7 +559,7 @@ export default function Amigos_pendientes() {
             ></input>
             <button className="px-4 py-2 rounded-full bg-cyan-900 hover:bg-slate-900 text-white w-12 h-10">
               <img
-                src="http://localhost:3000/add-friend.png"
+                src={`${process.env.REACT_APP_URL_FRONTED}/add-friend.png`}
                 alt="boton de añadir amigos"
               />
             </button>
@@ -568,7 +568,7 @@ export default function Amigos_pendientes() {
       </div>
       {/* --------------------------- menu plegado --------------------------- */}
       <img
-        src="http://localhost:3000/menu.png"
+        src={`${process.env.REACT_APP_URL_FRONTED}/menu.png`}
         alt="Example image"
         className={`hover:cursor-pointer w-8 h-8 m-4 ${
           screenSize < 720 && !desplegado ? styleMenuOn : styleMenuOff
@@ -584,7 +584,7 @@ export default function Amigos_pendientes() {
             <div className="flex items-center my-4">
               <a href="/home">
                 <img
-                  src="http://localhost:3000/flechaMenu.png"
+                  src={`${process.env.REACT_APP_URL_FRONTED}/flechaMenu.png`}
                   className={`relative cursor-pointer left-0 top-90 w-10 p-1 border-cyan-900 flex-grow-0 mr-5 ${!open}`}
                   onClick={() => setOpen(!open)}
                 />

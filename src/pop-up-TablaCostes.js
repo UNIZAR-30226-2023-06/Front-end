@@ -22,7 +22,7 @@ const PopupTablaCostes = (props) => {
   };
   const loadImage = () => {
     const img = new Image();
-    img.src = "http://localhost:3000/tabla-de-costes.png";
+    img.src = `${process.env.REACT_APP_URL_FRONTED}/tabla-de-costes.png`;
     img.onload = () => {
       setBgImage(`url(${img.src})`);
     };
@@ -40,7 +40,7 @@ const PopupTablaCostes = (props) => {
   return (
     <>
       <img
-        src="http://localhost:3000/tabla-de-costes.png"
+        src={`${process.env.REACT_APP_URL_FRONTED}/tabla-de-costes.png`}
         alt="Abrir Popup"
         className="cursor-pointer"
         onClick={handleOpen}
@@ -63,7 +63,7 @@ const PopupTablaCostes = (props) => {
           onClick={handleBackgroundClick}
         >
           <img
-            src="http://localhost:3000/tabla-de-costes.png"
+            src={`${process.env.REACT_APP_URL_FRONTED}/tabla-de-costes.png`}
             alt="close"
             className="absolute cursor-pointer my-auto mx-auto "
             style={{ maxWidth: "720px", maxHeight: "1290px" }}
@@ -71,7 +71,7 @@ const PopupTablaCostes = (props) => {
           />
           {/*   cruz para cerrar la pop-up*/}
           <img
-            src="http://localhost:3000/black_cross.png"
+            src={`${process.env.REACT_APP_URL_FRONTED}/black_cross.png`}
             alt="close"
             className="absolute top-14 cursor-pointer mt-3 mr-8 pointer-events-auto"
             style={{ width: "50px", height: "50px", left: "1250px" }}

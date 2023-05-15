@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 
+import { global_info } from "./Partida";
+
 const PopUpFaseNegociacion = (props) => {
   const [showPopup, setShowPopup] = useState(false);
   const [shouldShowPopup, setShouldShowPopup] = useState(false);
@@ -9,6 +11,7 @@ const PopUpFaseNegociacion = (props) => {
   const [oveja, setMiOveja] = useState(0);
   const [trigo, setMiTrigo] = useState(0);
   const [madera, setMiMadera] = useState(0);
+
   // orden: oveja = 1, madera = 2, trigo = 3, piedra = 4, arcilla = 5
   const [countOfrezco, setOfrezco] = useState([0, 0, 0, 0, 0]);
   const [countQuiero, setQuiero] = useState([0, 0, 0, 0, 0]);
@@ -21,17 +24,6 @@ const PopUpFaseNegociacion = (props) => {
     { src: "roca.png", alt: "piedras", value: roca },
     { src: "arcilla.png", alt: "arcilla", value: arcilla },
   ];
-
-  // useEffect(() => {
-  //   if (props.show) {
-  //     setShouldShowPopup(true);
-  //     setShowPopup(true);
-
-  //   } else {
-  //     setShowPopup(false);
-  //     setShouldShowPopup(false);
-  //   }
-  // }, [props.show]);
 
   const handleClose = () => {
     setShouldShowPopup(false);
@@ -107,7 +99,7 @@ const PopUpFaseNegociacion = (props) => {
   return (
     <>
       <img
-        src="http://localhost:3000/iconos-no-recursos/comerciar-jugadores.png"
+        src={`${process.env.REACT_APP_URL_FRONTED}/iconos-no-recursos/comerciar-jugadores.png`}
         alt="Abrir Popup"
         className="cursor-pointer"
         onClick={handleOpen}
@@ -131,7 +123,7 @@ const PopUpFaseNegociacion = (props) => {
           >
             <h1 className="text-3xl mt-2">FASE DE NEGOCIACION</h1>
             <img
-              src="http://localhost:3000/white_cross.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/white_cross.png`}
               alt="close"
               className="absolute top-0 right-0 cursor-pointer mt-3 mr-3"
               style={{ width: "50px", height: "50px" }}
@@ -150,7 +142,7 @@ const PopUpFaseNegociacion = (props) => {
                 >
                   <div className="mr-2">
                     <img
-                      src={`http://localhost:3000/recursos/${resource.src}`}
+                      src={`${process.env.REACT_APP_URL_FRONTED}/recursos/${resource.src}`}
                       alt={resource.alt}
                       style={{ width: "65px", height: "65px" }}
                     />
@@ -177,7 +169,7 @@ const PopUpFaseNegociacion = (props) => {
                   <div key={`quiero-${index}`}>
                     <div className="flex flex-row w-200 h-150 ml-30 rounded-13 justify-center mt-4 mb-12 ml-2">
                       <img
-                        src={`http://localhost:3000/recursos/${resource.src}`}
+                        src={`${process.env.REACT_APP_URL_FRONTED}/recursos/${resource.src}`}
                         alt={resource.alt}
                         className="w-14 h-14"
                       />
@@ -203,7 +195,7 @@ const PopUpFaseNegociacion = (props) => {
                   <div key={`ofrezco-${index}`}>
                     <div className="flex flex-row w-200 h-150 ml-30 rounded-13 justify-center mt-4 mb-4 ml-2">
                       <img
-                        src={`http://localhost:3000/recursos/${resource.src}`}
+                        src={`${process.env.REACT_APP_URL_FRONTED}/recursos/${resource.src}`}
                         alt={resource.alt}
                         className="w-14 h-14"
                       />
@@ -227,6 +219,13 @@ const PopUpFaseNegociacion = (props) => {
                 <button
                   class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-4 px-6 border border-gray-400 rounded shadow ml-2"
                   style={{ fontSize: "30px", marginLeft: "20px" }}
+                  onClick={() => {
+                    global_info.eligiendoOponenteIntercambiar = true;
+                    
+                    // Cierro el popup
+                    setShouldShowPopup(false);
+                    setShowPopup(false);
+                  }}
                 >
                   Realizar Oferta
                 </button>

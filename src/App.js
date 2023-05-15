@@ -6,7 +6,7 @@ import PrivateHome from "./PrivateHome";
 import Login from "./Login";
 import Registro from "./Register";
 import Amigos_todos from "./Amigos_todos";
-import Amigos_pendiente from "./Amigos_pendiente";
+import Amigos_pendiente from "./Amigos_pendiente"; 
 import RecPassword from "./recPassword";
 import Lista_partidas from "./Lista_partidas";
 import Sala_partida from "./Sala_partida";
@@ -14,10 +14,9 @@ import Partida from "./Partida";
 import Tienda from "./Tienda";
 import EditaPerfil from "./EditarPerfil";
 import Instrucciones from "./Instrucciones";
-import Prueba from "./PruebasPopUp";
 import Creando_partida_privada from "./creando_partida_privada";
 
-export default function App() {
+export default function App() { 
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
@@ -36,7 +35,6 @@ export default function App() {
           <Route exact path="/tienda" element={<Tienda/>} />
           <Route exact path="/editarPerfil" element={<EditaPerfil/>} />
           <Route exact path="/Instrucciones" element={<Instrucciones/>} />
-          <Route exact path="/PruebaPopUps" element={<Prueba />}/>
           <Route exact path="/Partida_privada" element={<Creando_partida_privada />}/>
 
         </Routes>

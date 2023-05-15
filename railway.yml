@@ -1,0 +1,12 @@
+version: 1
+commands:
+  - name: Install Dependencies
+    command: npm install
+
+  - name: Build
+    command: npm run build
+
+  - name: Start
+    command: npx serve -s build
+
+#start: npm start

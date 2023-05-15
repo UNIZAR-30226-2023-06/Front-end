@@ -41,7 +41,7 @@ const PopupCartas = (props) => {
             style={{ minHeight: "640px", minWidth: "1290px" }}
           >
             <img
-              src="http://localhost:3000/white_cross.png"
+              src={`${process.env.REACT_APP_URL_FRONTED}/white_cross.png`}
               alt="close"
               className="absolute top-0 right-0 cursor-pointer mt-3 mr-3 pointer-events-auto"
               style={{ width: "50px", height: "50px" }}
