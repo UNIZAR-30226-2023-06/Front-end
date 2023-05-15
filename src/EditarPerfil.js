@@ -38,7 +38,8 @@ export default function EditarPerfil() {
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState("");
   const [cookies, setCookie] = useCookies(["token"]); // Agregamos removeCookie
-
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const responsive = {
     0: { items: 1 },
     640: { items: 3 },
@@ -107,7 +108,7 @@ export default function EditarPerfil() {
           // Actualizamos el estado de cosas
           const img =
             data.profile_picture === "default"
-              ? `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/skin0.png`
+              ? `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/skin1.png`
               : `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/${data.profile_picture}.png`;
           const skin_tablero =
             data.selected_grid_skin === "default"
@@ -175,8 +176,11 @@ export default function EditarPerfil() {
     if (data && data.profile_pictures) {
       await Promise.all(
         data.profile_pictures.map(async (objeto) => {
+          console.log(objeto);
           if (objeto !== "default") {
             fotos_perfil.push(objeto);
+          } else {
+            fotos_perfil.push("skin1");
           }
         })
       );
@@ -249,7 +253,9 @@ export default function EditarPerfil() {
     items_fotos_perfil = fotos_perfil.map((foto, i) => (
       <div className="slide_tienda">
         <img
-          src={`${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/` + foto + `.png`}
+          src={
+            `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/` + foto + `.png`
+          }
           className="rounded-full bg-cyan-900 hover:cursor-pointer mt-4"
           name={foto}
           onClick={(event) => {
@@ -317,7 +323,11 @@ export default function EditarPerfil() {
     items_fichas = fichas.map((foto, i) => (
       <div className="slide_tienda">
         <img
-          src={`${process.env.REACT_APP_URL_FRONTED}/fotos-tienda-urbanizacion/` + foto + `.png`}
+          src={
+            `${process.env.REACT_APP_URL_FRONTED}/fotos-tienda-urbanizacion/` +
+            foto +
+            `.png`
+          }
           className="rounded-full bg-cyan-900 hover:cursor-pointer mt-4"
           name={foto}
           onClick={(event) => {
@@ -353,16 +363,78 @@ export default function EditarPerfil() {
 
   const handleNameChange = () => {
     if (inputValue.trim() === "") {
-      setError("Debes ingresar un nombre");
+      toast.error("Error en el cambio de nombre:\n debes introducir un nombre");
       return;
     }
-
-    // Aquí puedes realizar las acciones necesarias para cambiar el nombre
-    // por ejemplo, enviar una solicitud al servidor, actualizar la variable `name`, etc.
-
-    // Reiniciar los valores del campo de texto y del mensaje de error
+    console.log(inputValue.trim());
+    fetch(
+      `${
+        process.env.REACT_APP_URL_BACKEND
+      }/change-username?new_username=${inputValue.trim()}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${Token}`,
+        },
+      }
+    )
+      .then((res) => {
+        res.json().then(async (data) => {
+          console.log(data);
+          window.location.reload();
+          toast.success("Nombre cambiado con exito");
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
     setInputValue("");
     setError("");
+  };
+
+  const handleNewPasswordChange = (event) => {
+    setNewPassword(event.target.value);
+  };
+
+  const handleConfirmPasswordChange = (event) => {
+    setConfirmPassword(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (newPassword === "" || confirmPassword === "") {
+      toast.error("La contraseña no puede estar vacia");
+      return;
+    } else if (newPassword !== confirmPassword) {
+      toast.error("Las contraseñas tienen que coincidir");
+      return;
+    } else {
+      toast.success("Contraseña cambiada correctamente");
+    }
+
+    fetch(
+      `${process.env.REACT_APP_URL_BACKEND}/change-password?new_password=${newPassword}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${Token}`,
+        },
+      }
+    )
+      .then((res) => {
+        res.json().then(async (data) => {
+          console.log(data);
+          window.location.reload();
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+    setNewPassword("");
+    setConfirmPassword("");
   };
 
   return (
@@ -426,7 +498,10 @@ export default function EditarPerfil() {
         </div>
         <ul className="flex flex-col w-full items-start py-6 px-4 gap-2">
           {/* --------------------------- volver al home --------------------------- */}
-          <a href={`${process.env.REACT_APP_URL_FRONTED}/home`} className={styleLinks}>
+          <a
+            href={`${process.env.REACT_APP_URL_FRONTED}/home`}
+            className={styleLinks}
+          >
             <img
               alt="profil"
               src={`${process.env.REACT_APP_URL_FRONTED}/home.png`}
@@ -442,7 +517,10 @@ export default function EditarPerfil() {
             </h1>
           </a>
           {/* --------------------------- editar perfil --------------------------- */}
-          <a href={`${process.env.REACT_APP_URL_FRONTED}/editarPerfil`} className={styleLinks}>
+          <a
+            href={`${process.env.REACT_APP_URL_FRONTED}/editarPerfil`}
+            className={styleLinks}
+          >
             <img
               alt="profil"
               src={`${process.env.REACT_APP_URL_FRONTED}/editProfile.png`}
@@ -458,7 +536,10 @@ export default function EditarPerfil() {
             </h1>
           </a>
           {/* --------------------------- amigos ---------------------------*/}
-          <a href={`${process.env.REACT_APP_URL_FRONTED}/amigosT`} className={styleLinks}>
+          <a
+            href={`${process.env.REACT_APP_URL_FRONTED}/amigosT`}
+            className={styleLinks}
+          >
             {/* imagen amigos*/}
             <img
               alt="profil"
@@ -484,7 +565,10 @@ export default function EditarPerfil() {
             </h1>
           </a>
           {/* --------------------------- tienda --------------------------- */}
-          <a href={`${process.env.REACT_APP_URL_FRONTED}/tienda`} className={styleLinks}>
+          <a
+            href={`${process.env.REACT_APP_URL_FRONTED}/tienda`}
+            className={styleLinks}
+          >
             <img
               alt="profil"
               src={`${process.env.REACT_APP_URL_FRONTED}/shopping-cart.png`}
@@ -500,7 +584,10 @@ export default function EditarPerfil() {
             </h1>
           </a>
           {/* --------------------------- Instrucciones --------------------------- */}
-          <a href={`${process.env.REACT_APP_URL_FRONTED}/Instrucciones`} className={styleLinks}>
+          <a
+            href={`${process.env.REACT_APP_URL_FRONTED}/Instrucciones`}
+            className={styleLinks}
+          >
             <img
               alt="profil"
               src={`${process.env.REACT_APP_URL_FRONTED}/libro-abierto.png`}
@@ -617,7 +704,7 @@ export default function EditarPerfil() {
             className="overflow-y-scroll opacity-95 bg-cyan-900 rounded-xl shadow-xl"
             style={{
               width: "1200px",
-              height: "calc(100% - 200px)",
+              height: "calc(100% - 50px)",
               overflow: "auto",
               position: "relative",
               margin: "20px",
@@ -628,17 +715,15 @@ export default function EditarPerfil() {
               <Popup
                 trigger={
                   /************ LO QUE VA AQUI ES LO QUE SACA LA POPUP ************/
-                  <div className="flex items-center">
+                  <div className="flex items-center justify-center flex-col">
+                    <h1 className="text-white font-medium text-3xl mb-2 mr-4 mb-4 mt-4">
+                      Foto de perfil
+                    </h1>
                     <img
                       alt="profil"
                       src={imagen}
-                      className={`ml-10 object-cover rounded-full h-60 w-60 mt-9 bg-cyan-900 hover:cursor-pointer`}
+                      className="object-cover rounded-full h-60 w-60 bg-cyan-900 hover:cursor-pointer"
                     />
-                    <div className="ml-5">
-                      <h1 className="text-white font-medium text-xl mb-2">
-                        Foto de perfil
-                      </h1>
-                    </div>
                   </div>
                 }
                 modal
@@ -664,36 +749,37 @@ export default function EditarPerfil() {
                 )}
               </Popup>
             </div>
-
-            <div>
-              <h1 className="text-white  font-medium text-xl text-center mr-10 mt-5">
-                Cambio de nombre
-              </h1>
-              <input
-                type="text"
-                value={inputValue}
-                onChange={handleInputChange}
-                placeholder={`Tu nombre actual: ${nombre}`}
-                className="mb-4"
-              />
-              {error && <p>{error}</p>}
+            <div className="text-center text-white font-medium text-5xl mr-2">
+              {"#" + codigo}
             </div>
-            <button
-              onClick={handleNameChange}
-              className="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
-            >
-              Cambiar nombre
-            </button>
+
+            <div className="flex justify-center mt-4">
+              <div>
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={handleInputChange}
+                  placeholder={`Tu nombre actual: ${nombre}`}
+                  className="mb-4"
+                />
+                {error && <p>{error}</p>}
+              </div>
+            </div>
+            <div className="flex justify-center">
+              <button
+                onClick={handleNameChange}
+                className="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
+              >
+                Cambiar nombre
+              </button>
+            </div>
 
             <Popup
               trigger={
-                /************ LO QUE VA AQUI ES LO QUE SACA LA POPUP ************/
-                <div>
-                  <img
-                    alt="profil"
-                    src={skin}
-                    className={`ml-10 object-cover rounded-full h-60 w-60 mt-9 bg-cyan-900 hover:cursor-pointer`}
-                  />
+                <div className="flex justify-center mt-5">
+                  <button className="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded">
+                    Cambiar contraseña
+                  </button>
                 </div>
               }
               modal
@@ -709,49 +795,149 @@ export default function EditarPerfil() {
               {(close) => (
                 /************ LO QUE VA AQUI ES LO QUE HAY DENTRO DE LA POP UP ************/
                 <div className="justify-center gap-10 mt-8 mx-2 ml-2">
-                  <AliceCarousel
-                    mouseTracking
-                    items={items_skin}
-                    responsive={responsive}
-                    controlsStrategy="alternate"
-                  />
-                </div>
-              )}
-            </Popup>
+                  <h2 className="text-center">
+                    -------------------------Cambiar
+                    contraseña---------------------------
+                  </h2>
+                  <form
+                    onSubmit={handleSubmit}
+                    className="flex flex-col items-center"
+                  >
+                    <label htmlFor="newPassword">Nueva contraseña:</label>
+                    <input
+                      type="password"
+                      id="newPassword"
+                      value={newPassword}
+                      onChange={handleNewPasswordChange}
+                      className="mb-4"
+                    />
 
-            <Popup
-              trigger={
-                /************ LO QUE VA AQUI ES LO QUE SACA LA POPUP ************/
-                <div>
-                  <img
-                    alt="profil"
-                    src={ficha}
-                    className={`ml-10 object-cover rounded-full h-60 w-60 mt-9 bg-cyan-900 hover:cursor-pointer`}
-                  />
-                </div>
-              }
-              modal
-              nested
-              arrow={false}
-              contentStyle={{
-                width: "60%",
-                height: "45%",
-                border: "5px solid black",
-                borderRadius: "10px",
-              }}
-            >
-              {(close) => (
-                /************ LO QUE VA AQUI ES LO QUE HAY DENTRO DE LA POP UP ************/
-                <div className="justify-center gap-10 mt-8 mx-2 ml-2">
-                  <AliceCarousel
-                    mouseTracking
-                    items={items_fichas}
-                    responsive={responsive}
-                    controlsStrategy="alternate"
-                  />
+                    <label htmlFor="confirmPassword">
+                      Confirmar contraseña:
+                    </label>
+                    <input
+                      type="password"
+                      id="confirmPassword"
+                      value={confirmPassword}
+                      onChange={handleConfirmPasswordChange}
+                      className="mb-4"
+                    />
+
+                    {error && <p>{error}</p>}
+
+                    <button
+                      type="submit"
+                      className="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded mb-5"
+                    >
+                      Guardar
+                    </button>
+                    <button
+                      onClick={close}
+                      className="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
+                    >
+                      Cancelar
+                    </button>
+                  </form>
                 </div>
               )}
             </Popup>
+            <div className="flex justify-center">
+              <Popup
+                trigger={
+                  /************ LO QUE VA AQUI ES LO QUE SACA LA POPUP ************/
+                  <div>
+                    <div
+                      className="rounded-lg bg-gray-300 p-4 mt-10"
+                      style={{
+                        height: "50px",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <h1 className="text-black font-medium text-3xl ml-2">
+                        Skins del tablero
+                      </h1>
+                    </div>
+
+                    <img
+                      alt="profil"
+                      src={skin}
+                      className={`ml-10 object-cover rounded-full h-60 w-60 mt-9 bg-cyan-900 hover:cursor-pointer`}
+                    />
+                  </div>
+                }
+                modal
+                nested
+                arrow={false}
+                contentStyle={{
+                  width: "60%",
+                  height: "45%",
+                  border: "5px solid black",
+                  borderRadius: "10px",
+                }}
+              >
+                {(close) => (
+                  /************ LO QUE VA AQUI ES LO QUE HAY DENTRO DE LA POP UP ************/
+                  <div className="justify-center gap-10 mt-8 mx-2 ml-2">
+                    <AliceCarousel
+                      mouseTracking
+                      items={items_skin}
+                      responsive={responsive}
+                      controlsStrategy="alternate"
+                    />
+                  </div>
+                )}
+              </Popup>
+
+              <Popup
+                trigger={
+                  /************ LO QUE VA AQUI ES LO QUE SACA LA POPUP ************/
+                  <div>
+                    <div
+                      className="rounded-lg bg-gray-300 p-4 mt-10"
+                      style={{
+                        height: "50px",
+                        display: "flex",
+                        width: "50%",
+                        marginLeft:"90px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <h1 className="text-black font-medium text-3xl ml-2">
+                        Fichas
+                      </h1>
+                    </div>
+
+                    <img
+                      alt="profil"
+                      src={ficha}
+                      className={`ml-10 object-cover rounded-full h-60 w-60 mt-9 bg-cyan-900 hover:cursor-pointer`}
+                    />
+                  </div>
+                }
+                modal
+                nested
+                arrow={false}
+                contentStyle={{
+                  width: "60%",
+                  height: "45%",
+                  border: "5px solid black",
+                  borderRadius: "10px",
+                }}
+              >
+                {(close) => (
+                  /************ LO QUE VA AQUI ES LO QUE HAY DENTRO DE LA POP UP ************/
+                  <div className="justify-center gap-10 mt-8 mx-2 ml-2">
+                    <AliceCarousel
+                      mouseTracking
+                      items={items_fichas}
+                      responsive={responsive}
+                      controlsStrategy="alternate"
+                    />
+                  </div>
+                )}
+              </Popup>
+            </div>
           </div>
         </div>
       </h1>
