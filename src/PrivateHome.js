@@ -260,7 +260,7 @@ export default function PrivateHome() {
           // Actualizamos el estado de cosas
           const img =
             data.profile_picture === "default"
-              ? `/fotos_perfil/skin1.png`
+              ? `https://catanic-web.up.railway.app/fotos_perfil/skin1.png`
               : `/fotos_perfil/${data.profile_picture}.png`;
 
           set_dinero(data.coins);
