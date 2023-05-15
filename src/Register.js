@@ -63,11 +63,11 @@ export default function Registro() {
               success: "Registrado con éxito",
               error: "ha habido un problema en el registro",
             })
-            .then(() => navigate("/login"));
+            .then(() => navigate("/"));
         }}
       >
         <div className="flex justify-between items-center px-2 w-full">
-          <a href="/login">
+          <a href="/">
             <img
               alt="flecha retroceder a página anterior"
               src={`${process.env.REACT_APP_URL_FRONTED}/flechaMenu.png`}

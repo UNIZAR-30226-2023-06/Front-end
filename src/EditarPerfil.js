@@ -796,8 +796,7 @@ export default function EditarPerfil() {
                 /************ LO QUE VA AQUI ES LO QUE HAY DENTRO DE LA POP UP ************/
                 <div className="justify-center gap-10 mt-8 mx-2 ml-2">
                   <h2 className="text-center">
-                    -------------------------Cambiar
-                    contraseña---------------------------
+                    Cambiar contraseña
                   </h2>
                   <form
                     onSubmit={handleSubmit}
