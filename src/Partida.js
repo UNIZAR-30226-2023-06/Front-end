@@ -58,6 +58,8 @@ function Partida() {
 
   const [codigo_partida, setCodigo_partida] = useState(0);
 
+  const [maxJugadores, setMaxJugadores] = useState(0);
+
   // Recordatorio de fases:
   // 0: Obtención de recursos
   // 1: Uso de cartas de desarrollo
@@ -205,6 +207,8 @@ function Partida() {
   const img_camino_negro = `${process.env.REACT_APP_URL_FRONTED}/camino_negro.png`;
   const img_camino_gris = `${process.env.REACT_APP_URL_FRONTED}/camino_gris.png`;
 
+  
+
   // sacamos los datos para saber si hay actualizaciones
   useQuery(
     ["get-state-game"],
@@ -224,35 +228,53 @@ function Partida() {
           .then((data) => {
             console.log("JSON de la partida:", data);
 
+            const maximo_jugadores = data.max_players;
+            setMaxJugadores(data.max_players);
+
             // Si un jugador ya ha conseguido 10 puntos, detengo las iteraciones
-            if (data.player_0.victory_points >= 10) {
-              setPartidaTerminada(true);
-              setNombreGanador(data.player_0.name);
-              setIdGanador(data.player_0.id);
-              setImgGanador(id_to_img[data.player_0.id]);
-            } else if (data.player_1.victory_points >= 10) {
-              setPartidaTerminada(true);
-              setNombreGanador(data.player_1.name);
-              setIdGanador(data.player_1.id);
-              setImgGanador(id_to_img[data.player_1.id]);
-            } else if (data.player_2.victory_points >= 10) {
-              setPartidaTerminada(true);
-              setNombreGanador(data.player_2.name);
-              setIdGanador(data.player_2.id);
-              setImgGanador(id_to_img[data.player_2.id]);
-            } else if (data.player_3.victory_points >= 10) {
-              setPartidaTerminada(true);
-              setNombreGanador(data.player_3.name);
-              setIdGanador(data.player_3.id);
-              setImgGanador(id_to_img[data.player_3.id]);
+            // if (data.player_0.victory_points >= 10) {
+            //   setPartidaTerminada(true);
+            //   setNombreGanador(data.player_0.name);
+            //   setIdGanador(data.player_0.id);
+            //   setImgGanador(id_to_img[data.player_0.id]);
+            // } else if (data.player_1.victory_points >= 10) {
+            //   setPartidaTerminada(true);
+            //   setNombreGanador(data.player_1.name);
+            //   setIdGanador(data.player_1.id);
+            //   setImgGanador(id_to_img[data.player_1.id]);
+            // } else if (data.player_2.victory_points >= 10) {
+            //   setPartidaTerminada(true);
+            //   setNombreGanador(data.player_2.name);
+            //   setIdGanador(data.player_2.id);
+            //   setImgGanador(id_to_img[data.player_2.id]);
+            // } else if (data.player_3.victory_points >= 10) {
+            //   setPartidaTerminada(true);
+            //   setNombreGanador(data.player_3.name);
+            //   setIdGanador(data.player_3.id);
+            //   setImgGanador(id_to_img[data.player_3.id]);
+            // }
+
+            for (let i = 0; i < maximo_jugadores; i++) {
+              if (data[`player_${i}`].victory_points >= data.victory_points_to_win) {
+                setPartidaTerminada(true);
+                setNombreGanador(data[`player_${i}`].name);
+                setIdGanador(data[`player_${i}`].id);
+                setImgGanador(id_to_img[data[`player_${i}`].id]);
+              }
             }
 
-            const nuevos_jugadores = [
-              data.player_0,
-              data.player_1,
-              data.player_2,
-              data.player_3,
-            ];
+            // const nuevos_jugadores = [
+            //   data.player_0,
+            //   data.player_1,
+            //   data.player_2,
+            //   data.player_3,
+            // ];
+            let nuevos_jugadores = [];
+            for (let i = 0; i < maximo_jugadores; i++) {
+              let player = "player_" + i;
+              nuevos_jugadores = [...nuevos_jugadores, data[player]];
+            }
+            
             setJugadores(nuevos_jugadores);
 
             // De todos los jugadores saco el que tiene mi mismo id
@@ -300,7 +322,7 @@ function Partida() {
             ) {
               setColocando_ladron(true);
             }
-
+            
             // Si no es mi turno o la fase de RESOURCE_PRODUCTION, pongo el booleano
             // ladronYaColocado a false
             if (
@@ -379,7 +401,9 @@ function Partida() {
             let nuevos_colores_oponentes = [];
             let nuevos_ids_oponentes = [];
 
-            for (let i = 0; i < lista_oponentes.length; i++) {
+              console.log("El maximo de jugardores es: ", lista_oponentes);
+
+            for (let i = 0; i < maximo_jugadores - 1; i++) {
               const nueva_img_oponente =
                 lista_oponentes[i].profile_pic === "default"
                   ? `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/skin1.png`
@@ -413,7 +437,7 @@ function Partida() {
                 lista_oponentes[i].id,
               ];
             }
-
+            console.log("Hola :X");
             setImgs_oponentes(nueva_lista_imgs_oponentes);
             setPuntos_victoria_oponentes(nueva_lista_puntos_victoria_oponentes);
             setBono_caballeros_oponentes(nueva_lista_bono_caballeros_oponentes);
@@ -427,7 +451,7 @@ function Partida() {
             let nuevo_usuario_to_color = [null, null, null, null, null];
 
             // Obtenemos de todos los jugadores sus skins y sus colores
-            for (let i = 0; i < jugadores.length; i++) {
+            for (let i = 0; i < maximo_jugadores; i++) {
               const url_skin_poblado =
                 `${process.env.REACT_APP_URL_FRONTED}/poblado/` +
                 jugadores[i].color +
@@ -905,7 +929,7 @@ function Partida() {
 
       <div className="parte_superior_partida">
         <div className="menu_superior_partida">
-          {jugadores.length >= 2 && (
+          {maxJugadores >= 2 && (
             <div
               className="superior_jugador_1_partida"
               style={{
@@ -1004,7 +1028,7 @@ function Partida() {
               )}
             </div>
           )}
-          {jugadores.length >= 3 && (
+          {maxJugadores >= 3 && (
             <div
               className="superior_jugador_2_partida"
               style={{
@@ -1100,7 +1124,7 @@ function Partida() {
               )}
             </div>
           )}
-          {jugadores.length === 4 && (
+          {maxJugadores === 4 && (
             <div
               className="superior_jugador_3_partida"
               style={{

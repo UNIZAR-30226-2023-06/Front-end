@@ -189,34 +189,29 @@ export default function Creando_partida_privada() {
     }
   );
 
-  function unirseSalaPrivada(e) {
-    console.log(e);
-    console.log("nos unimos al lobby: ",e);
-    fetch(`${process.env.REACT_APP_URL_BACKEND}/join-lobby?lobby_id=${e}`, {
+  function onAceptarPartida() {
+    fetch(`${process.env.REACT_APP_URL_BACKEND}/set-player-ready`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "application/json",
         Authorization: `Bearer ${Token}`,
       },
     })
-      .then((res) => {
-        res.json().then((data) => {
-          if (res.status === 404) {
-            // error al entrar en el lobby
-            toast.error("No existe el lobby introducido");
-          } else if (data.detail === "Lobby joined") {
-            console.log("partida aceptada");
-          
-            // Me redirijo a la partida con href
-            window.location.href = `${process.env.REACT_APP_URL_FRONTED}/partida`;
-          } else {
-            toast.error("ya estas en un lobby :(");
-          }
-        });
+      .then((response) => {
+        toast.success("Esperando confirmación del resto de jugadores");
+
+        // Me redirijo a la partida con href
+        window.location.href = `${process.env.REACT_APP_URL_FRONTED}/partida`;
       })
       .catch((error) => {
-        console.error("Error:", error);
+        if (error.response.status === 409) {
+          console.log("Error 409: ya estas buscando una partida");
+        } else {
+          console.error("Error:", error);
+        }
       });
+    // damos permiso para comprobar si la partida se puede empezar
+    console.log("vemos el estado de la partida");
   }
 
   // ------------------------------------------- actualizamos a los jugadores ------------------------
@@ -829,7 +824,7 @@ export default function Creando_partida_privada() {
 
           {mostrar_img_jugador_2 && (
             <img
-            src={`${process.env.REACT_APP_URL_FRONTED}/dragones/hello.png`}
+              src={`${process.env.REACT_APP_URL_FRONTED}/dragones/hello.png`}
               alt="icono_jugadores"
               style={{
                 width: "65px",
@@ -839,7 +834,7 @@ export default function Creando_partida_privada() {
             />
           )}
           <span className="mt-6">
-          {nombre_jugador_2}
+            {nombre_jugador_2}
           </span>
 
         </a>}
@@ -848,7 +843,7 @@ export default function Creando_partida_privada() {
 
           {mostrar_img_jugador_3 && (
             <img
-            src={`${process.env.REACT_APP_URL_FRONTED}/dragones/peace.png`}
+              src={`${process.env.REACT_APP_URL_FRONTED}/dragones/peace.png`}
               style={{
                 width: "65px",
                 height: "65px",
@@ -865,7 +860,7 @@ export default function Creando_partida_privada() {
 
           {mostrar_img_jugador_4 && (
             <img
-            src={`${process.env.REACT_APP_URL_FRONTED}/dragones/boring.png`}
+              src={`${process.env.REACT_APP_URL_FRONTED}/dragones/boring.png`}
               style={{
                 width: "65px",
                 height: "65px",
@@ -883,7 +878,7 @@ export default function Creando_partida_privada() {
       {jugadores.length == numero_de_jugadores && <button
         className="flex text-6xl m-auto bg-cyan-900 hover:bg-cyan-700 text-white font-bold py-4 px-4 rounded-full absolute left-0 right-0 bottom-10 w-[440px]"
         onClick={() => {
-          unirseSalaPrivada(codigo);
+          onAceptarPartida();
         }}
       >
         Iniciar partida

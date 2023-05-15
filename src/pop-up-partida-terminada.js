@@ -21,6 +21,16 @@ const PopUpFinPartida = (params) => {
           className="relative bg-black rounded-lg p-4 bg-opacity-80 inline-flex flex-col items-center h-4/5 "
           style={{ height: "100%", width: "100%" }}
         >
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
           <h1
             className="text-5xl mt-2"
             style={{ color: "white", fontWeight: "700", marginTop: "50px" }}
@@ -30,7 +40,7 @@ const PopUpFinPartida = (params) => {
               : "¡Ha ganado " + params.nombreGanador + "!"}
           </h1>{" "}
           <div style={containerStyle}>
-            {params.idGanador === params.mi_id && (
+            {params.idGanador !== params.mi_id && (
               <img
                 src={params.imgGanador}
                 alt="Imagen 1"
@@ -45,7 +55,7 @@ const PopUpFinPartida = (params) => {
                   // Ejemplo url:
                   // http://localhost:8000/delete-lobby?lobby_id=1234
                   fetch(
-                    `${process.env.REACT_APP_URL_API}/delete-lobby?lobby_id=${params.lobby}`,
+                    `${process.env.REACT_APP_URL_BACKEND}/delete-lobby?lobby_id=${params.lobby}`,
                     {
                       method: "DELETE",
                       headers: {
