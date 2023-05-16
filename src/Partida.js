@@ -1893,7 +1893,12 @@ function Partida() {
       <h1
         style={{
           position: "absolute",
-          left: "50%",
+          // left: "80%",
+          right: "4%",
+
+          // Tamaño 50px y negrita
+          fontSize: "30px",
+          fontWeight: "bold",
         }}
       >
         {"Fase: " + fase_actual}
