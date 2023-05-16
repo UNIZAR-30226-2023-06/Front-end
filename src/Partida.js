@@ -514,7 +514,7 @@ function Partida() {
               id_to_img[jugadores[i].id] =
                 jugadores[i].profile_pic === "default"
                   ? `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/skin1.png`
-                  : `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/${lista_oponentes[i].profile_pic}.png`;
+                  : `${process.env.REACT_APP_URL_FRONTED}/fotos_perfil/${jugadores[i].profile_pic}.png`;
             }
 
             setSkins_jugadores_poblados(array_skins_jugadores_poblados);
