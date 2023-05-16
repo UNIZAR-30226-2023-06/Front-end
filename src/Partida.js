@@ -1927,7 +1927,7 @@ function Partida() {
           className="scale-75"
           style={{
             position: "absolute",
-            left: "27%",
+            left: "26%",
             bottom: "125px",
 
             // Marco blanco y fondo gris

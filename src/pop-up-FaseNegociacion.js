@@ -93,8 +93,8 @@ const PopUpFaseNegociacion = (props) => {
         onClick={handleOpen}
         style={{
           position: "absolute",
-          left: "15.8%",
-          bottom: "30px",
+          left: "19%",
+          bottom: "-190px",
 
           // Escalo la imagen para que se vea más pequeña
           transform: "scale(0.2)",
