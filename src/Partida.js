@@ -282,8 +282,8 @@ function Partida() {
             setRoad(data.board.edges);
             setBuilding(data.board.nodes);
 
-            // setTiempo_maximo(data.turn_time);
-            setTiempo_maximo(9999999);
+            setTiempo_maximo(data.turn_time);
+            //setTiempo_maximo(9999999);
 
             setChat(data.chat);
 
