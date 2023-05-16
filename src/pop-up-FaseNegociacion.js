@@ -62,39 +62,27 @@ const PopUpFaseNegociacion = (props) => {
       // ofrezco
       const newValues = [...countOfrezco];
       newValues[index] = value;
-      setOfrezco(newValues);
+      //setOfrezco(newValues);
+
+      global_info.recursos_ofrecidos[index_to_global(index)] = value;
     } else {
       // quiero
       const newValues = [...countQuiero];
       newValues[index] = value;
-      setQuiero(newValues);
+      //setQuiero(newValues);
+
+      global_info.recursos_pedidos[index_to_global(index)] = value;
     }
-  };
+ };
 
-  {
-    /* ------------------ funciones para enviar la oferta al resto de los jugadores ------------------ */
+  function index_to_global (index) {
+    if (index === 0) return 2;
+    if (index === 1) return 1;
+    if (index === 2) return 4;
+    if (index === 3) return 3;
+    if (index === 4) return 0;
   }
 
-  function LanzarOfertar(e) {
-    e.preventDefault();
-    // TODO: falta conectar con el backend que la funcion aún no existe pero esta todo preparado ya :)
-    console.log("------------------------");
-    console.log("y quiero a cambio: ", countQuiero);
-    console.log("yo doy: ", countOfrezco);
-    toast.success("CONSEJO: negocia por el chat!", {
-      style: {
-        border: "1px solid #713200",
-        padding: "16px",
-        color: "#713200",
-      },
-      iconTheme: {
-        primary: "#713200",
-        secondary: "#FFFAEE",
-      },
-    });
-
-    toast.success("Su oferta ha sido enviada!");
-  }
 
   return (
     <>
@@ -214,13 +202,13 @@ const PopUpFaseNegociacion = (props) => {
                 ))}
               </div>
             </div>
-            <form onSubmit={LanzarOfertar}>
               <div class=" mt-20">
                 <button
                   class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-4 px-6 border border-gray-400 rounded shadow ml-2"
                   style={{ fontSize: "30px", marginLeft: "20px" }}
                   onClick={() => {
                     global_info.eligiendoOponenteIntercambiar = true;
+                    toast.success("Su oferta ha sido enviada!");
                     
                     // Cierro el popup
                     setShouldShowPopup(false);
@@ -230,7 +218,6 @@ const PopUpFaseNegociacion = (props) => {
                   Realizar Oferta
                 </button>
               </div>
-            </form>
             {props.children}
           </div>
         </div>

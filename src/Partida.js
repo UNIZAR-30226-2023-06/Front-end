@@ -3,7 +3,11 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import Tabs from "./Components/TabComponent/Tabs";
+import PopUpOferta from "./pop-up-oferta";
 import PopUpFaseTirada from "./pop-up-Fase-tirada";
 import PopupTablaCostes from "./pop-up-TablaCostes";
 import PopUpFaseCompra from "./pop-up-FaseCompra";
@@ -13,7 +17,6 @@ import PopUpFaseNegociacion from "./pop-up-FaseNegociacion";
 // 1-- Importamos useCookies y jwt_decode
 import { useCookies } from "react-cookie";
 import jwt_decode from "jwt-decode";
-import { toast } from "react-hot-toast";
 
 function Partida() {
   ////////////////////////////////////////////////////////////////////////////
@@ -146,6 +149,9 @@ function Partida() {
   const top_variation_ladron = 27;
   const left_variation_ladron = 27;
 
+  const [intercambios, setIntercambios] = useState([]);
+  const [tenemosIntercambios, setTenemosIntercambios] = useState(false);
+
   const [aQuienPuedoColocarLadron] = useState([false, false, false]);
 
   const [road, setRoad] = useState({});
@@ -209,7 +215,7 @@ function Partida() {
   const img_camino_negro = `${process.env.REACT_APP_URL_FRONTED}/camino_negro.png`;
   const img_camino_gris = `${process.env.REACT_APP_URL_FRONTED}/camino_gris.png`;
 
-  
+
 
   // sacamos los datos para saber si hay actualizaciones
   useQuery(
@@ -247,7 +253,7 @@ function Partida() {
               let player = "player_" + i;
               nuevos_jugadores = [...nuevos_jugadores, data[player]];
             }
-            
+
             setJugadores(nuevos_jugadores);
 
             // De todos los jugadores saco el que tiene mi mismo id
@@ -276,8 +282,8 @@ function Partida() {
             setRoad(data.board.edges);
             setBuilding(data.board.nodes);
 
-            setTiempo_maximo(data.turn_time);
-            // setTiempo_maximo(9999999);
+            // setTiempo_maximo(data.turn_time);
+            setTiempo_maximo(9999999);
 
             setChat(data.chat);
 
@@ -298,7 +304,7 @@ function Partida() {
             ) {
               setColocando_ladron(true);
             }
-            
+
             // Si no es mi turno o la fase de RESOURCE_PRODUCTION, pongo el booleano
             // ladronYaColocado a false
             if (
@@ -363,6 +369,51 @@ function Partida() {
             } else {
               setAldeas_iniciales_colocadas(true);
             }
+
+            setIntercambios(data.trade_requests);
+
+            // Si tenemos intercambios dirigidos a nosotros, activamos el booleano
+            // tenemosIntercambios
+            let tenemos_intercambios = false;
+            for (let i = 0; i < data.trade_requests.length; i++) {
+              if (data.trade_requests[i].reciever === mi_id) {
+                tenemos_intercambios = true;
+              }
+            }
+            setTenemosIntercambios(tenemos_intercambios);
+
+            // Si no es la fase de TRADING y hay un intercambio en curso, lo cancelo
+            if (data.turn_phase !== "TRADING" && data.trade_requests > 0) {
+              // Ejemplo url:
+              // http://localhost:8000/game_phases/reject_trade?lobby_id=1234&player2_id=1234
+              const url_rechazar_intercambio =
+                `${process.env.REACT_APP_URL_BACKEND}/game_phases/reject_trade?lobby_id=` +
+                codigo_partida +
+                "&player2_id=" +
+                data.trade_requests[0].sender;
+
+              // Petición get para rechazar el intercambio
+              fetch(url_rechazar_intercambio, {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/x-www-form-urlencoded",
+                  Authorization: `Bearer ${Token}`,
+                },
+              }).then((res_2) => {
+                res_2
+                  .json()
+                  .then((data) => {
+                    console.log("JSON de la partida:", data);
+                  })
+                  .catch((error) => {
+                    console.error("Error:", error);
+                  });
+              });
+
+            }
+
+            // Imprimo todas las condiciones de:
+            // turno !== mi_id && fase_actual === "TRADING" && tenemosIntercambios == true
 
             // sacamos los datos de los distintos jugadores que hay en la partida
             // quitamos nuestro usuario de la lista
@@ -567,7 +618,7 @@ function Partida() {
           setShowPopupFaseNegociacion(false);
         }
       } else if (fase === "TRADING") {
-        // TODO: hacer que se muestre el popup de trading
+
         setShowPopupFaseTirada(false);
         setShowPopupFaseNegociacion(true);
       } else if (fase === "BUILDING") {
@@ -920,12 +971,17 @@ function Partida() {
                 let definitivamenteTieneColor = false;
                 const colorOponente0 = color_to_codigo(colores_oponentes[0]);
                 // Recorro con un for los pares obtenidos para ver si tiene el color del jugador
-                for (let i = 0; i < coloresAlrededorLadron.nodes.length; i++) {
-                  if (coloresAlrededorLadron.nodes[i][0] === colorOponente0) {
-                    definitivamenteTieneColor = true;
+
+                if (eligiendoJugadorRobar) {
+                  for (let i = 0; i < coloresAlrededorLadron.nodes.length; i++) {
+                    if (coloresAlrededorLadron.nodes[i][0] === colorOponente0) {
+                      definitivamenteTieneColor = true;
+                    }
                   }
                 }
 
+                console.log("Los recursos que ofrecemos son", global_info.recursos_ofrecidos);
+                console.log("A cambio queremos ", global_info.recursos_pedidos);
                 if (definitivamenteTieneColor && eligiendoJugadorRobar) {
 
                   // Ejemplo de url:
@@ -951,6 +1007,33 @@ function Partida() {
                     });
 
                   setEligiendoJugadorRobar(false);
+                }
+
+                else if (global_info.eligiendoOponenteIntercambiar) {
+                  // Ejemplo de url:
+                  // http://localhost:8000/game_phases/propose_trade?lobby_id=1234&player2_id=1234&wood_amount_p1=5&clay_amount_p1=5&sheep_amount_p1=5&wheat_amount_p1=5&stone_amount_p1=5&wood_amount_p2=5&clay_amount_p2=5&sheep_amount_p2=5&wheat_amount_p2=5&stone_amount_p2=5
+
+                  const url = `${process.env.REACT_APP_URL_BACKEND}/game_phases/propose_trade?lobby_id=${codigo_partida}&player2_id=${idsOponentes[0]}&wood_amount_p1=${global_info.recursos_ofrecidos[1]}&clay_amount_p1=${global_info.recursos_ofrecidos[0]}&sheep_amount_p1=${global_info.recursos_ofrecidos[2]}&wheat_amount_p1=${global_info.recursos_ofrecidos[4]}&stone_amount_p1=${global_info.recursos_ofrecidos[3]}&wood_amount_p2=${global_info.recursos_pedidos[1]}&clay_amount_p2=${global_info.recursos_pedidos[0]}&sheep_amount_p2=${global_info.recursos_pedidos[2]}&wheat_amount_p2=${global_info.recursos_pedidos[4]}&stone_amount_p2=${global_info.recursos_pedidos[3]}`;
+
+                  // Petición POST para hacer el trading
+                  fetch(url, {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/x-www-form-urlencoded",
+                      Authorization: `Bearer ${Token}`,
+                    },
+                  })
+                    .then((res) => {
+                      res.json().then((data) => {
+                        console.log("Intento de trading:", data);
+                      });
+                    }
+                    )
+                    .catch((error) => {
+                      console.error("Error:", error);
+                    });
+
+                  global_info.eligiendoOponenteIntercambiar = false;
                 }
               }}
             >
@@ -1016,9 +1099,13 @@ function Partida() {
                 let definitivamenteTieneColor = false;
                 const colorOponente0 = color_to_codigo(colores_oponentes[1]);
                 // Recorro con un for los pares obtenidos para ver si tiene el color del jugador
-                for (let i = 0; i < coloresAlrededorLadron.nodes.length; i++) {
-                  if (coloresAlrededorLadron.nodes[i][0] === colorOponente0) {
-                    definitivamenteTieneColor = true;
+
+
+                if (eligiendoJugadorRobar) {
+                  for (let i = 0; i < coloresAlrededorLadron.nodes.length; i++) {
+                    if (coloresAlrededorLadron.nodes[i][0] === colorOponente0) {
+                      definitivamenteTieneColor = true;
+                    }
                   }
                 }
 
@@ -1047,6 +1134,33 @@ function Partida() {
                     });
 
                   setEligiendoJugadorRobar(false);
+                }
+
+                else if (global_info.eligiendoOponenteIntercambiar) {
+                  // Ejemplo de url:
+                  // http://localhost:8000/game_phases/propose_trade?lobby_id=1234&player2_id=1234&wood_amount_p1=5&clay_amount_p1=5&sheep_amount_p1=5&wheat_amount_p1=5&stone_amount_p1=5&wood_amount_p2=5&clay_amount_p2=5&sheep_amount_p2=5&wheat_amount_p2=5&stone_amount_p2=5
+
+                  const url = `${process.env.REACT_APP_URL_BACKEND}/game_phases/propose_trade?lobby_id=${codigo_partida}&player2_id=${idsOponentes[1]}&wood_amount_p1=${global_info.recursos_ofrecidos[1]}&clay_amount_p1=${global_info.recursos_ofrecidos[0]}&sheep_amount_p1=${global_info.recursos_ofrecidos[2]}&wheat_amount_p1=${global_info.recursos_ofrecidos[4]}&stone_amount_p1=${global_info.recursos_ofrecidos[3]}&wood_amount_p2=${global_info.recursos_pedidos[1]}&clay_amount_p2=${global_info.recursos_pedidos[0]}&sheep_amount_p2=${global_info.recursos_pedidos[2]}&wheat_amount_p2=${global_info.recursos_pedidos[4]}&stone_amount_p2=${global_info.recursos_pedidos[3]}`;
+
+                  // Petición POST para hacer el trading
+                  fetch(url, {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/x-www-form-urlencoded",
+                      Authorization: `Bearer ${Token}`,
+                    },
+                  })
+                    .then((res) => {
+                      res.json().then((data) => {
+                        console.log("Intento de trading:", data);
+                      });
+                    }
+                    )
+                    .catch((error) => {
+                      console.error("Error:", error);
+                    });
+
+                  global_info.eligiendoOponenteIntercambiar = false;
                 }
               }}
             >
@@ -1113,9 +1227,13 @@ function Partida() {
                 let definitivamenteTieneColor = false;
                 const colorOponente0 = color_to_codigo(colores_oponentes[2]);
                 // Recorro con un for los pares obtenidos para ver si tiene el color del jugador
-                for (let i = 0; i < coloresAlrededorLadron.nodes.length; i++) {
-                  if (coloresAlrededorLadron.nodes[i][0] === colorOponente0) {
-                    definitivamenteTieneColor = true;
+
+
+                if (eligiendoJugadorRobar) {
+                  for (let i = 0; i < coloresAlrededorLadron.nodes.length; i++) {
+                    if (coloresAlrededorLadron.nodes[i][0] === colorOponente0) {
+                      definitivamenteTieneColor = true;
+                    }
                   }
                 }
 
@@ -1123,7 +1241,7 @@ function Partida() {
 
                   // Ejemplo de url:
                   // https://cataninc-back-end-production-4d3e.up.railway.app/game_phases/move_thief?lobby_id=3&stolen_player_id=4&new_thief_position_tile_coord=5
-
+                  console.log();
                   const url = `${process.env.REACT_APP_URL_BACKEND}/game_phases/move_thief?lobby_id=${codigo_partida}&stolen_player_id=${idsOponentes[2]}&new_thief_position_tile_coord=${nuevaPosicionLadron}`;
 
                   // Petición GET para mover el ladrón
@@ -1144,6 +1262,33 @@ function Partida() {
                     });
 
                   setEligiendoJugadorRobar(false);
+                }
+
+                else if (global_info.eligiendoOponenteIntercambiar) {
+                  // Ejemplo de url:
+                  // http://localhost:8000/game_phases/propose_trade?lobby_id=1234&player2_id=1234&wood_amount_p1=5&clay_amount_p1=5&sheep_amount_p1=5&wheat_amount_p1=5&stone_amount_p1=5&wood_amount_p2=5&clay_amount_p2=5&sheep_amount_p2=5&wheat_amount_p2=5&stone_amount_p2=5
+
+                  const url = `${process.env.REACT_APP_URL_BACKEND}/game_phases/propose_trade?lobby_id=${codigo_partida}&player2_id=${idsOponentes[2]}&wood_amount_p1=${global_info.recursos_ofrecidos[1]}&clay_amount_p1=${global_info.recursos_ofrecidos[0]}&sheep_amount_p1=${global_info.recursos_ofrecidos[2]}&wheat_amount_p1=${global_info.recursos_ofrecidos[4]}&stone_amount_p1=${global_info.recursos_ofrecidos[3]}&wood_amount_p2=${global_info.recursos_pedidos[1]}&clay_amount_p2=${global_info.recursos_pedidos[0]}&sheep_amount_p2=${global_info.recursos_pedidos[2]}&wheat_amount_p2=${global_info.recursos_pedidos[4]}&stone_amount_p2=${global_info.recursos_pedidos[3]}`;
+
+                  // Petición POST para hacer el trading
+                  fetch(url, {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/x-www-form-urlencoded",
+                      Authorization: `Bearer ${Token}`,
+                    },
+                  })
+                    .then((res) => {
+                      res.json().then((data) => {
+                        console.log("Intento de trading:", data);
+                      });
+                    }
+                    )
+                    .catch((error) => {
+                      console.error("Error:", error);
+                    });
+
+                  global_info.eligiendoOponenteIntercambiar = false;
                 }
               }}
             >
@@ -1875,8 +2020,17 @@ function Partida() {
         </div>
       )}
 
-      {turno === mi_id && fase_actual === "BUILDING" && (
-        <PopUpFaseCompra token={Token} lobby={codigo_partida} />
+      {turno !== mi_id && fase_actual === "TRADING" && tenemosIntercambios == true && (
+        <div>
+          <PopUpOferta
+            token={Token}
+            lobby={codigo_partida}
+            jugador_datos={estado_jugador}
+            show={true}
+            mi_id={mi_id}
+            oferta={intercambios.filter((intercambio) => intercambio.reciever === mi_id)[0]}
+          />
+        </div>
       )}
 
       {partidaTerminada && (
@@ -1889,6 +2043,8 @@ function Partida() {
           mi_id={mi_id}
         />
       )}
+
+
     </div>
   );
 }
@@ -1909,6 +2065,6 @@ export const global_info = {
 
   // Para los intercambios
   eligiendoOponenteIntercambiar: false,
-  recursos_ofrecidos: [],
-  recursos_pedidos: [],
+  recursos_ofrecidos: [0, 0, 0, 0, 0],
+  recursos_pedidos: [0, 0, 0, 0, 0],
 };
